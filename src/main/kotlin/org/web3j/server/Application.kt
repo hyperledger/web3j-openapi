@@ -2,41 +2,40 @@ package org.web3j.server
 
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
-import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
+import org.web3j.abi.datatypes.Address
+import org.web3j.crypto.Credentials
+import org.web3j.evm.Configuration
+import org.web3j.evm.EmbeddedWeb3jService
+import org.web3j.protocol.Web3j
+import org.web3j.tx.RawTransactionManager
+import org.web3j.tx.TransactionManager
+import org.web3j.tx.gas.DefaultGasProvider
+import kotlin.system.exitProcess
 
 fun main() {
-//    val resourceConfig = DefaultResourceConfig(Greeter::class.java)
-//    // The following line is to enable GZIP when client accepts it
-//    resourceConfig.getContainerResponseFilters().add(GZIPContentEncodingFilter())
-//    val server: HttpServer = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:5555", resourceConfig)
-//    try {
-//        println("Press any key to stop the service...")
-//        System.`in`.read()
-//    } finally {
-//        server.stop()
-//    }
 
-    val context = ServletContextHandler(ServletContextHandler.SESSIONS)
-    context.setContextPath("/")
 
-    val jettyServer = Server(8080)
-    jettyServer.setHandler(context)
+    val server = Server(8080)
 
-    val jerseyServlet: ServletHolder = context.addServlet(
-        ServletContainer::class.java, "/*"
-    )
-    jerseyServlet.setInitOrder(0)
+    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS)
 
-    jerseyServlet.setInitParameter(
-        "jersey.config.server.provider.classnames",
-        GreeterImplementation::class.java.canonicalName
+    servletContextHandler.contextPath = "/*"
+    server.handler = servletContextHandler
+
+    val servletHolder = servletContextHandler.addServlet(ServletContainer::class.java, "/*")
+    servletHolder.initOrder = 0
+    servletHolder.setInitParameter(
+        "jersey.config.server.provider.packages",
+        "org.web3j.something"
     )
 
     try {
-        jettyServer.start()
-        jettyServer.join()
+        server.start()
+        server.join()
+    } catch (ex: Exception) {
+        exitProcess(1)
     } finally {
-        jettyServer.destroy()
+        server.destroy()
     }
 }
