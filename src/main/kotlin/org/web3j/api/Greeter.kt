@@ -1,15 +1,31 @@
 package org.web3j.api
 
-import javax.ws.rs.Path
-import org.web3j.greeter.Greeter as GreetContract
+import org.web3j.protocol.core.methods.response.TransactionReceipt
+import javax.ws.rs.*
 
-@Path("/greeter")
+@Path("/api/contracts")
 interface Greeter {
 
-    companion object : LifeCycle<GreetContract> {
-        override fun load(service: ContractService) = ClientBuilder.build(
-            GreetContract::class.java, service
-        )
-    }
+//    @get:Path("contracts")
+//    val deployments: List<Deployment>
+//
+//    interface Deployment {
+//        @POST
+//        @Produces("application/json")
+//        @Consumes("application/json")
+//        fun deploy(greeting: String): String
+//    }
+
+    @POST
+    @Path("{contractAddress}/newGreeting")
+    @Consumes("application/json")
+    fun newGreeting(
+        @PathParam("contractAddress") contractAddress: String,
+        @QueryParam("greeting") greeting: String): TransactionReceipt
+
+    @GET
+    @Path("{contractAddress}/greet")
+    @Produces("application/json")
+    fun greet(@PathParam("contractAddress") contractAddress: String): String
 
 }
