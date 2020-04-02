@@ -13,11 +13,9 @@ import org.web3j.tx.RawTransactionManager
 import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.DefaultGasProvider
 import javax.ws.rs.GET
-import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Path("/api/contracts")
 class GreeterResourceImpl : org.web3j.api.GreeterResource {
 
     private val credentials = Credentials
