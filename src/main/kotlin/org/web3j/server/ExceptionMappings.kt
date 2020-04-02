@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response.Status
 import javax.ws.rs.core.Response.Status.Family
 import javax.ws.rs.core.UriInfo
 import javax.ws.rs.ext.ExceptionMapper
-import javax.ws.rs.ext.Provider
 
 sealed class BaseExceptionMapper<E : Throwable>(
     private val status: Response.StatusType
@@ -36,7 +35,6 @@ sealed class BaseExceptionMapper<E : Throwable>(
     }
 }
 
-@Provider
 class JsonMappingExceptionMapper : BaseExceptionMapper<JsonMappingException>(Status.BAD_REQUEST)
 class IllegalArgumentExceptionMapper : BaseExceptionMapper<IllegalArgumentException>(CustomStatus.UNPROCESSABLE_ENTITY)
 
