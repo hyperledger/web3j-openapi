@@ -2,33 +2,31 @@ package org.web3j.server
 
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
+import org.eclipse.jetty.servlet.ServletHolder
+import org.glassfish.jersey.server.ServerProperties
 import org.glassfish.jersey.servlet.ServletContainer
-import org.web3j.abi.datatypes.Address
-import org.web3j.crypto.Credentials
-import org.web3j.evm.Configuration
-import org.web3j.evm.EmbeddedWeb3jService
-import org.web3j.protocol.Web3j
-import org.web3j.tx.RawTransactionManager
-import org.web3j.tx.TransactionManager
-import org.web3j.tx.gas.DefaultGasProvider
+import org.web3j.something.GreeterResourceImpl
 import kotlin.system.exitProcess
 
 fun main() {
+    val resourceConfig = Web3jResourceConfig().apply {
+        // FIXME Load contract resource classes from eg. command line
+        registerClasses(GreeterResourceImpl::class.java)
+    }
 
+    val servletHolder = ServletHolder(ServletContainer(resourceConfig)).apply {
+        setInitParameter(ServerProperties.PROVIDER_PACKAGES, "org.web3j.something, org.web3j.server")
+        initOrder = 0
+    }
 
-    val server = Server(8080)
+    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
+        addServlet(servletHolder, "/*")
+        contextPath = "/*"
+    }
 
-    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS)
-
-    servletContextHandler.contextPath = "/*"
-    server.handler = servletContextHandler
-
-    val servletHolder = servletContextHandler.addServlet(ServletContainer::class.java, "/*")
-    servletHolder.initOrder = 0
-    servletHolder.setInitParameter(
-        "jersey.config.server.provider.packages",
-        "org.web3j.something"
-    )
+    val server = Server(8080).apply {
+        handler = servletContextHandler
+    }
 
     try {
         server.start()
