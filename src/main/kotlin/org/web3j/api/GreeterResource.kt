@@ -13,15 +13,10 @@ import javax.ws.rs.core.MediaType
 @Path("/api/contracts")
 interface GreeterResource {
 
-//    @get:Path("contracts")
-//    val deployments: List<Deployment>
-//
-//    interface Deployment {
-//        @POST
-//        @Produces("application/json")
-//        @Consumes("application/json")
-//        fun deploy(greeting: String): String
-//    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun deploy(greetingParameters: GreetingParameters): TransactionReceipt
 
     @POST
     @Path("{contractAddress}/newGreeting")
