@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType
 interface HelloWorldContractResource : ContractResource {
 
     @get:Path("Greeter")
-    val greeter: GreeterResource
+    val greeter: GreeterLifecycle
 
-    // TODO Generate other contracts here
+    // TODO Add other contracts here
 }

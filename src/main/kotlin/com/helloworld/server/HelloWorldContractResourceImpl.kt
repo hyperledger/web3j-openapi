@@ -30,9 +30,7 @@ class HelloWorldContractResourceImpl(
     uriInfo: ExtendedUriInfo
 ) : HelloWorldContractResource, ContractResourceImpl(uriInfo) {
 
-    override val greeter = GreeterResourceImpl(
-        web3j, credentials, transactionManager, defaultGasProvider
-    )
+    override val greeter = GreeterLifecycleImpl(web3j, credentials, transactionManager, defaultGasProvider)
 
     // TODO Generate other contracts here
 }

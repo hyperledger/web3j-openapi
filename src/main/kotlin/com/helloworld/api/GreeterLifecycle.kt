@@ -12,27 +12,27 @@
  */
 package com.helloworld.api
 
-import com.helloworld.api.model.NewGreetingParameters
+import com.helloworld.api.model.GreeterDeployParameters
+import org.web3j.openapi.ContractLifecycle
+import org.web3j.openapi.server.CONTRACT_ADDRESS
+import org.web3j.openapi.server.CONTRACT_ADDRESS_PATH
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
-import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface GreeterResource {
+interface GreeterLifecycle : ContractLifecycle<GreeterDeployParameters, GreeterResource> {
 
     @POST
-    @Path("newGreeting")
-    fun newGreeting(newGreetingParameters: NewGreetingParameters): TransactionReceipt
+    override fun deploy(parameters: GreeterDeployParameters): TransactionReceipt
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("greet")
-    fun greet(): String
+    @Path(CONTRACT_ADDRESS_PATH)
+    override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): GreeterResource
 }

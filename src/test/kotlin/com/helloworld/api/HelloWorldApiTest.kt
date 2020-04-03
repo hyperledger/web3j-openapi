@@ -16,6 +16,7 @@ import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.isEqualTo
 import com.helloworld.api.model.GreeterDeployParameters
+import com.helloworld.api.model.NewGreetingParameters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.web3j.openapi.client.ClientBuilder
@@ -42,7 +43,10 @@ class HelloWorldApiTest {
             GreeterDeployParameters("Test greeter")
         )
 
-        val greet = helloWorldApi.contracts.greeter.greet(receipt.contractAddress)
-        assertThat(greet).isEqualTo("Test greeter")
+        val greeter = helloWorldApi.contracts.greeter.load(receipt.contractAddress)
+        assertThat(greeter.greet()).isEqualTo("Test greeter")
+
+        greeter.newGreeting(NewGreetingParameters("Test new greeter"))
+        assertThat(greeter.greet()).isEqualTo("Test new greeter")
     }
 }
