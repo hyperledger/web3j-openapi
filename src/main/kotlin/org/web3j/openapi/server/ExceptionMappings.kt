@@ -10,10 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.server
+package org.web3j.openapi.server
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import org.eclipse.jetty.http.HttpStatus
+import org.web3j.openapi.ErrorResponse
+import org.web3j.tx.exceptions.ContractCallException
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.HttpHeaders
@@ -49,6 +51,7 @@ sealed class BaseExceptionMapper<E : Throwable>(
 
 class JsonMappingExceptionMapper : BaseExceptionMapper<JsonMappingException>(Status.BAD_REQUEST)
 class IllegalArgumentExceptionMapper : BaseExceptionMapper<IllegalArgumentException>(CustomStatus.UNPROCESSABLE_ENTITY)
+class ContractCallExceptionMapper : BaseExceptionMapper<ContractCallException>(CustomStatus.UNPROCESSABLE_ENTITY)
 
 enum class CustomStatus(
     private val _statusCode: Int,

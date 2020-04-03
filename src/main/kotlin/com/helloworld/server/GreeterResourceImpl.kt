@@ -10,43 +10,32 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.server
+package com.helloworld.server
 
+import com.helloworld.api.GreeterResource
+import com.helloworld.api.model.GreeterDeployParameters
+import com.helloworld.api.model.NewGreetingParameters
 import mu.KLogging
-import org.web3j.api.model.GreeterDeployParameters
-import org.web3j.api.model.NewGreetingParameters
 import org.web3j.crypto.Credentials
 import org.web3j.greeter.Greeter
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.methods.response.TransactionReceipt
-import org.web3j.protocol.http.HttpService
-import org.web3j.tx.RawTransactionManager
 import org.web3j.tx.TransactionManager
-import org.web3j.tx.gas.DefaultGasProvider
+import org.web3j.tx.gas.ContractGasProvider
 
-class GreeterResourceImpl : org.web3j.api.GreeterResource {
+class GreeterResourceImpl(
+    private val web3j: Web3j,
+    private val credentials: Credentials,
+    private val transactionManager: TransactionManager,
+    private val defaultGasProvider: ContractGasProvider
+) : GreeterResource {
 
-    private val credentials = Credentials
-        .create("0x19FF26B1B1263874C18A1B2AB0DAE3E37BD0944E981B308462FD08824BAA2C63")
-
-    private val web3j: Web3j
-
-    private val transactionManager: TransactionManager
-
-    private val defaultGasProvider = DefaultGasProvider()
-
-    init {
-        web3j = Web3j.build(HttpService("https://rinkeby.infura.io/v3/3ab1d29a341d448c8453c5835080dc2a"))
-
-        transactionManager = RawTransactionManager(web3j, credentials)
-    }
-
-    override fun deploy(greeterDeployParameters: GreeterDeployParameters): TransactionReceipt {
+    override fun deploy(greetingParameters: GreeterDeployParameters): TransactionReceipt {
         val greeter = Greeter.deploy(
             web3j,
             transactionManager,
             defaultGasProvider,
-            greeterDeployParameters.greeting
+            greetingParameters.greeting
         ).send()
 
         return greeter.transactionReceipt.get()
