@@ -10,38 +10,29 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.api
+package com.helloworld.api
 
-import org.web3j.api.model.GreeterDeployParameters
-import org.web3j.api.model.NewGreetingParameters
+import com.helloworld.api.model.GreeterDeployParameters
+import org.web3j.openapi.ContractLifecycle
+import org.web3j.openapi.server.CONTRACT_ADDRESS
+import org.web3j.openapi.server.CONTRACT_ADDRESS_PATH
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
-import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Path("/api/contracts")
-interface GreeterResource {
+@Generated
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+interface GreeterLifecycle : ContractLifecycle<GreeterDeployParameters, GreeterResource> {
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    fun deploy(greetingParameters: GreeterDeployParameters): TransactionReceipt
+    override fun deploy(parameters: GreeterDeployParameters): TransactionReceipt
 
-    @POST
-    @Path("{contractAddress}/newGreeting")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    fun newGreeting(
-        @PathParam("contractAddress") contractAddress: String,
-        newGreetingParameters: NewGreetingParameters
-    ): TransactionReceipt
-
-    @GET
-    @Path("{contractAddress}/greet")
-    @Produces(MediaType.TEXT_PLAIN)
-    fun greet(@PathParam("contractAddress") contractAddress: String): String
+    @Path(CONTRACT_ADDRESS_PATH)
+    override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): GreeterResource
 }

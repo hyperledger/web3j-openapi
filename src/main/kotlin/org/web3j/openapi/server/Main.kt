@@ -10,8 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.server
+package org.web3j.openapi.server
 
+import com.helloworld.server.HelloWorldApiImpl
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
@@ -20,9 +21,14 @@ import org.glassfish.jersey.servlet.ServletContainer
 import kotlin.system.exitProcess
 
 fun main() {
-    val resourceConfig = Web3jResourceConfig().apply {
-        // FIXME Load contract resource classes from eg. command line
-        registerClasses(GreeterResourceImpl::class.java)
+
+    // FIXME Load contract resources, etc. from args
+    val resourceConfig = Config(
+        "Web3j Open API Greeter PoC",
+        "https://rinkeby.infura.io/v3/3ab1d29a341d448c8453c5835080dc2a",
+        "0x19FF26B1B1263874C18A1B2AB0DAE3E37BD0944E981B308462FD08824BAA2C63"
+    ).apply {
+        registerClasses(HelloWorldApiImpl::class.java)
     }
 
     val servletHolder = ServletHolder(ServletContainer(resourceConfig)).apply {
