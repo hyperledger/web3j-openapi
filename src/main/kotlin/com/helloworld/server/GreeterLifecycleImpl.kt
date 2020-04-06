@@ -30,7 +30,6 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 class GreeterLifecycleImpl(
     private val web3j: Web3j,
-    private val credentials: Credentials,
     private val transactionManager: TransactionManager,
     private val defaultGasProvider: ContractGasProvider
 ) : GreeterLifecycle {
@@ -47,6 +46,6 @@ class GreeterLifecycleImpl(
     }
 
     override fun load(contractAddress: String) = GreeterResourceImpl(
-        Greeter.load(contractAddress, web3j, credentials, defaultGasProvider)
+        Greeter.load(contractAddress, web3j, transactionManager, defaultGasProvider)
     )
 }

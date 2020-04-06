@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType
 interface GreeterResource {
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("newGreeting")
     fun newGreeting(newGreetingParameters: NewGreetingParameters): TransactionReceipt
 

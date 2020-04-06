@@ -31,6 +31,6 @@ class HelloWorldApiImpl @Inject constructor(
 ) : Web3jOpenApi {
 
     override val contracts = HelloWorldContractResourceImpl(
-        web3j, credentials, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
+        web3j, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
     )
 }

@@ -24,13 +24,12 @@ import javax.annotation.processing.Generated
 @Generated
 class HelloWorldContractResourceImpl(
     web3j: Web3j,
-    credentials: Credentials,
     transactionManager: TransactionManager,
     defaultGasProvider: ContractGasProvider,
     uriInfo: ExtendedUriInfo
 ) : HelloWorldContractResource, ContractResourceImpl(uriInfo) {
 
-    override val greeter = GreeterLifecycleImpl(web3j, credentials, transactionManager, defaultGasProvider)
+    override val greeter = GreeterLifecycleImpl(web3j, transactionManager, defaultGasProvider)
 
     // TODO Generate other contracts here
 }
