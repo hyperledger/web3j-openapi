@@ -14,7 +14,6 @@ package com.helloworld.server
 
 import com.helloworld.api.GreeterLifecycle
 import com.helloworld.api.model.GreeterDeployParameters
-import org.web3j.crypto.Credentials
 import org.web3j.greeter.Greeter
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.methods.response.TransactionReceipt

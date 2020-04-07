@@ -14,7 +14,6 @@ package com.helloworld.server
 
 import com.helloworld.api.HelloWorldContractResource
 import org.glassfish.jersey.server.ExtendedUriInfo
-import org.web3j.crypto.Credentials
 import org.web3j.openapi.server.ContractResourceImpl
 import org.web3j.protocol.Web3j
 import org.web3j.tx.TransactionManager

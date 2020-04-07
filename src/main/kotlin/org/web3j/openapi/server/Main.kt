@@ -17,7 +17,6 @@ import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
-import org.glassfish.jersey.server.ServerProperties
 import org.glassfish.jersey.servlet.ServletContainer
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
@@ -26,7 +25,6 @@ import kotlin.system.exitProcess
 @Context lateinit var servletConfig: ServletConfig
 
 fun main() {
-
 
     // FIXME Load contract resources, etc. from args
     val resourceConfig = Config(
@@ -37,10 +35,7 @@ fun main() {
         registerClasses(HelloWorldApiImpl::class.java, OpenApiResource::class.java)
     }
 
-    val servletHolder = ServletHolder(ServletContainer(resourceConfig)).apply {
-        setInitParameter(ServerProperties.PROVIDER_PACKAGES, "org.web3j.server")
-        initOrder = 0
-    }
+    val servletHolder = ServletHolder(ServletContainer(resourceConfig))
 
     val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
         addServlet(servletHolder, "/*")

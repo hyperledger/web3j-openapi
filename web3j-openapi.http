@@ -1,4 +1,8 @@
-### Test requests for Web3j Open API PoC 
+### Test requests for Web3j Open API PoC
+
+GET http://localhost:8080/openapi.json
+
+###
 
 GET http://localhost:8080/api/contracts
 
