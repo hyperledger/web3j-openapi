@@ -14,7 +14,6 @@ package com.helloworld.server
 
 import com.helloworld.api.GreeterResource
 import com.helloworld.api.model.NewGreetingParameters
-import org.web3j.greeter.Greeter
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 
 class GreeterResourceImpl(private val greeter: Greeter) : GreeterResource {
