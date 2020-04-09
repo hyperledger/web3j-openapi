@@ -3,8 +3,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.25.0"
 }
 
-group 'org.web3j'
-version '1.0-SNAPSHOT'
+
 
 repositories {
     mavenLocal()

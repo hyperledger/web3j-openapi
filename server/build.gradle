@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':helloworld')
+//    implementation project(':helloworld')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
@@ -63,8 +63,8 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2:2.1.2"
     implementation "io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.1.2"
 
-    testImplementation project(':helloworld')
-    testImplementation project(':openapi')
+//    testImplementation project(':helloworld')
+//    testImplementation project(':openapi')
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
 }
 
