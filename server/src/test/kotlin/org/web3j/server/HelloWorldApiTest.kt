@@ -10,11 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.helloworld.api
+package org.web3j.server
 
 import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.isEqualTo
+import com.helloworld.api.HelloWorldApi
 import com.helloworld.api.model.GreeterDeployParameters
 import com.helloworld.api.model.NewGreetingParameters
 import org.junit.jupiter.api.BeforeEach
