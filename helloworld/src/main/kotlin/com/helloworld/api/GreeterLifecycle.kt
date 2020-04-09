@@ -13,6 +13,8 @@
 package com.helloworld.api
 
 import com.helloworld.api.model.GreeterDeployParameters
+import org.web3j.openapi.core.CONTRACT_ADDRESS
+import org.web3j.openapi.core.CONTRACT_ADDRESS_PATH
 import org.web3j.openapi.core.ContractLifecycle
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import javax.annotation.processing.Generated
