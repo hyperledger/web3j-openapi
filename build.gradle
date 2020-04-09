@@ -19,7 +19,7 @@ ext {
     web3jVersion = "4.5.16"
     bouncycastleVersion = '1.61'
     slf4jVersion = '1.7.25'
-
+    // test
     junitVersion = '5.5.2'
     logbackVersion = '1.2.3'
     mockitoJunitVersion = "3.1.0"

@@ -1,30 +1,9 @@
 dependencies {
-    implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
 
-    implementation "org.glassfish.jersey.containers:jersey-container-jetty-http:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet-core:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
-    implementation "org.glassfish.jersey.ext:jersey-bean-validation:2.29"
-    implementation "org.glassfish.jersey.core:jersey-client:2.29"
-    implementation "org.glassfish.jersey.ext:jersey-proxy-client:2.29"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:2.29"
+    implementation 'org.web3j:core:4.5.12'
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.29"
-
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7"
-
     implementation "ch.qos.logback:logback-classic:1.2.3"
     implementation "org.slf4j:jul-to-slf4j:1.7.25"
-    implementation 'io.github.microutils:kotlin-logging:1.7.9'
-
-    implementation "org.eclipse.jetty:jetty-server:9.4.27.v20200227"
-    implementation "org.eclipse.jetty:jetty-servlet:9.4.27.v20200227"
-
-    implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
-    implementation "io.swagger.core.v3:swagger-core:2.1.2"
-    implementation "io.swagger.core.v3:swagger-project:2.1.2"
-    implementation "io.swagger.core.v3:swagger-models:2.1.2"
-    implementation "io.swagger.core.v3:swagger-jaxrs2:2.1.2"
-    implementation "io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.1.2"
 
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
 }
