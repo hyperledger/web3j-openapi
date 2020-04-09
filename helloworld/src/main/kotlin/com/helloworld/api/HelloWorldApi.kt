@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Contact
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.web3j.openapi.Web3jOpenApi
+import org.web3j.openapi.core.Web3jOpenApi
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.Path

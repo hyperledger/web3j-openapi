@@ -1,7 +1,25 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.3.71'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.1.2"
+    id 'org.hidetake.swagger.generator' version '2.18.2'
     id 'org.web3j' version '4.5.11'
+}
+
+
+resolve {
+    outputFileName = 'Web3jContractApi'
+    outputFormat = 'JSON'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    resourcePackages = ['com.helloworld.api']
+    outputDir = file("$buildDir/generated/")
+}
+
+swaggerSources {
+    Web3jContractApi {
+        inputFile = file("$buildDir/generated/Web3jContractApi.json")
+    }
 }
 
 group 'org.web3j'
@@ -14,6 +32,8 @@ repositories {
 }
 
 dependencies {
+    implementation project(':helloworld')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
@@ -43,6 +63,8 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2:2.1.2"
     implementation "io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.1.2"
 
+    testImplementation project(':helloworld')
+    testImplementation project(':openapi')
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
 }
 

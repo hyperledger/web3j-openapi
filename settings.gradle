@@ -1,3 +1,4 @@
 rootProject.name = 'web3j-openapi-poc'
+include 'server'
 include 'openapi'
 include 'helloworld'

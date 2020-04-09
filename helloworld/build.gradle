@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':openapi')
+    implementation project(':openapi')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
@@ -34,7 +34,18 @@ dependencies {
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
+    dependsOn 'generateContractWrappers'
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+    dependsOn 'generateTestContractWrappers'
+}
+
+web3j {
+    generatedPackageName = "org.web3j.{0}"
+}
+
+sourceSets {
+    main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
+    test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
 }

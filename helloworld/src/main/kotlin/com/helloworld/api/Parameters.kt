@@ -12,20 +12,6 @@
  */
 package com.helloworld.api
 
-import org.web3j.openapi.core.ContractResource
-import javax.annotation.processing.Generated
-import javax.ws.rs.Consumes
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
-
-@Generated
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-interface HelloWorldContractResource : ContractResource {
-
-    @get:Path("Greeter")
-    val greeter: GreeterLifecycle
-
-    // TODO Add other contracts here
-}
+const val HEX_40 = "0x[a-f0-9]{40}"
+const val CONTRACT_ADDRESS = "contractAddress"
+const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40}"
