@@ -10,14 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.helloworld.server
+package org.web3j.openapi.helloworld.server
 
-import com.helloworld.api.GreeterResource
-import com.helloworld.api.model.NewGreetingParameters
+import org.web3j.openapi.helloworld.api.GreeterResource
+import org.web3j.openapi.helloworld.api.model.NewGreetingParameters
 import org.web3j.greeter.Greeter
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 
-class GreeterResourceImpl(private val greeter: Greeter) : GreeterResource {
+class GreeterResourceImpl(private val greeter: Greeter) :
+    GreeterResource {
 
     override fun newGreeting(newGreetingParameters: NewGreetingParameters): TransactionReceipt {
         return greeter.newGreeting(newGreetingParameters.greeting).send()

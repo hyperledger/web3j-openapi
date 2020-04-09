@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-//    implementation project(':openapi')
+    api project(':web3j-openapi-core')
 
     implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
 

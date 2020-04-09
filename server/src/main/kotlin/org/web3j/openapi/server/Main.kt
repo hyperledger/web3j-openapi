@@ -12,12 +12,12 @@
  */
 package org.web3j.openapi.server
 
-import com.helloworld.server.HelloWorldApiImpl
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
+import org.web3j.openapi.helloworld.server.HelloWorldApiImpl
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
 import kotlin.system.exitProcess
