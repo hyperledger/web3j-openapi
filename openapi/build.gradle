@@ -1,21 +1,4 @@
-plugins {
-    id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.71'
-    id 'org.web3j' version '4.5.11'
-}
-
-group 'org.web3j'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
     implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
 
     implementation "org.glassfish.jersey.containers:jersey-container-jetty-http:2.29"
@@ -44,11 +27,4 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.1.2"
 
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
 }

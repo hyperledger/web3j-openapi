@@ -1,33 +1,24 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
+    }
+}
+
 plugins {
     id 'de.undercouch.download' version '4.0.0'
     id "com.diffplug.gradle.spotless" version "3.25.0"
 }
 
-
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
-}
-
 ext {
     web3jVersion = "4.5.16"
     bouncycastleVersion = '1.61'
-    jacksonVersion = '2.8.5'
-    javaPoetVersion = '1.7.0'
-    kotlinPoetVersion = '1.5.0'
-    jnr_unixsocketVersion = '0.21'
-    okhttpVersion = '4.3.1'
-    rxjavaVersion = '2.2.2'
     slf4jVersion = '1.7.25'
-    javaWebSocketVersion = '1.3.8'
-    picocliVersion = '3.0.0'
-    web3jUnitVersion = version
-    // test dependencies
-    equalsverifierVersion = '3.1.10'
+
     junitVersion = '5.5.2'
-    junitBenchmarkVersion = '0.7.2'
     logbackVersion = '1.2.3'
     mockitoJunitVersion = "3.1.0"
     junitPlatformLauncherVersion = "1.5.2"
@@ -35,7 +26,15 @@ ext {
 
 
 
-allprojects {
+subprojects {
+
+    apply plugin: "kotlin"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
     apply {
         [
             'java',
@@ -53,13 +52,22 @@ allprojects {
     }
 
     dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
         testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
         testCompile "org.mockito:mockito-junit-jupiter:$mockitoJunitVersion"
     }
+
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    sourceCompatibility = 1.8
+
+
+
 }
-
-
-//sourceSets {
-//    main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
-//    test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
-//}
