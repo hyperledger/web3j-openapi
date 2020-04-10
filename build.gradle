@@ -13,7 +13,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.25.0"
 }
 
-description = 'Web3j-openapi project.'
+description = 'Web3j-openapi-poc project.'
 
 ext {
     web3jVersion = "4.5.16"

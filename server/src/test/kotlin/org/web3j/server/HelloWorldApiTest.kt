@@ -13,6 +13,7 @@
 package org.web3j.server
 
 import assertk.assertThat
+import assertk.assertions.containsOnly
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,7 +35,7 @@ class HelloWorldApiTest {
 
     @Test
     fun `list contracts`() {
-        // assertThat(helloWorldApi.contracts.findAll()).containsOnly("Greeter")
+        assertThat(helloWorldApi.contracts.findAll()).containsOnly("Greeter")
     }
 
     @Test
