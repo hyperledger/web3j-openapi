@@ -1,65 +1,76 @@
-plugins {
-    id 'org.web3j' version '4.5.11'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
-    id 'de.undercouch.download' version '4.0.0'
-}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-group 'org.web3j'
-version '1.0-SNAPSHOT'
-
-[
-        'bintray',
-        'jacoco',
-        'java',
-        'javadoc',
-        'publish',
-        'repositories',
-        'spotless'
-].each { buildScript ->
-    download {
-        src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
-        dest "$rootDir/gradle/$buildScript/build.gradle"
-        overwrite true
-        quiet true
-        onlyIfModified true
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.25.0"
 }
 
-dependencies {
-    implementation "org.glassfish.jersey.containers:jersey-container-jetty-http:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet-core:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
-    implementation "org.glassfish.jersey.core:jersey-client:2.29"
-    implementation "org.glassfish.jersey.ext:jersey-proxy-client:2.29"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:2.29"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.29"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7"
+description = 'Web3j-openapi-poc project.'
 
-//    implementation "org.glassfish.jersey:project:2.30.1"
-    implementation "org.eclipse.jetty:jetty-server:9.4.27.v20200227"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+ext {
+    web3jVersion = "4.5.16"
+    bouncycastleVersion = '1.61'
+    slf4jVersion = '1.7.25'
+    // test
+    junitVersion = '5.5.2'
+    logbackVersion = '1.2.3'
+    mockitoJunitVersion = "3.1.0"
+    junitPlatformLauncherVersion = "1.5.2"
 }
 
-test {
-    useJUnitPlatform()
-}
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-    dependsOn 'generateContractWrappers'
-}
 
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-    dependsOn 'generateTestContractWrappers'
-}
+subprojects {
 
-sourceSets {
-    main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
-    test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
+    apply plugin: "kotlin"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    apply {
+        [
+            'java',
+            'javadoc',
+            'repositories',
+            'spotless'
+        ].each { buildScript ->
+            from("$rootDir/gradle/$buildScript/build.gradle")
+        }
+    }
+
+    tasks.withType(Test) {
+        reports.html.destination = file("${reporting.baseDir}/${name}")
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation "io.github.microutils:kotlin-logging:1.6.10"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+        testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
+        testCompile "org.mockito:mockito-junit-jupiter:$mockitoJunitVersion"
+    }
+
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    sourceCompatibility = 1.8
+
+
+
 }

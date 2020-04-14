@@ -1,2 +1,13 @@
 rootProject.name = 'web3j-openapi-poc'
 
+include 'server'
+findProject(':server')?.name = 'web3j-openapi-poc-server'
+
+include 'core'
+findProject(':core')?.name = 'web3j-openapi-poc-core'
+
+include 'helloworld'
+findProject(':helloworld')?.name = 'web3j-openapi-poc-helloworld'
+
+include 'client'
+findProject(':client')?.name = 'web3j-openapi-poc-client'
