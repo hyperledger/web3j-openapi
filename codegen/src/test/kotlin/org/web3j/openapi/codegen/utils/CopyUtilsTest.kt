@@ -10,18 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.codegen.utils
 
-import javax.ws.rs.GET
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import assertk.assertThat
+import org.junit.jupiter.api.Test
+import org.web3j.openapi.codegen.Folders
+import java.io.File
 
-interface ContractResource {
+class CopyUtilsTest {
 
-    /**
-     * Lists all available contract types.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findAll(): List<String>
+    private val tempFolder = Folders.tempBuildFolder().canonicalPath
+
+    @Test
+    fun copyResourcesTest() {
+        CopyUtils.copyResource("build.gradle", File(tempFolder))
+        assertThat(File(tempFolder).listFiles().size == 1)
+    }
 }

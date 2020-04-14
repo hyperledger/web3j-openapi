@@ -10,19 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.codegen
 
-import org.glassfish.jersey.server.ExtendedUriInfo
-import org.glassfish.jersey.server.internal.routing.UriRoutingContext
-import org.glassfish.jersey.server.model.Resource
-import org.web3j.openapi.api.ContractResource
+import assertk.assertThat
+import org.junit.jupiter.api.Test
+import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 
-abstract class ContractResourceImpl(
-    private val uriInfo: ExtendedUriInfo
-) : ContractResource {
+class GradleResourceCopyTest {
+    private val tempFolder = Folders.tempBuildFolder()
 
-    override fun findAll(): List<String> {
-        val resourceClass = (uriInfo as UriRoutingContext).resourceClass
-        return Resource.builder(resourceClass).build().childResources.map { it.path }
+    @Test
+    fun copyProjectResourcesTest() {
+        GradleResourceCopy.copyProjectResources(tempFolder)
+        assertThat(tempFolder.listFiles().size == 6)
     }
 }

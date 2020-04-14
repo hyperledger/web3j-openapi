@@ -17,23 +17,11 @@ plugins {
     id "de.marcphilipp.nexus-publish" version '0.4.0'
 }
 
-description = 'Web3j-openapi-poc project.'
-
-ext {
-    web3jVersion = "4.5.16"
-    bouncycastleVersion = '1.61'
-    slf4jVersion = '1.7.25'
-    // test
-    junitVersion = '5.5.2'
-    logbackVersion = '1.2.3'
-    mockitoJunitVersion = "3.1.0"
-    junitPlatformLauncherVersion = "1.5.2"
-}
-
-
+description = 'Web3j-openapi project.'
 
 subprojects {
     apply plugin: "kotlin"
+    apply from: "$rootProject.projectDir/gradle/versions.gradle"
 
     repositories {
         mavenCentral()
@@ -68,11 +56,12 @@ subprojects {
 
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
-        implementation "io.github.microutils:kotlin-logging:1.6.10"
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+        implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
 
-        testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
-        testCompile "org.mockito:mockito-junit-jupiter:$mockitoJunitVersion"
+        testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
+        testImplementation "org.junit.jupiter:junit-jupiter:${versions.junitVersion}"
+        testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunitVersion}"
     }
 
 

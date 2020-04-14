@@ -10,19 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.codegen
 
-import org.glassfish.jersey.server.ExtendedUriInfo
-import org.glassfish.jersey.server.internal.routing.UriRoutingContext
-import org.glassfish.jersey.server.model.Resource
-import org.web3j.openapi.api.ContractResource
+import java.io.File
 
-abstract class ContractResourceImpl(
-    private val uriInfo: ExtendedUriInfo
-) : ContractResource {
-
-    override fun findAll(): List<String> {
-        val resourceClass = (uriInfo as UriRoutingContext).resourceClass
-        return Resource.builder(resourceClass).build().childResources.map { it.path }
+object Folders {
+    fun tempBuildFolder(): File {
+        val tmpTestLocation = File(
+            arrayOf(
+                "build",
+                "tmp",
+                "testing",
+                System.currentTimeMillis().toString()).joinToString(File.separator))
+        if (!tmpTestLocation.mkdirs()) throw Exception(
+            "Unable to create folder at " + tmpTestLocation.absolutePath)
+        return tmpTestLocation
     }
 }

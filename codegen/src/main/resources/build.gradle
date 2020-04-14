@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
+    }
+}
+
+plugins {
+    id 'de.undercouch.download' version '4.0.0'
+    id "com.diffplug.gradle.spotless" version "3.25.0"
+}
+
+description = 'generated web3j-openapi.'
+
+ext {
+    web3jVersion = "4.5.16"
+    bouncycastleVersion = '1.61'
+    slf4jVersion = '1.7.25'
+    // test
+    junitVersion = '5.5.2'
+    logbackVersion = '1.2.3'
+    mockitoJunitVersion = "3.1.0"
+    junitPlatformLauncherVersion = "1.5.2"
+}
+
+
+
+subprojects {
+
+    apply plugin: "kotlin"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    apply {
+        [
+            'java',
+            'javadoc',
+            'repositories',
+            'spotless'
+        ].each { buildScript ->
+            from("$rootDir/gradle/$buildScript/build.gradle")
+        }
+    }
+
+    tasks.withType(Test) {
+        reports.html.destination = file("${reporting.baseDir}/${name}")
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+        testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
+        testCompile "org.mockito:mockito-junit-jupiter:$mockitoJunitVersion"
+    }
+
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    sourceCompatibility = 1.8
+}

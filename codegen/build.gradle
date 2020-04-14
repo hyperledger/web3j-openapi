@@ -1,0 +1,24 @@
+dependencies {
+    implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
+        exclude group: 'org.apache.commons'
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'org.slf4j'
+    }
+
+    implementation "com.pinterest.ktlint:ktlint-ruleset-standard:${versions.ktlint}"
+    implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
+    implementation("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
+        exclude group: 'com.github.jknack'
+        exclude group: 'javax.activation'
+        exclude group: 'javax.validation'
+        exclude group: 'javax.xml.bind'
+    }
+}
+
+sourceSets {
+    main {
+        kotlin {
+            exclude "codegen/src/main/resources"
+        }
+    }
+}

@@ -10,19 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.api
 
-import org.glassfish.jersey.server.ExtendedUriInfo
-import org.glassfish.jersey.server.internal.routing.UriRoutingContext
-import org.glassfish.jersey.server.model.Resource
-import org.web3j.openapi.api.ContractResource
+import javax.ws.rs.GET
+import javax.ws.rs.Produces
+import javax.ws.rs.core.MediaType
 
-abstract class ContractResourceImpl(
-    private val uriInfo: ExtendedUriInfo
-) : ContractResource {
+interface ContractResource {
 
-    override fun findAll(): List<String> {
-        val resourceClass = (uriInfo as UriRoutingContext).resourceClass
-        return Resource.builder(resourceClass).build().childResources.map { it.path }
-    }
+    /**
+     * Lists all available contract types.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findAll(): List<String>
 }
