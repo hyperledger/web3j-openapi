@@ -1,114 +1,76 @@
-plugins {
-    id 'org.web3j' version '4.5.11'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
-    id 'de.undercouch.download' version '4.0.0'
-    id "com.diffplug.gradle.spotless" version "3.25.0"
-//    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.1.2"
-//    id 'org.hidetake.swagger.generator' version '2.18.2'
-}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-group 'org.web3j'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
-}
-
-//resolve {
-//    outputFileName = 'Web3jContractApi'
-//    outputFormat = 'JSON'
-//    prettyPrint = 'TRUE'
-//    classpath = sourceSets.main.runtimeClasspath
-//    resourcePackages = ['com.helloworld.api']
-//    outputDir = file("$buildDir/generated/")
-//}
-//
-//swaggerSources {
-//    Web3jContractApi {
-//        inputFile = file("$buildDir/generated/Web3jContractApi.json")
-//    }
-//}
-
-apply {
-    [
-        // We don't need to publish this for now
-        //            'bintray',
-        //            'publish',
-        'jacoco',
-        'java',
-        'javadoc',
-        'repositories',
-        'spotless'
-    ].each { buildScript ->
-        download {
-            src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
-            dest "$rootDir/gradle/$buildScript/build.gradle"
-            overwrite true
-            quiet true
-            onlyIfModified true
-        }
-        from("$rootDir/gradle/$buildScript/build.gradle")
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
     }
 }
 
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.25.0"
+}
+
+description = 'Web3j-openapi-poc project.'
+
 ext {
     web3jVersion = "4.5.16"
+    bouncycastleVersion = '1.61'
+    slf4jVersion = '1.7.25'
+    // test
+    junitVersion = '5.5.2'
+    logbackVersion = '1.2.3'
+    mockitoJunitVersion = "3.1.0"
+    junitPlatformLauncherVersion = "1.5.2"
 }
 
-dependencies {
-//    swaggerUI 'org.webjars:swagger-ui:3.18.2'
 
-    api "io.github.microutils:kotlin-logging:1.6.10"
 
-    implementation "org.glassfish.jersey.containers:jersey-container-jetty-http:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet-core:2.29"
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
-    implementation "org.glassfish.jersey.ext:jersey-bean-validation:2.29"
-    implementation "org.glassfish.jersey.core:jersey-client:2.29"
-    implementation "org.glassfish.jersey.ext:jersey-proxy-client:2.29"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:2.29"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.29"
+subprojects {
 
-    implementation "org.eclipse.jetty:jetty-server:9.4.27.v20200227"
-    implementation "org.eclipse.jetty:jetty-servlet:9.4.27.v20200227"
+    apply plugin: "kotlin"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.61"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.61"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7"
-    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
-    implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
-//    implementation "io.swagger.core.v3:swagger-core:2.1.2"
-//    implementation "io.swagger.core.v3:swagger-project:2.1.2"
-//    implementation "io.swagger.core.v3:swagger-models:2.1.2"
-    implementation "io.swagger.core.v3:swagger-jaxrs2:2.1.2"
-//    implementation "io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.1.2"
-    implementation "ch.qos.logback:logback-classic:1.2.3"
-    implementation "org.slf4j:jul-to-slf4j:1.7.25"
+    apply {
+        [
+            'java',
+            'javadoc',
+            'repositories',
+            'spotless'
+        ].each { buildScript ->
+            from("$rootDir/gradle/$buildScript/build.gradle")
+        }
+    }
 
-    implementation "org.web3j:core:$web3jVersion"
+    tasks.withType(Test) {
+        reports.html.destination = file("${reporting.baseDir}/${name}")
+        useJUnitPlatform()
+    }
 
-    testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.5.2"
-}
+    dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation "io.github.microutils:kotlin-logging:1.6.10"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-test {
-    useJUnitPlatform()
-}
+        testCompile "org.junit.jupiter:junit-jupiter:$junitVersion"
+        testCompile "org.mockito:mockito-junit-jupiter:$mockitoJunitVersion"
+    }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-    dependsOn 'generateContractWrappers'
-}
 
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-    dependsOn 'generateTestContractWrappers'
-}
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 
-sourceSets {
-    main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
-    test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
+    sourceCompatibility = 1.8
+
+
+
 }
