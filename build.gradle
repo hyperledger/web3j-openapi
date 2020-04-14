@@ -1,16 +1,8 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
-    }
-}
-
 plugins {
+    id 'java'
     id 'de.undercouch.download' version '4.0.0'
     id "com.diffplug.gradle.spotless" version "3.25.0"
+    id "org.jetbrains.kotlin.jvm" version "1.3.71"
 }
 
 description = 'Web3j-openapi-poc project.'
