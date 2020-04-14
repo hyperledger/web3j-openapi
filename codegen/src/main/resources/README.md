@@ -1,0 +1,1 @@
+Generated openapi project.

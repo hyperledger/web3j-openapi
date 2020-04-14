@@ -10,13 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.codegen.utils
 
-import org.web3j.protocol.core.methods.response.TransactionReceipt
+import assertk.assertThat
+import org.junit.jupiter.api.Test
+import org.web3j.openapi.codegen.Folders
+import java.io.File
 
-interface ContractLifecycle<P, R> {
+class CopyUtilsTest {
 
-    fun deploy(parameters: P): TransactionReceipt
+    private val tempFolder = Folders.tempBuildFolder().canonicalPath
 
-    fun load(contractAddress: String): R
+    @Test
+    fun copyResourcesTest() {
+        CopyUtils.copyResource("build.gradle", File(tempFolder))
+        assertThat(File(tempFolder).listFiles().size == 1)
+    }
 }

@@ -10,8 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.codegen
 
-const val HEX_40 = "0x[a-f0-9]{40}"
-const val CONTRACT_ADDRESS = "contractAddress"
-const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40}"
+interface AppGenerator {
+    fun generateAll()
+    fun generateClient()
+    fun generateServer()
+    fun generateCore()
+    fun generateContractsApi()
+    fun generateGradleResources()
+}

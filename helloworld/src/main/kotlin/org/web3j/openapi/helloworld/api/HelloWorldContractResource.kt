@@ -12,7 +12,7 @@
  */
 package org.web3j.openapi.helloworld.api
 
-import org.web3j.openapi.core.ContractResource
+import org.web3j.openapi.api.ContractResource
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.Path
