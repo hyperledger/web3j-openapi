@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    api project(':web3j-openapi-poc-client')
-    api project(':web3j-openapi-poc-helloworld')
+    implementation project(':web3j-openapi-poc-client')
+    implementation project(':web3j-openapi-poc-helloworld')
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
     implementation "org.glassfish.jersey.inject:jersey-hk2:2.29"
