@@ -1,5 +1,14 @@
-include 'client'
-include 'server'
-include 'core'
-include 'contracts'
 include 'utils'
+findProject(':utils')?.name = 'openapi-generated-utils'
+
+include 'core'
+findProject(':core')?.name = 'openapi-generated-core'
+
+include 'contracts'
+findProject(':contracts')?.name = 'openapi-generated-contracts'
+
+include 'server'
+findProject(':server')?.name = 'openapi-generated-server'
+
+include 'client'
+findProject(':client')?.name = 'openapi-generated-client'

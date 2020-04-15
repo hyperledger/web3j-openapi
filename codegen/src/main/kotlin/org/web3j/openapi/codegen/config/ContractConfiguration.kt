@@ -4,6 +4,6 @@ import java.io.File
 
 data class ContractConfiguration(
     val abiFile: File,
-    val basePackageName: String
+    val contractName: String
 ) {
 }
