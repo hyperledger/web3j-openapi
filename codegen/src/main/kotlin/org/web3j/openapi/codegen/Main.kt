@@ -1,5 +1,6 @@
 package org.web3j.openapi.codegen
 
+import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import java.io.File
@@ -22,7 +23,17 @@ fun main() {
     val configuration = GeneratorConfiguration(
         "testApp",
         "com.app.test",
-        "/home/chamirachid/tmp/openapi/ClientTest"
+        "/home/chamirachid/tmp/openapi/ClientTest",
+        listOf(
+            ContractConfiguration(
+                File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"),
+                "Something"
+            ),
+            ContractConfiguration(
+                File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"),
+                "Somehow"
+            )
+        )
     )
     val generator = Generator(configuration)
     generator.generateAll()
