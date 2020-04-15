@@ -17,6 +17,7 @@ interface AppGenerator {
     fun generateClient()
     fun generateServer()
     fun generateCore()
-    fun generateContractsApi()
+    fun generateContracts()
     fun generateGradleResources()
+    fun generateUtils()
 }
