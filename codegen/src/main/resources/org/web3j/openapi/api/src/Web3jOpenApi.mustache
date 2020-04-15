@@ -12,27 +12,37 @@
  */
 package org.web3j.openapi.helloworld.api
 
-import org.web3j.openapi.core.CONTRACT_ADDRESS
-import org.web3j.openapi.core.CONTRACT_ADDRESS_PATH
-import org.web3j.openapi.core.ContractLifecycle
-import org.web3j.openapi.helloworld.api.model.GreeterDeployParameters
-import org.web3j.protocol.core.methods.response.TransactionReceipt
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Contact
+import io.swagger.v3.oas.annotations.info.Info
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.web3j.openapi.core.Web3jOpenApi
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
-import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Generated
+@Path("/api")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface GreeterLifecycle : ContractLifecycle<GreeterDeployParameters, GreeterResource> {
+@OpenAPIDefinition(
+    info = Info(
+        title = "Web3j Hello World PoC",
+        contact = Contact(
+            name = "Ivaylo",
+            email = "hi@web3labs.com",
+            url = "http://web3labs.com"
+        )
+    ),
+    tags = [
+        Tag(name = "web3j"),
+        Tag(name = "ethereum")
+    ]
+)
+@Generated
+interface HelloWorldApi : Web3jOpenApi {
 
-    @POST
-    override fun deploy(parameters: GreeterDeployParameters): TransactionReceipt
-
-    @Path(CONTRACT_ADDRESS_PATH)
-    override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): GreeterResource
+    @get:Path("contracts")
+    override val contracts: HelloWorldContractResource
 }
