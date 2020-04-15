@@ -16,6 +16,7 @@ import org.web3j.openapi.codegen.client.ClientGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.core.CoreGenerator
 import org.web3j.openapi.codegen.gradle.GradleResourceCopy
+import org.web3j.openapi.codegen.utilsModule.UtilsGenerator
 import java.io.File
 
 class Generator(
@@ -27,6 +28,7 @@ class Generator(
         generateCore()
 //        generateContractsApi()
         generateGradleResources()
+        generateUtils()
     }
 
     override fun generateClient() {
@@ -43,11 +45,16 @@ class Generator(
         coreGenerator.generate()
     }
 
-    override fun generateContractsApi() {
+    override fun generateContracts() {
         TODO("Not yet implemented")
     }
 
     override fun generateGradleResources() {
         GradleResourceCopy.copyProjectResources(File(configuration.outputDir))
+    }
+
+    override fun generateUtils() {
+        val utilsGenerator = UtilsGenerator(configuration)
+        utilsGenerator.generate()
     }
 }
