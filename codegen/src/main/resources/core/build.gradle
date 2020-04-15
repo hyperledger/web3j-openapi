@@ -1,4 +1,4 @@
-package org.web3j.openapi.api
+package api
 
 dependencies {
     implementation "org.web3j:core:4.5.12"

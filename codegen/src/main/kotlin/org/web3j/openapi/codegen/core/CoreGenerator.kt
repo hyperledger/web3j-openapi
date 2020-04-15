@@ -27,7 +27,7 @@ class CoreGenerator(
 
     override fun generate() {
         val packageDir = configuration.packageName.split(".").joinToString("/")
-        val folderPath = CopyUtils.createTree("org/web3j/openapi/api", packageDir, configuration.outputDir)
+        val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
         val context = setContext()
         copySources(context, folderPath)
@@ -40,8 +40,8 @@ class CoreGenerator(
     private fun copyGradleFile(folderPath: String) {
         logger.debug("Copying core/build.gradle")
         CopyUtils.copyResource(
-            "org/web3j/openapi/api/build.gradle",
-            File(folderPath.substringBefore("org/web3j/openapi/api")))
+            "core/build.gradle",
+            File(folderPath.substringBefore("core")))
     }
 
     private fun copySources(context: HashMap<String, Any>, folderPath: String) {
