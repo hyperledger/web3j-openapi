@@ -10,18 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.api
+package org.web3j.openapi.core
 
-import javax.ws.rs.GET
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import org.web3j.protocol.core.methods.response.TransactionReceipt
 
-interface ContractResource {
+interface ContractLifecycle<P, R> {
 
-    /**
-     * Lists all available contract types.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findAll(): List<String>
+    fun deploy(parameters: P): TransactionReceipt
+
+    fun load(contractAddress: String): R
 }

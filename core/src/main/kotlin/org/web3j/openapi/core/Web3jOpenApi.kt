@@ -10,29 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.helloworld.api
+package org.web3j.openapi.core
 
-import org.web3j.openapi.core.CONTRACT_ADDRESS
-import org.web3j.openapi.core.CONTRACT_ADDRESS_PATH
-import org.web3j.openapi.core.ContractLifecycle
-import org.web3j.openapi.helloworld.api.model.GreeterDeployParameters
-import org.web3j.protocol.core.methods.response.TransactionReceipt
-import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
-import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Generated
+/**
+ * Entry point for a generated Web3j Open API.
+ *
+ * A Web3j Open API generation can contains multiple contracts.
+ * This class will contain all generated contracts as sub-resources.
+ */
+@Path("/api")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface GreeterLifecycle : ContractLifecycle<GreeterDeployParameters, GreeterResource> {
+interface Web3jOpenApi {
 
-    @POST
-    override fun deploy(parameters: GreeterDeployParameters): TransactionReceipt
-
-    @Path(CONTRACT_ADDRESS_PATH)
-    override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): GreeterResource
+    /**
+     * Generated applications override this property to add a custom resource containing all contract types.
+     */
+    @get:Path("contracts")
+    val contracts: ContractResource
 }

@@ -12,5 +12,6 @@ findProject(':client')?.name = 'web3j-openapi-client'
 include 'codegen'
 findProject(':codegen')?.name = 'web3j-openapi-codegen'
 
-include 'api'
-findProject(':api')?.name = 'web3j-openapi-api'
+include 'utils'
+findProject(':utils')?.name = 'web3j-openapi-utils'
+

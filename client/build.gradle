@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(":web3j-openapi-core")
+    implementation project(":web3j-openapi-utils")
 
     implementation "org.glassfish.jersey.core:jersey-client:${versions.jerseyClientVersion}"
     implementation "org.glassfish.jersey.ext:jersey-proxy-client:${versions.jerseyProxyClientVersion}"

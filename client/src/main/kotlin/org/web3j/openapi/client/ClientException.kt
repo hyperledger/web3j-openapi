@@ -12,7 +12,7 @@
  */
 package org.web3j.openapi.client
 
-import org.web3j.openapi.core.ErrorResponse
+import org.web3j.openapi.utils.ErrorResponse
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.core.MediaType
 

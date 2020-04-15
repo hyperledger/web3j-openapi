@@ -10,27 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.api
+package org.web3j.openapi.core
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.Path
+import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-/**
- * Entry point for a generated Web3j Open API.
- *
- * A Web3j Open API generation can contains multiple contracts.
- * This class will contain all generated contracts as sub-resources.
- */
-@Path("/api")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-interface Web3jOpenApi {
+interface ContractResource {
 
     /**
-     * Generated applications override this property to add a custom resource containing all contract types.
+     * Lists all available contract types.
      */
-    @get:Path("contracts")
-    val contracts: ContractResource
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findAll(): List<String>
 }

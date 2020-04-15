@@ -15,7 +15,7 @@ package org.web3j.openapi.server
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.glassfish.jersey.server.internal.routing.UriRoutingContext
 import org.glassfish.jersey.server.model.Resource
-import org.web3j.openapi.api.ContractResource
+import org.web3j.openapi.core.ContractResource
 
 abstract class ContractResourceImpl(
     private val uriInfo: ExtendedUriInfo

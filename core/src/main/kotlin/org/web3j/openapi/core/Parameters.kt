@@ -10,13 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package {{packageName}}.core
+package org.web3j.openapi.core
 
-import org.web3j.protocol.core.methods.response.TransactionReceipt
-
-interface ContractLifecycle<P, R> {
-
-    fun deploy(parameters: P): TransactionReceipt
-
-    fun load(contractAddress: String): R
-}
+const val HEX_40 = "0x[a-f0-9]{40}"
+const val CONTRACT_ADDRESS = "contractAddress"
+const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40}"
