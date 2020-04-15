@@ -22,6 +22,7 @@ object GradleResourceCopy {
         CopyUtils.copyResource("gradlew.bat", outputDir)
         CopyUtils.copyResource("gradlew", outputDir)
         CopyUtils.copyResource("build.gradle", outputDir)
+        CopyUtils.copyResource("versions.properties", outputDir)
 
         File("${outputDir.toURI().path}${File.separator}gradlew").setExecutable(true)
 
@@ -31,6 +32,8 @@ object GradleResourceCopy {
             "gradle-wrapper.properties",
             gradleFolder
         )
+
+        CopyUtils.copyResource("versions.properties", File("$outputDir${File.separator}gradle"))
         CopyUtils.copyResource("README.md", outputDir)
     }
 }

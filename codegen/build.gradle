@@ -13,6 +13,8 @@ dependencies {
         exclude group: 'javax.validation'
         exclude group: 'javax.xml.bind'
     }
+
+    implementation "org.web3j:codegen:4.5.17"
 }
 
 sourceSets {
