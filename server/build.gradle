@@ -3,9 +3,9 @@ plugins {
 }
 
 dependencies {
-    api project(':web3j-openapi-core')
-
-    implementation "org.aeonbits.owner:owner:1.0.11"
+    implementation project(':web3j-openapi-helloworld')
+    implementation project(':web3j-openapi-core')
+    implementation project(':web3j-openapi-utils')
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
     implementation "org.glassfish.jersey.inject:jersey-hk2:2.29"
