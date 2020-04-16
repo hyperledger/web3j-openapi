@@ -12,8 +12,6 @@
  */
 package org.web3j.openapi.codegen.client
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.CopyUtils
@@ -21,13 +19,13 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 class ClientGenerator(
-    private val configuration: GeneratorConfiguration
-) : DefaultGenerator {
-    private val logger: Logger = LoggerFactory.getLogger(ClientGenerator::class.java)
+    override val configuration: GeneratorConfiguration
+) : DefaultGenerator(
+    configuration
+) {
+    override val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
 
     override fun generate() {
-        val packageDir = configuration.packageName.split(".").joinToString("/")
-        val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
         val context = setContext()
         copySources(context, folderPath)

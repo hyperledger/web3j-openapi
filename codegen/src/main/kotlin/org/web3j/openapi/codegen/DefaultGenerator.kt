@@ -12,6 +12,18 @@
  */
 package org.web3j.openapi.codegen
 
-interface DefaultGenerator {
-    fun generate()
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.web3j.openapi.codegen.config.GeneratorConfiguration
+
+abstract class DefaultGenerator(
+    open val configuration: GeneratorConfiguration
+) {
+    val packageDir = configuration.packageName.split(".").joinToString("/")
+
+    val logger: Logger = LoggerFactory.getLogger(DefaultGenerator::class.java)
+
+    abstract val folderPath: String
+
+    abstract fun generate()
 }

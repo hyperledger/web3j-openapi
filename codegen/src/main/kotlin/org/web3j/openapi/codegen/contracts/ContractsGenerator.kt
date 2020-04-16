@@ -10,27 +10,33 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 
-class ContractGenerator(
-    private val configuration: GeneratorConfiguration
-) : DefaultGenerator {
-    private val logger: Logger = LoggerFactory.getLogger(ClientGenerator::class.java)
+class ContractsGenerator(
+    override val configuration: GeneratorConfiguration
+) : DefaultGenerator(
+    configuration
+) {
+    override val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
 
     override fun generate() {
-        val packageDir = configuration.packageName.split(".").joinToString("/")
-
-        val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
         configuration.contracts.forEach {
-            logger.debug("Creating ${it.contractDetails.capitalizedContractName()} folder")
-            File("$folderPath${File.separator}${it.contractDetails.capitalizedContractName()}").apply { mkdirs() }
+            logger.debug("Creating ${it.contractDetails.capitalizedContractName()} folders")
+            File("$folderPath${File.separator}${it.contractDetails.capitalizedContractName()}${File.separator}api${File.separator}model")
+                .apply {
+                    mkdirs()
+                }
+            File("$folderPath${File.separator}${it.contractDetails.capitalizedContractName()}${File.separator}server")
+                .apply {
+                    mkdirs()
+                }
         }
 
-        copyGradleFile(folderPath)
+        copyGradleFile()
         val context = setContext()
-        copySources(context, folderPath)
-        generateContractsApi(context, folderPath)
+        copySources(context)
+        generateContractsApi(context)
     }
 
-    private fun generateContractsApi(context: HashMap<String, Any>, folderPath: String) {
+    private fun generateContractsApi(context: HashMap<String, Any>) {
 
     }
 
@@ -41,7 +47,7 @@ class ContractGenerator(
         )
     }
 
-    private fun copyGradleFile(folderPath: String) {
+    private fun copyGradleFile() {
         logger.debug("Copying contracts/build.gradle")
         CopyUtils.copyResource(
             "contracts/build.gradle",
@@ -49,7 +55,7 @@ class ContractGenerator(
         )
     }
 
-    private fun copySources(context: HashMap<String, Any>, folderPath: String) {
+    private fun copySources(context: HashMap<String, Any>) {
         File("codegen/src/main/resources/contracts/src/")
             .listFiles()
             ?.forEach { it ->

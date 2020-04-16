@@ -1,7 +1,10 @@
-package org.web3j.openapi.codegen.contracts
+package org.web3j.openapi.codegen.config
+
+import org.web3j.protocol.core.methods.response.AbiDefinition
 
 class ContractDetails(
-    private val contractName: String
+    val contractName: String,
+    val functionsDefintion: List<AbiDefinition>
 ) {
     fun lowerCaseContractName(): String{
         return contractName.toLowerCase()
