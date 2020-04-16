@@ -19,7 +19,7 @@ import {{packageName}}.core.ContractResource
 
 abstract class ContractResourceImpl(
 private val uriInfo: ExtendedUriInfo
-) : ContractResource {
+) : ContractsResource {
 
 override fun findAll(): List<String> {
     val resourceClass = (uriInfo as UriRoutingContext).resourceClass
