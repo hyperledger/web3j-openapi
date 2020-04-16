@@ -19,7 +19,7 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 abstract class DefaultGenerator(
     open val configuration: GeneratorConfiguration
 ) {
-    val packageDir = configuration.packageName.split(".").joinToString("/")
+    abstract val packageDir: String
 
     val logger: Logger = LoggerFactory.getLogger(DefaultGenerator::class.java)
 

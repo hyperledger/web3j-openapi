@@ -33,7 +33,7 @@ object GradleResourceCopy {
             gradleFolder
         )
 
-        CopyUtils.copyResource("versions.properties", File("$outputDir${File.separator}gradle"))
+        CopyUtils.copyResource("versions.gradle", File("$outputDir${File.separator}gradle"))
         CopyUtils.copyResource("README.md", outputDir)
     }
 }
