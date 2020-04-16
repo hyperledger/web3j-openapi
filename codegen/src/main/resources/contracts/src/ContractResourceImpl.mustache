@@ -12,14 +12,14 @@
 */
 package {{packageName}}.contracts
 
+import {{packageName}}.core.ContractResource
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.glassfish.jersey.server.internal.routing.UriRoutingContext
 import org.glassfish.jersey.server.model.Resource
-import {{packageName}}.core.ContractResource
 
 abstract class ContractResourceImpl(
 private val uriInfo: ExtendedUriInfo
-) : ContractsResource {
+) : ContractResource {
 
 override fun findAll(): List<String> {
     val resourceClass = (uriInfo as UriRoutingContext).resourceClass

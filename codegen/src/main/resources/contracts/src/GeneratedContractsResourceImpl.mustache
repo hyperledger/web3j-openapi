@@ -12,6 +12,9 @@
 */
 package {{packageName}}.contracts
 
+{{#imports}}
+    {{import}}LifecycleImpl
+{{/imports}}
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.web3j.protocol.Web3j
 import org.web3j.tx.TransactionManager
