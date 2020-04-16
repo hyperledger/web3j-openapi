@@ -12,29 +12,21 @@
 */
 package {{packageName}}.contracts.{{contractName}}.api
 
-import {{packageName}}.core.CONTRACT_ADDRESS
-import {{packageName}}.core.CONTRACT_ADDRESS_PATH
-import {{packageName}}.core.ContractLifecycle
-import {{packageName}}.contracts.{{contractName}}.api.model.{{#contractDetails}}{{capitalizedContractName}}{{/contractDetails}}DeployParameters
+import {{packageName}}.contracts.{{contractName}}.api.model.{{#contractDetails}}{{capitalizedContractName}}{{/contractDetails}}NewGreetingParameters
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
+import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-{{#contractDetails}}
-interface {{capitalizedContractName}}Lifecycle : ContractLifecycle<{{capitalizedContractName}}DeployParameters, {{capitalizedContractName}}Resource> {
+interface {{contractName}}Resource {
 
-@POST
-override fun deploy(parameters: {{capitalizedContractName}}DeployParameters): TransactionReceipt
+// To be generated
 
-@Path(CONTRACT_ADDRESS_PATH)
-override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
 }
-{{/contractDetails}}
