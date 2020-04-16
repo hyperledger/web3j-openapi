@@ -1,0 +1,13 @@
+ext {
+    loadPropsFromFile = { String path ->
+        def props = new Properties()
+        def propsFile = file(path)
+        if (propsFile.exists()) {
+            propsFile.withReader { reader ->
+                props.load(reader)
+            }
+        }
+        props
+    }
+    versions = loadPropsFromFile("../versions.properties")
+}
