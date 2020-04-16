@@ -43,13 +43,13 @@ class ContractApiGenerator(
     private fun copySources(context: HashMap<String, Any>) {
         File("codegen/src/main/resources/contracts/src/api")
             .listFiles()
-            ?.forEach { it ->
+            ?.forEach {
                 logger.debug("Generating from ${it.canonicalPath}")
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = "$folderPath${File.separator}api",
                     template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${it.name.removeSuffix(".mustache")}.kt"
+                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache").removePrefix("Contract")}.kt"
                 )
             }
     }
