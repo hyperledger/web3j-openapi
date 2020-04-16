@@ -13,9 +13,9 @@
 package {{packageName}}.contracts
 
 import {{packageName}}.core.ContractResource
-{{#ContractConfiguraction}}
-import {{packageName}}.contracts.{{contractName}}Lifecycle
-{{/ContractConfiguraction}}
+{{#imports}}
+    {{import}}Lifecycle
+{{/imports}}
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.Path
@@ -27,11 +27,11 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 interface GeneratedContractsResource : ContractResource {
 
-{{#ContractConfiguration}}
+{{#contractsConfiguration}}
     {{#contractDetails}}
         @get:Path("{{lowerCaseContractName}}")
         val {{lowerCaseContractName}}: {{capitalizedContractName}}Lifecycle
 
     {{/contractDetails}}
-{{/ContractConfiguration}}
+{{/contractsConfiguration}}
 }

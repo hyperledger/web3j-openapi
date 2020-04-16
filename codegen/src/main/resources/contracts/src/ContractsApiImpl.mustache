@@ -14,7 +14,7 @@ package {{packageName}}.contracts
 
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.core.Web3jOpenApi
+import {{packageName}}.core.Web3jOpenApi
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager
 import org.web3j.tx.gas.ContractGasProvider
@@ -30,7 +30,7 @@ defaultGasProvider: ContractGasProvider,
 @Context uriInfo: ExtendedUriInfo
 ) : Web3jOpenApi {
 
-override val contracts = HelloWorldContractResourceImpl(
+override val contracts = GeneratedContractsResourceImpl(
 web3j, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
 )
 }
