@@ -28,7 +28,10 @@ import javax.ws.rs.core.MediaType
 interface GeneratedContractsResource : ContractResource {
 
 {{#ContractConfiguration}}
-@get:Path("{{contractName}}")
-val {{contractName}}: {{contractName}}Lifecycle
+    {{#contractDetails}}
+        @get:Path("{{lowerCaseContractName}}")
+        val {{lowerCaseContractName}}: {{capitalizedContractName}}Lifecycle
+
+    {{/contractDetails}}
 {{/ContractConfiguration}}
 }

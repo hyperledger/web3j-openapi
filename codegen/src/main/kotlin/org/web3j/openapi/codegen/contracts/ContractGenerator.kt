@@ -20,8 +20,8 @@ class ContractGenerator(
 
         val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
         configuration.contracts.forEach {
-            logger.debug("Creating ${it.contractName} folder")
-            File("$folderPath${File.separator}${it.contractName}").apply { mkdirs() }
+            logger.debug("Creating ${it.contractDetails.capitalizedContractName()} folder")
+            File("$folderPath${File.separator}${it.contractDetails.capitalizedContractName()}").apply { mkdirs() }
         }
 
         copyGradleFile(folderPath)
@@ -37,7 +37,7 @@ class ContractGenerator(
     private fun setContext(): HashMap<String, Any> {
         return hashMapOf(
             "packageName" to configuration.packageName,
-            "ContractConfiguration" to configuration.contracts // FIXME: make the names of the variables in the generated names lowercase
+            "ContractConfiguration" to configuration.contracts
         )
     }
 

@@ -27,9 +27,12 @@ uriInfo: ExtendedUriInfo
 ) : GeneratedContractsResource, ContractResourceImpl(uriInfo) {
 
 {{#ContractConfiguration}}
-    override val {{contractName}} = {{contractName}}LifecycleImpl(
-    web3j,
-    transactionManager,
-    defaultGasProvider)
+    {{#contractDetails}}
+        override val {{lowerCaseContractName}} = {{capitalizedContractName}}LifecycleImpl(
+        web3j,
+        transactionManager,
+        defaultGasProvider)
+
+    {{/contractDetails}}
 {{/ContractConfiguration}}
 }
