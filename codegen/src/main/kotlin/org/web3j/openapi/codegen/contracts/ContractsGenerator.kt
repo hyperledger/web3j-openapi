@@ -31,6 +31,7 @@ class ContractsGenerator(
         copyGradleFile()
         val context = setContext()
         copySources(context)
+        copyResources()
 
         configuration.contracts.forEach {
             logger.debug("Generating ${it.contractDetails.capitalizedContractName()} folders and files")
@@ -47,6 +48,22 @@ class ContractsGenerator(
 //            ContractServerGenerator().generate()
 //            ContractModelGenerator().generate()
         }
+    }
+
+    private fun copyResources() {
+        File("${folderPath.substringBefore("main")}${File.separator}main${File.separator}resources")
+            .apply {
+                mkdirs()
+            }
+        logger.debug("Copying contracts/resources")
+        CopyUtils.copyResource(
+            "contracts/src/main/resources/logback.xml",
+            File(folderPath.substringBefore("contracts"))
+        )
+        CopyUtils.copyResource(
+            "contracts/src/main/resources/logging.properties",
+            File(folderPath.substringBefore("contracts"))
+        )
     }
 
     private fun setContext(): HashMap<String, Any> {
