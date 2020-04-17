@@ -50,7 +50,11 @@ class ContractsGenerator(
                 folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
                 logger = logger,
                 contractDetails = it.contractDetails).generate()
-//            ContractModelGenerator().generate()
+            ContractModelGenerator(
+                configuration.packageName,
+                folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
+                logger = logger,
+                contractDetails = it.contractDetails).generate()
         }
     }
 
