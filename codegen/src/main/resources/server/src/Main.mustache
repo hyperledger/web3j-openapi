@@ -17,7 +17,7 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
-import {{packageName}}.contracts.server.HelloWorldApiImpl // FIXME: correct imports
+import {{packageName}}.contracts.ContractsApiImpl
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
 import kotlin.system.exitProcess
@@ -32,7 +32,10 @@ fun main() {
         "https://rinkeby.infura.io/v3/3ab1d29a341d448c8453c5835080dc2a",
         "0x19FF26B1B1263874C18A1B2AB0DAE3E37BD0944E981B308462FD08824BAA2C63"
     ).apply {
-        registerClasses(HelloWorldApiImpl::class.java, OpenApiResource::class.java) // FIXME: correct classes
+        registerClasses(
+            ContractsApiImpl::class.java,
+            OpenApiResource::class.java
+        )
     }
 
     val servletHolder = ServletHolder(ServletContainer(resourceConfig))
