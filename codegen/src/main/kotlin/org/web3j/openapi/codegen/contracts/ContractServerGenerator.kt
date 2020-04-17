@@ -11,3 +11,47 @@
  * specific language governing permissions and limitations under the License.
  */
 package org.web3j.openapi.codegen.contracts
+
+import org.slf4j.Logger
+import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.openapi.codegen.utils.TemplateUtils
+import java.io.File
+
+class ContractServerGenerator(
+    val packageName: String,
+    val folderPath: String,
+    val logger: Logger,
+    val contractDetails: ContractDetails
+) {
+    fun generate() {
+        File("$folderPath${File.separator}server")
+            .apply {
+                mkdirs()
+            }
+        val context = setContext()
+        copySources(context)
+    }
+
+    private fun setContext(): HashMap<String, Any> {
+        return hashMapOf(
+            "packageName" to packageName,
+            "lowerCaseContractName" to contractDetails.lowerCaseContractName(),
+            "capitalizedContractName" to contractDetails.capitalizedContractName()
+//            "contractDetails" to contractDetails,
+        )
+    }
+
+    private fun copySources(context: HashMap<String, Any>) {
+        File("codegen/src/main/resources/contracts/src/server")
+            .listFiles()
+            ?.forEach {
+                logger.debug("Generating from ${it.canonicalPath}")
+                TemplateUtils.generateFromTemplate(
+                    context = context,
+                    outputDir = "$folderPath${File.separator}server",
+                    template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
+                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache").removePrefix("Contract")}.kt"
+                )
+            }
+    }
+}

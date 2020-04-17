@@ -45,7 +45,11 @@ class ContractsGenerator(
                 logger = logger,
                 contractDetails = it.contractDetails
             ).generate()
-//            ContractServerGenerator().generate()
+            ContractServerGenerator(
+                configuration.packageName,
+                folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
+                logger = logger,
+                contractDetails = it.contractDetails).generate()
 //            ContractModelGenerator().generate()
         }
     }
@@ -70,13 +74,20 @@ class ContractsGenerator(
         return hashMapOf(
             "packageName" to configuration.packageName,
             "contractsConfiguration" to configuration.contracts,
-            "imports" to getImports()
+            "apiImports" to getApiImports(),
+            "serverImports" to getServerImports()
         )
     }
 
-    private fun getImports(): List<Import> {
+    private fun getApiImports(): List<Import> {
         return configuration.contracts.map {
             Import("import ${configuration.packageName}.contracts.${it.contractDetails.lowerCaseContractName()}.api.${it.contractDetails.capitalizedContractName()}")
+        }
+    }
+
+    private fun getServerImports(): List<Import> {
+        return configuration.contracts.map {
+            Import("import ${configuration.packageName}.contracts.${it.contractDetails.lowerCaseContractName()}.server.${it.contractDetails.capitalizedContractName()}")
         }
     }
 
