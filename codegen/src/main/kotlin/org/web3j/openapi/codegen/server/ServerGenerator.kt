@@ -15,7 +15,6 @@ package org.web3j.openapi.codegen.server
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
