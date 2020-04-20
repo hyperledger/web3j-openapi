@@ -12,8 +12,6 @@
  */
 package org.web3j.openapi.codegen
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 
 abstract class DefaultGenerator(
