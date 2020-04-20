@@ -16,6 +16,7 @@ import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.contracts.model.ContractModelGenerator
+import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
@@ -29,7 +30,7 @@ class ContractsGenerator(
 
     override fun generate() {
         val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
-        copyGradleFile(folderPath)
+        GradleResourceCopy.copyModuleGradleFile(folderPath, "contracts")
         setContext()
         copySources(folderPath)
         copyResources(folderPath)
@@ -92,14 +93,6 @@ class ContractsGenerator(
         return configuration.contracts.map {
             Import("import ${configuration.packageName}.contracts.${it.contractDetails.lowerCaseContractName()}.server.${it.contractDetails.capitalizedContractName()}")
         }
-    }
-
-    private fun copyGradleFile(folderPath: String) {
-        logger.debug("Copying contracts/build.gradle")
-        CopyUtils.copyResource(
-            "contracts/build.gradle",
-            File(folderPath.substringBefore("contracts"))
-        )
     }
 
     private fun copySources(folderPath: String) {

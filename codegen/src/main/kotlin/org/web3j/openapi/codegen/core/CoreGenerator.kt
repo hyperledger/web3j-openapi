@@ -15,6 +15,7 @@ package org.web3j.openapi.codegen.core
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
@@ -26,15 +27,8 @@ class CoreGenerator(
 ) {
     override fun generate() {
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        copyGradleFile(folderPath)
+        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
         copySources(folderPath)
-    }
-
-    private fun copyGradleFile(folderPath: String) {
-        logger.debug("Copying core/build.gradle")
-        CopyUtils.copyResource(
-            "core/build.gradle",
-            File(folderPath.substringBefore("core")))
     }
 
     private fun copySources(folderPath: String) {

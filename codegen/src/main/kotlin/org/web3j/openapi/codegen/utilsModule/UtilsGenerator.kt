@@ -15,6 +15,7 @@ package org.web3j.openapi.codegen.utilsModule
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
@@ -27,16 +28,8 @@ class UtilsGenerator(
 
     override fun generate() {
         val folderPath = CopyUtils.createTree("utils", packageDir, configuration.outputDir)
-        copyGradleFile(folderPath)
+        GradleResourceCopy.copyModuleGradleFile(folderPath, "utils")
         copySources(folderPath)
-    }
-
-    private fun copyGradleFile(folderPath: String) {
-        logger.debug("Copying utils/build.gradle")
-        CopyUtils.copyResource(
-            "utils/build.gradle",
-            File(folderPath.substringBefore("utils"))
-        )
     }
 
     private fun copySources(folderPath: String) {

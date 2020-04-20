@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.gradle
 
+import org.web3j.openapi.codegen.client.ClientGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
 import java.io.File
 
@@ -35,5 +36,12 @@ object GradleResourceCopy {
 
         CopyUtils.copyResource("versions.gradle", File("$outputDir${File.separator}gradle"))
         CopyUtils.copyResource("README.md", outputDir)
+    }
+
+    fun copyModuleGradleFile(folderPath: String, module: String) {
+        ClientGenerator.logger.debug("Copying ${module}/build.gradle")
+        CopyUtils.copyResource(
+            "${module}/build.gradle",
+            File(folderPath.substringBefore(module)))
     }
 }
