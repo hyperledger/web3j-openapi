@@ -46,7 +46,7 @@ fun main() {
             )
         )
     )
-    val generator = Generator(configuration)
+    val generator = GenerateOpenApi(configuration)
             generator.generateAll()
 
 //    val functionsDefinition = solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"))
