@@ -24,7 +24,6 @@ class CoreGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val packageDir = configuration.packageName.split(".").joinToString("/")
     override val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
 
     override fun generate() {

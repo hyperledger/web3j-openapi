@@ -24,7 +24,6 @@ class ClientGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val packageDir = configuration.packageName.split(".").joinToString("/")
     override val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
 
     override fun generate() {

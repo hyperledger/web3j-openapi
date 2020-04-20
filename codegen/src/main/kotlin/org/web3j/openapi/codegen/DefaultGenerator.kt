@@ -19,9 +19,9 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 abstract class DefaultGenerator(
     val configuration: GeneratorConfiguration
 ) {
-    abstract val packageDir: String
+    protected val packageDir = configuration.packageName.split(".").joinToString("/")
 
-    abstract val folderPath: String
+    protected abstract val folderPath: String
 
     abstract fun generate()
 }

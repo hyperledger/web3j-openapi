@@ -26,7 +26,6 @@ class ContractsGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val packageDir = configuration.packageName.split(".").joinToString("/")
     override val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
 
     override fun generate() {

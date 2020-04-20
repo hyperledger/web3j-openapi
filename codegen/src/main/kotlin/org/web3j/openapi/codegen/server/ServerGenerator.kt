@@ -24,7 +24,6 @@ class ServerGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val packageDir = configuration.packageName.split(".").joinToString("/")
     override val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
 
     override fun generate() {
