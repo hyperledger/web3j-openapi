@@ -15,6 +15,7 @@ package org.web3j.openapi.codegen.contracts
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.contracts.model.ContractModelGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
@@ -55,7 +56,8 @@ class ContractsGenerator(
                 configuration.packageName,
                 folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
                 logger = logger,
-                contractDetails = it.contractDetails).generate()
+                contractDetails = it.contractDetails
+            ).generate()
         }
     }
 
