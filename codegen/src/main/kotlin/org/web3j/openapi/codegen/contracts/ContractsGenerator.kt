@@ -21,6 +21,7 @@ import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.nio.file.Path
 
 class ContractsGenerator(
     configuration: GeneratorConfiguration
@@ -43,18 +44,28 @@ class ContractsGenerator(
                 }
             ContractApiGenerator(
                 configuration.packageName,
-                folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName()
+                ).toString(),
                 logger = logger,
                 contractDetails = it.contractDetails
             ).generate()
             ContractServerGenerator(
                 configuration.packageName,
-                folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName()
+                ).toString(),
                 logger = logger,
-                contractDetails = it.contractDetails).generate()
+                contractDetails = it.contractDetails
+            ).generate()
             ContractModelGenerator(
                 configuration.packageName,
-                folderPath = "$folderPath${File.separator}${it.contractDetails.lowerCaseContractName()}",
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName()
+                ).toString(),
                 logger = logger,
                 contractDetails = it.contractDetails
             ).generate()
@@ -62,7 +73,13 @@ class ContractsGenerator(
     }
 
     private fun copyResources(folderPath: String) {
-        File("${folderPath.substringBefore("main")}${File.separator}main${File.separator}resources")
+        File(
+            Path.of(
+                folderPath.substringBefore("main"),
+                "main",
+                "resources"
+            ).toString()
+        )
             .apply {
                 mkdirs()
             }
@@ -110,5 +127,5 @@ class ContractsGenerator(
             }
     }
 
-    companion object: KLogging() {}
+    companion object : KLogging()
 }

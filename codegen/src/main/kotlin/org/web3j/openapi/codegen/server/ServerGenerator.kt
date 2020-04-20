@@ -33,7 +33,7 @@ class ServerGenerator(
         copySources(folderPath)
     }
 
-    private fun setContext(){
+    private fun setContext() {
         context["contracts"] = configuration.contracts
     }
 
