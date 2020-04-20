@@ -27,7 +27,7 @@ object TemplateUtils {
         } ?: throw IllegalStateException("Template not found: $file")
     }
 
-    fun generateFromTemplate(context: HashMap<String, Any>, outputDir: String, name: String, template: Template): File {
+    fun generateFromTemplate(context: Map<String, Any>, outputDir: String, name: String, template: Template): File {
         return File(outputDir)
             .resolve(name)
             .apply {
@@ -38,7 +38,7 @@ object TemplateUtils {
             }
     }
 
-    private fun mustacheWriter(context: HashMap<String, Any>, template: Template, filePath: String) {
+    private fun mustacheWriter(context: Map<String, Any>, template: Template, filePath: String) {
         PrintWriter(OutputStreamWriter(FileOutputStream(filePath))).use {
             template.execute(context, it)
             it.flush()
