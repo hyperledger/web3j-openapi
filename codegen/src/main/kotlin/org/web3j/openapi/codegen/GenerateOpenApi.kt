@@ -21,10 +21,10 @@ import org.web3j.openapi.codegen.server.ServerGenerator
 import org.web3j.openapi.codegen.utilsModule.UtilsGenerator
 import java.io.File
 
-class Generator(
+class GenerateOpenApi(
     private val configuration: GeneratorConfiguration
-) : AppGenerator {
-    override fun generateAll() {
+) {
+    fun generateAll() {
         generateGradleResources()
         generateUtils()
         generateClient()
@@ -33,31 +33,31 @@ class Generator(
         generateServer()
     }
 
-    override fun generateClient() {
+    fun generateClient() {
         val clientGenerator = ClientGenerator(configuration)
         clientGenerator.generate()
     }
 
-    override fun generateServer() {
+    fun generateServer() {
         val serverGenerator = ServerGenerator(configuration)
         serverGenerator.generate()
     }
 
-    override fun generateCore() {
+    fun generateCore() {
         val coreGenerator = CoreGenerator(configuration)
         coreGenerator.generate()
     }
 
-    override fun generateContracts() {
+    fun generateContracts() {
         val contractGenerator = ContractsGenerator(configuration)
         contractGenerator.generate()
     }
 
-    override fun generateGradleResources() {
+    fun generateGradleResources() {
         GradleResourceCopy.copyProjectResources(File(configuration.outputDir))
     }
 
-    override fun generateUtils() {
+    fun generateUtils() {
         val utilsGenerator = UtilsGenerator(configuration)
         utilsGenerator.generate()
     }
