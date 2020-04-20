@@ -24,12 +24,12 @@ class ClientGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
 
     override fun generate() {
+        val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
         val context = setContext()
-        copySources(context)
+        copySources(folderPath, context)
     }
 
     private fun setContext(): HashMap<String, Any> {
@@ -43,7 +43,7 @@ class ClientGenerator(
             File(folderPath.substringBefore("client")))
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
         File("codegen/src/main/resources/client/src/")
             .listFiles()
             ?.forEach { it ->

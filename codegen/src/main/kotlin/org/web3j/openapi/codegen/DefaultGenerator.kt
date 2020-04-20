@@ -21,7 +21,5 @@ abstract class DefaultGenerator(
 ) {
     protected val packageDir = configuration.packageName.split(".").joinToString("/")
 
-    protected abstract val folderPath: String
-
     abstract fun generate()
 }

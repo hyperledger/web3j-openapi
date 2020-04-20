@@ -24,13 +24,13 @@ class ServerGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
 
     override fun generate() {
+        val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
         val context = setContext()
-        copyResources()
-        copySources(context)
+        copyResources(folderPath)
+        copySources(folderPath, context)
     }
 
     private fun setContext(): HashMap<String, Any> {
@@ -48,7 +48,7 @@ class ServerGenerator(
         )
     }
 
-    private fun copyResources() {
+    private fun copyResources(folderPath: String) {
         File("${folderPath.substringBefore("main")}${File.separator}main${File.separator}resources")
             .apply {
                 mkdirs()
@@ -64,7 +64,7 @@ class ServerGenerator(
         )
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
         File("codegen/src/main/resources/server/src/")
             .listFiles()
             .filter { !it.isDirectory }

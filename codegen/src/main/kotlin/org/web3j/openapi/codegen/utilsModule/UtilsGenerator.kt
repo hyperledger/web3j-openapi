@@ -24,19 +24,19 @@ class UtilsGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val folderPath = CopyUtils.createTree("utils", packageDir, configuration.outputDir)
 
     override fun generate() {
-        copyGradleFile()
+        val folderPath = CopyUtils.createTree("utils", packageDir, configuration.outputDir)
+        copyGradleFile(folderPath)
         val context = setContext()
-        copySources(context)
+        copySources(folderPath, context)
     }
 
     private fun setContext(): HashMap<String, Any> {
         return hashMapOf("packageName" to configuration.packageName)
     }
 
-    private fun copyGradleFile() {
+    private fun copyGradleFile(folderPath: String) {
         logger.debug("Copying utils/build.gradle")
         CopyUtils.copyResource(
             "utils/build.gradle",
@@ -44,7 +44,7 @@ class UtilsGenerator(
         )
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
         File("codegen/src/main/resources/utils/src/")
             .listFiles()
             ?.forEach { it ->

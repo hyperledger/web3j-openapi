@@ -26,13 +26,13 @@ class ContractsGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
 
     override fun generate() {
-        copyGradleFile()
+        val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
+        copyGradleFile(folderPath)
         val context = setContext()
-        copySources(context)
-        copyResources()
+        copySources(folderPath, context)
+        copyResources(folderPath)
 
         configuration.contracts.forEach {
             logger.debug("Generating ${it.contractDetails.capitalizedContractName()} folders and files")
@@ -60,7 +60,7 @@ class ContractsGenerator(
         }
     }
 
-    private fun copyResources() {
+    private fun copyResources(folderPath: String) {
         File("${folderPath.substringBefore("main")}${File.separator}main${File.separator}resources")
             .apply {
                 mkdirs()
@@ -97,7 +97,7 @@ class ContractsGenerator(
         }
     }
 
-    private fun copyGradleFile() {
+    private fun copyGradleFile(folderPath: String) {
         logger.debug("Copying contracts/build.gradle")
         CopyUtils.copyResource(
             "contracts/build.gradle",
@@ -105,7 +105,7 @@ class ContractsGenerator(
         )
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
         File("codegen/src/main/resources/contracts/src/")
             .listFiles()
             .filter { !it.isDirectory }
