@@ -15,19 +15,19 @@ package org.web3j.openapi.codegen.utils
 import com.samskivert.mustache.Mustache
 import com.samskivert.mustache.Template
 import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import java.io.FileOutputStream
 
 object TemplateUtils {
     fun mustacheTemplate(file: String): Template {
-        return javaClass.classLoader.getResourceAsStream("$file")?.run {
+        return javaClass.classLoader.getResourceAsStream(file)?.run {
             Mustache.compiler().compile(InputStreamReader(this))
         } ?: throw IllegalStateException("Template not found: $file")
     }
 
-    fun generateFromTemplate(context: HashMap<String, Any>, outputDir: String, name: String, template: Template): File {
+    fun generateFromTemplate(context: Map<String, Any>, outputDir: String, name: String, template: Template): File {
         return File(outputDir)
             .resolve(name)
             .apply {
@@ -38,7 +38,7 @@ object TemplateUtils {
             }
     }
 
-    private fun mustacheWriter(context: HashMap<String, Any>, template: Template, filePath: String) {
+    private fun mustacheWriter(context: Map<String, Any>, template: Template, filePath: String) {
         PrintWriter(OutputStreamWriter(FileOutputStream(filePath))).use {
             template.execute(context, it)
             it.flush()

@@ -12,18 +12,16 @@
  */
 package org.web3j.openapi.codegen
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 
 abstract class DefaultGenerator(
-    open val configuration: GeneratorConfiguration
+    val configuration: GeneratorConfiguration
 ) {
-    abstract val packageDir: String
+    protected val context: MutableMap<String, Any> = mutableMapOf("packageName" to configuration.packageName)
 
-    val logger: Logger = LoggerFactory.getLogger(DefaultGenerator::class.java)
+    protected abstract val packageDir: String
 
-    abstract val folderPath: String
+    protected abstract val folderPath: String
 
     abstract fun generate()
 }

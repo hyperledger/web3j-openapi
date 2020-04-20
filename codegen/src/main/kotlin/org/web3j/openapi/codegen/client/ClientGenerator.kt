@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.client
 
+import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.CopyUtils
@@ -19,7 +20,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 class ClientGenerator(
-    override val configuration: GeneratorConfiguration
+    configuration: GeneratorConfiguration
 ) : DefaultGenerator(
     configuration
 ) {
@@ -56,4 +57,6 @@ class ClientGenerator(
                 )
             }
     }
+
+    companion object : KLogging()
 }

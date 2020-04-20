@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.server
 
+import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.CopyUtils
@@ -19,25 +20,21 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 class ServerGenerator(
-    override val configuration: GeneratorConfiguration
+    configuration: GeneratorConfiguration
 ) : DefaultGenerator(
     configuration
 ) {
+    init {
+        context["contracts"] = configuration.contracts
+    }
+
     override val packageDir = configuration.packageName.split(".").joinToString("/")
     override val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
 
     override fun generate() {
         copyGradleFile(folderPath)
-        val context = setContext()
         copyResources()
-        copySources(context)
-    }
-
-    private fun setContext(): HashMap<String, Any> {
-        return hashMapOf(
-            "packageName" to configuration.packageName,
-            "contracts" to configuration.contracts
-        )
+        copySources()
     }
 
     private fun copyGradleFile(folderPath: String) {
@@ -64,7 +61,7 @@ class ServerGenerator(
         )
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources() {
         File("codegen/src/main/resources/server/src/")
             .listFiles()
             .filter { !it.isDirectory }
@@ -78,4 +75,6 @@ class ServerGenerator(
                 )
             }
     }
+
+    companion object : KLogging()
 }
