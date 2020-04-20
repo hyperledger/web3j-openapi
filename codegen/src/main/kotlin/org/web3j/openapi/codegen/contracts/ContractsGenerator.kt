@@ -30,8 +30,8 @@ class ContractsGenerator(
     override fun generate() {
         val folderPath = CopyUtils.createTree("contracts", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
-        val context = setContext()
-        copySources(folderPath, context)
+        setContext()
+        copySources(folderPath)
         copyResources(folderPath)
 
         configuration.contracts.forEach {
@@ -76,13 +76,10 @@ class ContractsGenerator(
         )
     }
 
-    private fun setContext(): HashMap<String, Any> {
-        return hashMapOf(
-            "packageName" to configuration.packageName,
-            "contractsConfiguration" to configuration.contracts,
-            "apiImports" to getApiImports(),
-            "serverImports" to getServerImports()
-        )
+    private fun setContext() {
+        context["contractsConfiguration"] = configuration.contracts
+        context["apiImports"] = getApiImports()
+        context["serverImports"] = getServerImports()
     }
 
     private fun getApiImports(): List<Import> {
@@ -105,7 +102,7 @@ class ContractsGenerator(
         )
     }
 
-    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String) {
         File("codegen/src/main/resources/contracts/src/")
             .listFiles()
             .filter { !it.isDirectory }

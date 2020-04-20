@@ -28,12 +28,7 @@ class ClientGenerator(
     override fun generate() {
         val folderPath = CopyUtils.createTree("client", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
-        val context = setContext()
-        copySources(folderPath, context)
-    }
-
-    private fun setContext(): HashMap<String, Any> {
-        return hashMapOf("packageName" to configuration.packageName)
+        copySources(folderPath)
     }
 
     private fun copyGradleFile(folderPath: String) {
@@ -43,7 +38,7 @@ class ClientGenerator(
             File(folderPath.substringBefore("client")))
     }
 
-    private fun copySources(folderPath: String, context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String) {
         File("codegen/src/main/resources/client/src/")
             .listFiles()
             ?.forEach { it ->

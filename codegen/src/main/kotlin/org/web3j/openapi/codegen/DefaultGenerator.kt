@@ -21,5 +21,7 @@ abstract class DefaultGenerator(
 ) {
     protected val packageDir = configuration.packageName.split(".").joinToString("/")
 
+    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
+
     abstract fun generate()
 }
