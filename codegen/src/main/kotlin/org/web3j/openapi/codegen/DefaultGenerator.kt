@@ -17,9 +17,11 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 abstract class DefaultGenerator(
     val configuration: GeneratorConfiguration
 ) {
-    protected val packageDir = configuration.packageName.split(".").joinToString("/")
+    protected val context: MutableMap<String, Any> = mutableMapOf("packageName" to configuration.packageName)
 
-    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
+    protected abstract val packageDir: String
+
+    protected abstract val folderPath: String
 
     abstract fun generate()
 }
