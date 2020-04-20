@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 
 abstract class DefaultGenerator(
-    open val configuration: GeneratorConfiguration
+    val configuration: GeneratorConfiguration
 ) {
     abstract val packageDir: String
 

@@ -19,7 +19,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 class ClientGenerator(
-    override val configuration: GeneratorConfiguration
+    configuration: GeneratorConfiguration
 ) : DefaultGenerator(
     configuration
 ) {
