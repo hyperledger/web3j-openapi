@@ -23,5 +23,7 @@ abstract class DefaultGenerator(
 
     protected abstract val folderPath: String
 
+    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
+
     abstract fun generate()
 }

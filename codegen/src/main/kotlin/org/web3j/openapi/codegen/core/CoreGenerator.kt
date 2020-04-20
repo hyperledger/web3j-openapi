@@ -24,27 +24,20 @@ class CoreGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-    override val packageDir = configuration.packageName.split(".").joinToString("/")
-    override val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-
     override fun generate() {
-        copyGradleFile()
-        val context = setContext()
-        copySources(context)
+        val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
+        copyGradleFile(folderPath)
+        copySources(folderPath)
     }
 
-    private fun setContext(): HashMap<String, Any> {
-        return hashMapOf("packageName" to configuration.packageName)
-    }
-
-    private fun copyGradleFile() {
+    private fun copyGradleFile(folderPath: String) {
         logger.debug("Copying core/build.gradle")
         CopyUtils.copyResource(
             "core/build.gradle",
             File(folderPath.substringBefore("core")))
     }
 
-    private fun copySources(context: HashMap<String, Any>) {
+    private fun copySources(folderPath: String) {
         File("codegen/src/main/resources/core/src/")
             .listFiles()
             ?.forEach { it ->
