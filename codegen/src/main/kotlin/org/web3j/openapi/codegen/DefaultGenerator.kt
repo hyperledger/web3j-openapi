@@ -21,8 +21,6 @@ abstract class DefaultGenerator(
 ) {
     abstract val packageDir: String
 
-    val logger: Logger = LoggerFactory.getLogger(DefaultGenerator::class.java)
-
     abstract val folderPath: String
 
     abstract fun generate()
