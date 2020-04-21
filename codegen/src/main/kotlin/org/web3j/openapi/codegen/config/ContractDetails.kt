@@ -25,4 +25,13 @@ class ContractDetails(
     fun capitalizedContractName(): String {
         return contractName.toLowerCase().capitalize()
     }
+
+    fun deployParameters(): String{
+        functionsDefintion
+            .filter { it.type == "constructor" }
+            .forEach {
+                if(it.inputs.isNotEmpty()) return "${capitalizedContractName()}DeployParameters"
+            }
+        return "Void"
+    }
 }
