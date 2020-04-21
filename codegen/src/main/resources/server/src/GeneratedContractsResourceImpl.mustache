@@ -10,27 +10,33 @@
 * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations under the License.
 */
-package {{packageName}}.contracts
+package {{packageName}}.server
 
+{{#serverImports}}
+    {{import}}LifecycleImpl
+{{/serverImports}}
 import org.glassfish.jersey.server.ExtendedUriInfo
-import org.web3j.crypto.Credentials
-import {{packageName}}.core.Web3jOpenApi
 import org.web3j.protocol.Web3j
-import org.web3j.tx.RawTransactionManager
+import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.ContractGasProvider
 import javax.annotation.processing.Generated
-import javax.inject.Inject
-import javax.ws.rs.core.Context
+import {{packageName}}.core.GeneratedContractsResource
 
 @Generated
-class ContractsApiImpl @Inject constructor(
+class GeneratedContractsResourceImpl(
 web3j: Web3j,
-credentials: Credentials,
+transactionManager: TransactionManager,
 defaultGasProvider: ContractGasProvider,
-@Context uriInfo: ExtendedUriInfo
-) : Web3jOpenApi {
+uriInfo: ExtendedUriInfo
+) : GeneratedContractsResource, ContractResourceImpl(uriInfo) {
 
-override val contracts = GeneratedContractsResourceImpl(
-web3j, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
-)
+{{#contracts}}
+    {{#contractDetails}}
+        override val {{lowerCaseContractName}} = {{capitalizedContractName}}LifecycleImpl(
+        web3j,
+        transactionManager,
+        defaultGasProvider)
+
+    {{/contractDetails}}
+{{/contracts}}
 }

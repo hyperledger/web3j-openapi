@@ -16,6 +16,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import org.slf4j.Logger
 import org.web3j.openapi.codegen.config.ContractDetails
+import java.nio.file.Path
 
 class ContractApiGenerator(
     val packageName: String,
@@ -24,7 +25,9 @@ class ContractApiGenerator(
     val contractDetails: ContractDetails
 ) {
     fun generate() {
-        File("$folderPath${File.separator}api")
+        File(
+            Path.of(folderPath, "api").toString()
+        )
             .apply {
                 mkdirs()
             }
