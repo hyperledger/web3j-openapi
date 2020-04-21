@@ -12,4 +12,48 @@
  */
 package org.web3j.openapi.codegen.core
 
-class CoreFunctionsModelGenerator
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.TypeSpec
+import mu.KLogging
+import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.protocol.core.methods.response.AbiDefinition
+import java.io.File
+
+class CoreFunctionsModelGenerator(
+    val packageName: String,
+    private val contractName: String,
+    private val functionName: String,
+    val folderPath: String,
+    val inputs: MutableList<AbiDefinition.NamedType>
+) {
+    fun generate() {
+        val functionFile = getFunctions()
+        functionFile.writeTo(File(folderPath))
+    }
+
+    private fun getFunctions(): FileSpec {
+        val functionBuilder = FunSpec.constructorBuilder()
+
+        val functionFile = FileSpec.builder(
+            "$packageName.core.${contractName.toLowerCase()}.model",
+            "${functionName.capitalize()}Parameters"
+        )
+
+        inputs.forEach {
+            functionBuilder.addParameter(
+                it.name,
+                SolidityUtils.getNativeType(it.type)
+            )
+        }
+
+        val constructor = TypeSpec.classBuilder("${functionName.capitalize()}Parameters")
+            .primaryConstructor(functionBuilder.build()).build()
+
+        return functionFile
+            .addType(constructor)
+            .build()
+    }
+
+    companion object : KLogging()
+}

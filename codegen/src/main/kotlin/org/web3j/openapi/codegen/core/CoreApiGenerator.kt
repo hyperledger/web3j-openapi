@@ -47,8 +47,20 @@ class CoreApiGenerator(
             when (it.type) {
                 "constructor" -> {
                     CoreDeployModelGenerator(
-                        packageName,
-                        contractDetails.capitalizedContractName(),
+                        packageName = packageName,
+                        contractName = contractDetails.capitalizedContractName(),
+                        folderPath = Path.of(
+                            folderPath.substringBefore("kotlin"),
+                            "kotlin"
+                        ).toString(),
+                        inputs = it.inputs
+                    ).generate()
+                }
+                "function" -> {
+                    CoreFunctionsModelGenerator(
+                        packageName = packageName,
+                        contractName = contractDetails.capitalizedContractName(),
+                        functionName = it.name,
                         folderPath = Path.of(
                             folderPath.substringBefore("kotlin"),
                             "kotlin"
