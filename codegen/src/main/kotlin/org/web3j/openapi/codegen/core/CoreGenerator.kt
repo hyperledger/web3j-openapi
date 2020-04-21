@@ -15,10 +15,13 @@ package org.web3j.openapi.codegen.core
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
+import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.nio.file.Path
 
 class CoreGenerator(
     configuration: GeneratorConfiguration
@@ -28,13 +31,38 @@ class CoreGenerator(
     override fun generate() {
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
         GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
+        setContext()
         copySources(folderPath)
+
+        configuration.contracts.forEach {
+            ContractsGenerator.logger.debug("Generating ${it.contractDetails.capitalizedContractName()} api folders and files")
+            CoreApiGenerator(
+                configuration.packageName,
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName()
+                ).toString(),
+                contractDetails = it.contractDetails
+            ).generate()
+        }
+    }
+
+    private fun setContext() {
+        context["contractsConfiguration"] = configuration.contracts
+        context["apiImports"] = getApiImports()
+    }
+
+    private fun getApiImports(): List<Import> {
+        return configuration.contracts.map {
+            Import("import ${configuration.packageName}.core.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
+        }
     }
 
     private fun copySources(folderPath: String) {
         File("codegen/src/main/resources/core/src/")
             .listFiles()
-            ?.forEach { it ->
+            .filter { !it.isDirectory }
+            .forEach {
                 logger.debug("Generating from ${it.canonicalPath}")
                 TemplateUtils.generateFromTemplate(
                     context = context,

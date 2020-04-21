@@ -12,13 +12,10 @@
  */
 package org.web3j.openapi.codegen
 
-import org.web3j.openapi.codegen.client.ClientGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.core.CoreGenerator
 import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.server.ServerGenerator
-import org.web3j.openapi.codegen.utilsModule.UtilsGenerator
 import java.io.File
 
 class GenerateOpenApi(
@@ -26,16 +23,8 @@ class GenerateOpenApi(
 ) {
     fun generateAll() {
         generateGradleResources()
-        generateUtils()
-        generateClient()
         generateCore()
-        generateContracts()
         generateServer()
-    }
-
-    fun generateClient() {
-        val clientGenerator = ClientGenerator(configuration)
-        clientGenerator.generate()
     }
 
     fun generateServer() {
@@ -48,17 +37,7 @@ class GenerateOpenApi(
         coreGenerator.generate()
     }
 
-    fun generateContracts() {
-        val contractGenerator = ContractsGenerator(configuration)
-        contractGenerator.generate()
-    }
-
     fun generateGradleResources() {
         GradleResourceCopy.copyProjectResources(File(configuration.outputDir))
-    }
-
-    fun generateUtils() {
-        val utilsGenerator = UtilsGenerator(configuration)
-        utilsGenerator.generate()
     }
 }

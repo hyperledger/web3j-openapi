@@ -10,38 +10,44 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.utilsModule
+package org.web3j.openapi.codegen.server
 
 import mu.KLogging
-import org.web3j.openapi.codegen.DefaultGenerator
-import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.gradle.GradleResourceCopy
-import org.web3j.openapi.codegen.utils.CopyUtils
+import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
-class UtilsGenerator(
-    configuration: GeneratorConfiguration
-) : DefaultGenerator(
-    configuration
+class ServerImplGenerator(
+    val packageName: String,
+    val folderPath: String,
+    val contractDetails: ContractDetails
 ) {
+    val context = mutableMapOf<String, Any>()
 
-    override fun generate() {
-        val folderPath = CopyUtils.createTree("utils", packageDir, configuration.outputDir)
-        GradleResourceCopy.copyModuleGradleFile(folderPath, "utils")
-        copySources(folderPath)
+    init {
+        context["packageName"] = packageName
+        context["lowerCaseContractName"] = contractDetails.lowerCaseContractName()
+        context["capitalizedContractName"] = contractDetails.capitalizedContractName()
     }
 
-    private fun copySources(folderPath: String) {
-        File("codegen/src/main/resources/utils/src/")
+    fun generate() {
+        File("$folderPath")
+            .apply {
+                mkdirs()
+            }
+        copySources()
+    }
+
+    private fun copySources() {
+        File("codegen/src/main/resources/server/src/contractImpl")
             .listFiles()
-            ?.forEach { it ->
+            ?.forEach {
                 logger.debug("Generating from ${it.canonicalPath}")
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = folderPath,
                     template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${it.name.removeSuffix(".mustache")}.kt"
+                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache").removePrefix("Contract")}.kt"
                 )
             }
     }

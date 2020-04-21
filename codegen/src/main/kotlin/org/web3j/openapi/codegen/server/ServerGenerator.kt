@@ -15,9 +15,12 @@ package org.web3j.openapi.codegen.server
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
+import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.nio.file.Path
 
 class ServerGenerator(
     configuration: GeneratorConfiguration
@@ -27,6 +30,7 @@ class ServerGenerator(
 
     init {
         context["contracts"] = configuration.contracts
+        context["serverImports"] = getServerImports()
     }
 
     override fun generate() {
@@ -34,6 +38,24 @@ class ServerGenerator(
         copyGradleFile(folderPath)
         copyResources(folderPath)
         copySources(folderPath)
+
+        configuration.contracts.forEach {
+            ContractsGenerator.logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
+            ServerImplGenerator(
+                configuration.packageName,
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName()
+                ).toString(),
+                contractDetails = it.contractDetails
+            ).generate()
+        }
+    }
+
+    private fun getServerImports(): List<Import> {
+        return configuration.contracts.map {
+            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
+        }
     }
 
     private fun copyGradleFile(folderPath: String) {
@@ -45,10 +67,15 @@ class ServerGenerator(
     }
 
     private fun copyResources(folderPath: String) {
-        File("${folderPath.substringBefore("main")}${File.separator}main${File.separator}resources")
-            .apply {
-                mkdirs()
-            }
+        File(
+            Path.of(
+                folderPath.substringBefore("main"),
+                "main",
+                "resources"
+            ).toString()
+        ).apply {
+            mkdirs()
+        }
         logger.debug("Copying server/resources")
         CopyUtils.copyResource(
             "server/src/main/resources/logback.xml",

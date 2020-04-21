@@ -12,11 +12,11 @@
  */
 package org.web3j.openapi.codegen.gradle
 
-import org.web3j.openapi.codegen.client.ClientGenerator
+import mu.KLogging
 import org.web3j.openapi.codegen.utils.CopyUtils
 import java.io.File
 
-object GradleResourceCopy {
+object GradleResourceCopy : KLogging() {
 
     fun copyProjectResources(outputDir: File) {
         CopyUtils.copyResource("settings.gradle", outputDir)
@@ -39,7 +39,7 @@ object GradleResourceCopy {
     }
 
     fun copyModuleGradleFile(folderPath: String, module: String) {
-        ClientGenerator.logger.debug("Copying $module/build.gradle")
+        logger.debug("Copying $module/build.gradle")
         CopyUtils.copyResource(
             "$module/build.gradle",
             File(folderPath.substringBefore(module)))
