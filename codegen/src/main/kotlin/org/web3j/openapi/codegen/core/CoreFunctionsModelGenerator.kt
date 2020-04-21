@@ -16,6 +16,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
 import mu.KLogging
+import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
@@ -52,6 +53,7 @@ class CoreFunctionsModelGenerator(
 
         return functionFile
             .addType(constructor)
+            .addComment(LICENSE)
             .build()
     }
 
