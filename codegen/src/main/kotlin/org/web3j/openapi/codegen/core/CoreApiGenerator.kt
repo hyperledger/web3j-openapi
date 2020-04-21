@@ -14,8 +14,10 @@ package org.web3j.openapi.codegen.core
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.nio.file.Path
 
 class CoreApiGenerator(
     val packageName: String,
@@ -32,9 +34,31 @@ class CoreApiGenerator(
 
     fun generate() {
         File(folderPath).apply {
-                mkdirs()
-            }
+            mkdirs()
+        }
         copySources()
+        generateModels()
+    }
+
+    private fun generateModels() {
+        contractDetails.functionsDefintion.forEach {
+            ContractsGenerator.logger.debug("Generating ${it.name} model")
+
+            when (it.type) {
+                "constructor" -> {
+                    CoreDeployModelGenerator(
+                        packageName,
+                        contractDetails.capitalizedContractName(),
+                        folderPath = Path.of(
+                            folderPath.substringBefore("kotlin"),
+                            "kotlin"
+                        ).toString(),
+                        inputs = it.inputs
+                    ).generate()
+                }
+                else -> println("Not a constructor") // TODO: Create corresponding exception
+            }
+        }
     }
 
     private fun copySources() {
@@ -46,7 +70,8 @@ class CoreApiGenerator(
                     context = context,
                     outputDir = folderPath,
                     template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache").removePrefix("Contract")}.kt"
+                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache")
+                        .removePrefix("Contract")}.kt"
                 )
             }
     }
