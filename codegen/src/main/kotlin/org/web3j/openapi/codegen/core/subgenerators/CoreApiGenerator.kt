@@ -14,7 +14,7 @@ package org.web3j.openapi.codegen.core.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
-import org.web3j.openapi.codegen.contracts.ContractsGenerator
+import org.web3j.openapi.codegen.utils.ContractResource
 import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
@@ -32,14 +32,7 @@ class CoreApiGenerator(
         context["contractName"] = contractDetails.lowerCaseContractName()
         context["contractDetails"] = contractDetails
         context["imports"] = imports()
-    }
-
-    private fun imports(): List<Import> {
-        return contractDetails.functionsDefintion
-            .filter { it.type == "function" && it.inputs.isNotEmpty() }
-            .map {
-                Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
-            }
+        context["contractResources"] = contractResources()
     }
 
     fun generate() {
@@ -50,9 +43,36 @@ class CoreApiGenerator(
         generateModels()
     }
 
+    private fun imports(): List<Import> {
+        return contractDetails.functionsDefintion
+            .filter { it.type == "function" && it.inputs.isNotEmpty() }
+            .map {
+                Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+            }
+    }
+
+    private fun contractResources(): List<ContractResource> {
+        val resources = mutableListOf<ContractResource>()
+        contractDetails.functionsDefintion
+            .filter { it.type == "function" }
+            .forEach {
+                val parameters =
+                    if (it.inputs.isNotEmpty())
+                        "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
+                    else ""
+                resources.add(
+                    ContractResource(
+                        it.name.capitalize(),
+                        "fun ${it.name}($parameters): TransactionReceipt",
+                        if (it.inputs.isEmpty()) "GET" else "POST"
+                    ))
+            }
+        return resources
+    }
+
     private fun generateModels() {
         contractDetails.functionsDefintion.forEach {
-            ContractsGenerator.logger.debug("Generating ${it.name} model")
+            logger.debug("Generating ${it.name} model")
 
             when (it.type) {
                 "constructor" -> {

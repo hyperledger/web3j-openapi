@@ -12,12 +12,8 @@
  */
 package org.web3j.openapi.codegen.core.subgenerators
 
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
 import mu.KLogging
-import org.web3j.openapi.codegen.LICENSE
-import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.openapi.codegen.utils.KPoetUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -28,32 +24,14 @@ class CoreDeployModelGenerator(
     val inputs: MutableList<AbiDefinition.NamedType>
 ) {
     fun generate() {
-        val constructorFile = getContractConstructor()
-        constructorFile.writeTo(File(folderPath))
-    }
-
-    private fun getContractConstructor(): FileSpec {
-        val constructorBuilder = FunSpec.constructorBuilder()
-
-        val constructorFile = FileSpec.builder(
+        val constructorFile = KPoetUtils.inputsToDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
-            "${contractName}DeployParameters"
+            contractName,
+            inputs,
+            "DeployParameters"
         )
-
-        inputs.forEach {
-            constructorBuilder.addParameter(
-                it.name,
-                SolidityUtils.getNativeType(it.type)
-            )
-        }
-
-        val constructor = TypeSpec.classBuilder("${contractName}DeployParameters")
-            .primaryConstructor(constructorBuilder.build()).build()
-
-        return constructorFile
-            .addType(constructor)
-            .addComment(LICENSE)
-            .build()
+        logger.debug("Generating $contractName deploy parameters")
+        constructorFile.writeTo(File(folderPath))
     }
 
     companion object : KLogging()
