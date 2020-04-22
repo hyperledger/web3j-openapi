@@ -15,6 +15,7 @@ package org.web3j.openapi.codegen.core
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.contracts.ContractsGenerator
+import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.nio.file.Path
@@ -30,6 +31,15 @@ class CoreApiGenerator(
         context["packageName"] = packageName
         context["contractName"] = contractDetails.lowerCaseContractName()
         context["contractDetails"] = contractDetails
+        context["imports"] = imports()
+    }
+
+    private fun imports(): List<Import>{
+        return contractDetails.functionsDefintion
+            .filter { it.type == "function" && it.inputs.isNotEmpty() }
+            .map {
+                Import("import ${packageName}.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+            }
     }
 
     fun generate() {
@@ -70,7 +80,7 @@ class CoreApiGenerator(
                             inputs = it.inputs
                         ).generate()
                 }
-                else -> println("Not a constructor") // TODO: Create corresponding exception
+                else -> println("Unsupported type of abi types") // TODO: Create corresponding exception
             }
         }
     }
