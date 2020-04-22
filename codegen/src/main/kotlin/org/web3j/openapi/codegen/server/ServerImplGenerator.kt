@@ -28,6 +28,8 @@ class ServerImplGenerator(
         context["packageName"] = packageName
         context["lowerCaseContractName"] = contractDetails.lowerCaseContractName()
         context["capitalizedContractName"] = contractDetails.capitalizedContractName()
+        context["parameters"] = getParameters()
+        context["deployParameters"] = contractDetails.deployParameters()
     }
 
     fun generate() {
@@ -36,6 +38,19 @@ class ServerImplGenerator(
                 mkdirs()
             }
         copySources()
+    }
+
+    private fun getParameters() : String {
+        if(contractDetails.deployParameters() == "Void") return ""
+        var parameters = ""
+        contractDetails.functionsDefintion
+            .filter { it.type == "constructor" }
+            .map { it.inputs }
+            .first()
+            .forEach {
+                parameters += ", parameters.${it.name}"
+            }
+        return parameters
     }
 
     private fun copySources() {
