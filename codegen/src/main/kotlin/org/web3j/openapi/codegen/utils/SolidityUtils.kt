@@ -23,15 +23,15 @@ object SolidityUtils {
     fun getNativeType(typeName: String): TypeName {
         return if (typeName == Address::class.java.simpleName) {
             String::class.asTypeName()
-        } else if (typeName == "string") { // FIXME: Is this right ?
+        } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
             String::class.asTypeName()
-        } else if (typeName.startsWith("Uint") || typeName.startsWith("int")) {
+        } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
             BigInteger::class.asTypeName()
         } else if (typeName == Utf8String::class.java.simpleName) {
             String::class.asTypeName()
-        } else if (typeName.startsWith("Bytes") || typeName == "DynamicBytes") {
+        } else if (typeName.toLowerCase().startsWith("bytes") || typeName == "dynamicbytes") {
             ByteArray::class.asTypeName()
-        } else if (typeName.startsWith("Bool")) {
+        } else if (typeName.toLowerCase().startsWith("bool")) {
             Boolean::class.asTypeName()
             // boolean cannot be a parameterized type
         } else if (typeName == org.web3j.abi.datatypes.primitive.Byte::class.java.simpleName) {
