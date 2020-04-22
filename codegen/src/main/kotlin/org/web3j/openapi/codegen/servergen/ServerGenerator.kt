@@ -17,6 +17,8 @@ import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.common.Import
+import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
+import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplsGenerator
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.nio.file.Path
@@ -26,7 +28,6 @@ class ServerGenerator(
 ) : DefaultGenerator(
     configuration
 ) {
-
     init {
         context["contracts"] = configuration.contracts
         context["serverImports"] = getServerImports()
@@ -40,13 +41,23 @@ class ServerGenerator(
 
         configuration.contracts.forEach {
             logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
-            ServerImplGenerator(
+            LifecycleImplGenerator(
                 configuration.packageName,
                 folderPath = Path.of(
                     folderPath,
                     it.contractDetails.lowerCaseContractName()
                 ).toString(),
                 contractDetails = it.contractDetails
+            ).generate()
+
+            ResourcesImplsGenerator(
+                packageName = configuration.packageName,
+                contractName = it.contractDetails.contractName,
+                folderPath = Path.of(
+                    folderPath.substringBefore("kotlin"),
+                    "kotlin"
+                ).toString(),
+                functionsDefinition = it.contractDetails.functionsDefintion
             ).generate()
         }
     }
