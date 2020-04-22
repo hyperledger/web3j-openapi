@@ -10,14 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.servergen
+package org.web3j.openapi.codegen.servergen.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
-class ServerImplGenerator(
+class LifecycleImplGenerator(
     val packageName: String,
     val folderPath: String,
     val contractDetails: ContractDetails
