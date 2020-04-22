@@ -11,7 +11,7 @@ import org.web3j.protocol.core.methods.response.AbiDefinition
 object KPoetUtils {
 
     fun inputsToDataClass(packageName: String, name: String, inputs: MutableList<AbiDefinition.NamedType>, type: String): FileSpec {
-        val functionFile = FileSpec.builder(
+        val outputFile = FileSpec.builder(
             packageName,
             "${name.capitalize()}$type"
         )
@@ -20,10 +20,10 @@ object KPoetUtils {
             .classBuilder("${name.capitalize()}$type")
             .addModifiers(KModifier.DATA)
 
-        val functionBuilder = FunSpec.constructorBuilder()
+        val constructorBuilder = FunSpec.constructorBuilder()
 
         inputs.forEach {
-            functionBuilder.addParameter(
+            constructorBuilder.addParameter(
                 it.name,
                 SolidityUtils.getNativeType(it.type)
             )
@@ -36,9 +36,9 @@ object KPoetUtils {
                     .build()
             )
         }
-        constructor.primaryConstructor(functionBuilder.build())
+        constructor.primaryConstructor(constructorBuilder.build())
 
-        return functionFile
+        return outputFile
             .addType(constructor.build())
             .addComment(LICENSE)
             .build()
