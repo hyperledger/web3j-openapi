@@ -12,7 +12,9 @@
 */
 package {{packageName}}.core.{{contractName}}
 
-// import {{packageName}}.core.{{contractName}}.model.{{#contractDetails}}{{capitalizedContractName}}{{/contractDetails}}NewGreetingParameters FIXME
+{{#imports}}
+    {{import}}
+{{/imports}}
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
@@ -22,11 +24,17 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
+{{#contractDetails}}
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface {{#contractDetails}}{{capitalizedContractName}}{{/contractDetails}}Resource {
+interface {{capitalizedContractName}}Resource {
+{{#contractResources}}
+        @{{method}}
+        @Produces(MediaType.APPLICATION_JSON)
+        @Path("{{functionName}}")
+        {{resource}}
 
-// To be generated
-
+{{/contractResources}}
 }
+{{/contractDetails}}
