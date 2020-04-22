@@ -65,7 +65,7 @@ class CoreApiGenerator(
                         it.name.capitalize(),
                         "fun ${it.name}($parameters)",
                         if (it.inputs.isEmpty()) "GET" else "POST",
-                        if (it.inputs.isEmpty()) "String" else "TransactionReceipt"
+                        if (it.inputs.isEmpty() && it.name != "kill") "String" else "TransactionReceipt" // TODO: Check for other special functions
                     )
                 )
             }
