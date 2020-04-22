@@ -1,6 +1,24 @@
+/*
+ * Copyright 2020 Web3 Labs Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package org.web3j.openapi.codegen.servergen.subgenerators
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.asTypeName
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import org.web3j.protocol.core.methods.response.TransactionReceipt
@@ -19,7 +37,7 @@ class ResourcesImplsGenerator(
 
     private fun generateClass(): FileSpec {
         val resourcesFile = FileSpec.builder(
-            "${packageName}.server.${contractName.decapitalize()}",
+            "$packageName.server.${contractName.decapitalize()}",
             "${contractName.capitalize()}ResourceImpl"
         )
 
@@ -35,7 +53,7 @@ class ResourcesImplsGenerator(
             )
 
         val contractResourceClass = ClassName(
-            "${packageName}.core.${contractName.decapitalize()}",
+            "$packageName.core.${contractName.decapitalize()}",
             "${contractName.capitalize()}Resource")
 
         val resourcesClass = TypeSpec
@@ -61,7 +79,6 @@ class ResourcesImplsGenerator(
             .addType(resourcesClass.build())
             .addComment(LICENSE)
             .build()
-
     }
 
     private fun generateFunctions(): List<FunSpec> {
@@ -69,19 +86,19 @@ class ResourcesImplsGenerator(
         functionsDefinition
             .filter { it.type == "function" }
             .forEach {
-                val funSpec = if(it.inputs.isEmpty()){
+                val funSpec = if (it.inputs.isEmpty()) {
                     FunSpec.builder(it.name.decapitalize())
                         .returns(
-                            if(it.name != "kill") String::class.asTypeName() else TransactionReceipt::class.asTypeName()
+                            if (it.name != "kill") String::class.asTypeName() else TransactionReceipt::class.asTypeName()
                         )
                         .addCode(
-                            "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
+                            "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send().toString()" // TODO: Remove the trailing toString() and make proper type checking
                         )
                         .addModifiers(KModifier.OVERRIDE)
                         .build()
                 } else {
                     val nameClass = ClassName(
-                        "${packageName}.core.${contractName.decapitalize()}.model",
+                        "$packageName.core.${contractName.decapitalize()}.model",
                         "${it.name.capitalize()}Parameters"
                     )
 
@@ -106,7 +123,7 @@ class ResourcesImplsGenerator(
         return functions
     }
 
-    private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String) : String{
+    private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
         var callParameters = ""
         inputs.forEach {
             callParameters += "${functionName.decapitalize()}Parameters.${it.name.decapitalize()},"

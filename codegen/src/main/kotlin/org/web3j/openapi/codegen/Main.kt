@@ -44,17 +44,17 @@ fun main() {
         "/home/chamirachid/tmp/openapi/ClientTest",
         listOf(
             ContractConfiguration(
-                File("/home/chamirachid/tmp/openapi/AbiTst/Number.abi"),
+                File("/home/chamirachid/solidity/Number.abi"),
                 ContractDetails(
                     "Number",
-                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/tmp/openapi/AbiTst/Number.abi"))
+                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Number.abi"))
                 )
             ),
             ContractConfiguration(
-                File("/home/chamirachid/tmp/openapi/AbiTst/Greeter.abi"),
+                File("/home/chamirachid/solidity/Greeter.abi"),
                 ContractDetails(
                     "Greeter",
-                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/tmp/openapi/AbiTst/Greeter.abi"))
+                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Greeter.abi"))
                 )
             )
         )

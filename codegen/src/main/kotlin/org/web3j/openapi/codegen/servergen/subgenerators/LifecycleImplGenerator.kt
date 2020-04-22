@@ -40,8 +40,8 @@ class LifecycleImplGenerator(
         copySources()
     }
 
-    private fun getParameters() : String {
-        if(contractDetails.deployParameters() == "Void") return ""
+    private fun getParameters(): String {
+        if (contractDetails.deployParameters() == "Void") return ""
         var parameters = ""
         contractDetails.functionsDefintion
             .filter { it.type == "constructor" }
