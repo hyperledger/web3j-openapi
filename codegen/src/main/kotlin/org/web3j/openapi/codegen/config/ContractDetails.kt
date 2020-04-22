@@ -35,31 +35,4 @@ class ContractDetails(
             }
         return "Void"
     }
-
-    fun functionNames(): List<String> {
-        return functionsDefintion
-            .filter { it.type == "function" && it.inputs.isNotEmpty() }
-            .map {
-                it.name.capitalize()
-            }
-    }
-
-    fun contractResources(): List<ContractResource> {
-        val resources = mutableListOf<ContractResource>()
-        functionsDefintion
-            .filter { it.type == "function" }
-            .forEach {
-                val parameters =
-                    if (it.inputs.isNotEmpty())
-                        "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
-                    else ""
-                resources.add(
-                    ContractResource(
-                        it.name.capitalize(),
-                            "fun ${it.name}($parameters): TransactionReceipt",
-                        if (it.inputs.isEmpty()) "GET" else "POST"
-                    ))
-            }
-        return resources
-    }
 }

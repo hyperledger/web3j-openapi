@@ -15,7 +15,6 @@ package org.web3j.openapi.codegen.core
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.core.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.gradle.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
@@ -36,7 +35,7 @@ class CoreGenerator(
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            ContractsGenerator.logger.debug("Generating ${it.contractDetails.capitalizedContractName()} api folders and files")
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} api folders and files")
             CoreApiGenerator(
                 configuration.packageName,
                 folderPath = Path.of(

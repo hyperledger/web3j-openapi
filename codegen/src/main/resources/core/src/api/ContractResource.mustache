@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 interface {{capitalizedContractName}}Resource {
+{{/contractDetails}}
 {{#contractResources}}
         @{{method}}
         @Produces(MediaType.APPLICATION_JSON)
@@ -37,4 +38,3 @@ interface {{capitalizedContractName}}Resource {
 
 {{/contractResources}}
 }
-{{/contractDetails}}
