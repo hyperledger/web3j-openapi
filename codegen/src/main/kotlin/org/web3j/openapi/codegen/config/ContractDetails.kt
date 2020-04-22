@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.codegen.config
 
-import org.web3j.openapi.codegen.utils.ContractResource
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
 class ContractDetails(

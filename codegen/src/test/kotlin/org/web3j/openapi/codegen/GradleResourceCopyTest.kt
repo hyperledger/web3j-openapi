@@ -14,7 +14,7 @@ package org.web3j.openapi.codegen
 
 import assertk.assertThat
 import org.junit.jupiter.api.Test
-import org.web3j.openapi.codegen.gradle.GradleResourceCopy
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 
 class GradleResourceCopyTest {
     private val tempFolder = Folders.tempBuildFolder()

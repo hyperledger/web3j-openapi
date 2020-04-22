@@ -10,37 +10,33 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.server
+package org.web3j.openapi.codegen.coregen
 
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.Import
+import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.nio.file.Path
 
-class ServerGenerator(
+class CoreGenerator(
     configuration: GeneratorConfiguration
 ) : DefaultGenerator(
     configuration
 ) {
-
-    init {
-        context["contracts"] = configuration.contracts
-        context["serverImports"] = getServerImports()
-    }
-
     override fun generate() {
-        val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
-        copyGradleFile(folderPath)
-        copyResources(folderPath)
+        val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
+        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
+        setContext()
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
-            ServerImplGenerator(
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} api folders and files")
+            CoreApiGenerator(
                 configuration.packageName,
                 folderPath = Path.of(
                     folderPath,
@@ -51,43 +47,19 @@ class ServerGenerator(
         }
     }
 
-    private fun getServerImports(): List<Import> {
+    private fun setContext() {
+        context["contractsConfiguration"] = configuration.contracts
+        context["apiImports"] = getApiImports()
+    }
+
+    private fun getApiImports(): List<Import> {
         return configuration.contracts.map {
-            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
+            Import("import ${configuration.packageName}.core.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
         }
-    }
-
-    private fun copyGradleFile(folderPath: String) {
-        logger.debug("Copying server/build.gradle")
-        CopyUtils.copyResource(
-            "server/build.gradle",
-            File(folderPath.substringBefore("server"))
-        )
-    }
-
-    private fun copyResources(folderPath: String) {
-        File(
-            Path.of(
-                folderPath.substringBefore("main"),
-                "main",
-                "resources"
-            ).toString()
-        ).apply {
-            mkdirs()
-        }
-        logger.debug("Copying server/resources")
-        CopyUtils.copyResource(
-            "server/src/main/resources/logback.xml",
-            File(folderPath.substringBefore("server"))
-        )
-        CopyUtils.copyResource(
-            "server/src/main/resources/logging.properties",
-            File(folderPath.substringBefore("server"))
-        )
     }
 
     private fun copySources(folderPath: String) {
-        File("codegen/src/main/resources/server/src/")
+        File("codegen/src/main/resources/core/src/")
             .listFiles()
             .filter { !it.isDirectory }
             .forEach {

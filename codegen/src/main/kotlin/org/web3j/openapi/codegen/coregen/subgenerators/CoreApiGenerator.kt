@@ -10,12 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.core.subgenerators
+package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
-import org.web3j.openapi.codegen.utils.ContractResource
-import org.web3j.openapi.codegen.utils.Import
+import org.web3j.openapi.codegen.common.ContractResource
+import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.nio.file.Path
@@ -65,7 +65,8 @@ class CoreApiGenerator(
                         it.name.capitalize(),
                         "fun ${it.name}($parameters): TransactionReceipt",
                         if (it.inputs.isEmpty()) "GET" else "POST"
-                    ))
+                    )
+                )
             }
         return resources
     }
