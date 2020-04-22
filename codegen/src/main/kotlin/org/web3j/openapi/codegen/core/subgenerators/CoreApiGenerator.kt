@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.core
+package org.web3j.openapi.codegen.core.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
@@ -34,11 +34,11 @@ class CoreApiGenerator(
         context["imports"] = imports()
     }
 
-    private fun imports(): List<Import>{
+    private fun imports(): List<Import> {
         return contractDetails.functionsDefintion
             .filter { it.type == "function" && it.inputs.isNotEmpty() }
             .map {
-                Import("import ${packageName}.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+                Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
             }
     }
 
@@ -56,7 +56,7 @@ class CoreApiGenerator(
 
             when (it.type) {
                 "constructor" -> {
-                    if(it.inputs.isNotEmpty())
+                    if (it.inputs.isNotEmpty())
                         CoreDeployModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName(),
@@ -68,7 +68,7 @@ class CoreApiGenerator(
                         ).generate()
                 }
                 "function" -> {
-                    if(it.inputs.isNotEmpty())
+                    if (it.inputs.isNotEmpty())
                         CoreFunctionsModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName(),
