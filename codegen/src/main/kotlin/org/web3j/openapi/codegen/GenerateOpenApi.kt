@@ -13,9 +13,9 @@
 package org.web3j.openapi.codegen
 
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.core.CoreGenerator
-import org.web3j.openapi.codegen.gradle.GradleResourceCopy
-import org.web3j.openapi.codegen.server.ServerGenerator
+import org.web3j.openapi.codegen.coregen.CoreGenerator
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
+import org.web3j.openapi.codegen.servergen.ServerGenerator
 import java.io.File
 
 class GenerateOpenApi(

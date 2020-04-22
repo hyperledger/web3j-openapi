@@ -10,29 +10,28 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.core.subgenerators
+package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.utils.KPoetUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
-class CoreFunctionsModelGenerator(
+class CoreDeployModelGenerator(
     val packageName: String,
     private val contractName: String,
-    private val functionName: String,
     val folderPath: String,
     val inputs: MutableList<AbiDefinition.NamedType>
 ) {
     fun generate() {
-        val functionFile = KPoetUtils.inputsToDataClass(
+        val constructorFile = KPoetUtils.inputsToDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
-            functionName,
+            contractName,
             inputs,
-            "Parameters"
+            "DeployParameters"
         )
-        logger.debug("Generating $contractName $functionName parameters")
-        functionFile.writeTo(File(folderPath))
+        logger.debug("Generating $contractName deploy parameters")
+        constructorFile.writeTo(File(folderPath))
     }
 
     companion object : KLogging()
