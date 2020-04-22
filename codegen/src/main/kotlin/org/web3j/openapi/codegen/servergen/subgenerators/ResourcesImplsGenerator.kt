@@ -71,7 +71,9 @@ class ResourcesImplsGenerator(
             .forEach {
                 val funSpec = if(it.inputs.isEmpty()){
                     FunSpec.builder(it.name.decapitalize())
-                        .returns(String::class.asTypeName())
+                        .returns(
+                            if(it.name != "kill") String::class.asTypeName() else TransactionReceipt::class.asTypeName()
+                        )
                         .addCode(
                             "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
                         )
