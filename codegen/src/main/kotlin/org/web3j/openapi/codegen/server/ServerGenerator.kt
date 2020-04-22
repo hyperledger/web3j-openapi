@@ -15,7 +15,6 @@ package org.web3j.openapi.codegen.server
 import mu.KLogging
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.contracts.ContractsGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
@@ -40,7 +39,7 @@ class ServerGenerator(
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            ContractsGenerator.logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
             ServerImplGenerator(
                 configuration.packageName,
                 folderPath = Path.of(

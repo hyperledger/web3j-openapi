@@ -33,12 +33,12 @@ class {{capitalizedContractName}}LifecycleImpl(
     private val defaultGasProvider: ContractGasProvider
 ) : {{capitalizedContractName}}Lifecycle {
 
-    override fun deploy(parameters: {{capitalizedContractName}}DeployParameters): TransactionReceipt {
+    override fun deploy(parameters: {{deployParameters}}): TransactionReceipt {
         val {{lowerCaseContractName}} = {{capitalizedContractName}}.deploy(
             web3j,
             transactionManager,
-            defaultGasProvider,
-            parameters.{{lowerCaseContractName}}
+            defaultGasProvider
+            {{parameters}}
         ).send()
 
         return {{lowerCaseContractName}}.transactionReceipt.get()
