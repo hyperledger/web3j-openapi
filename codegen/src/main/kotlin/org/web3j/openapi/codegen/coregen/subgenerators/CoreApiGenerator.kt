@@ -63,8 +63,9 @@ class CoreApiGenerator(
                 resources.add(
                     ContractResource(
                         it.name.capitalize(),
-                        "fun ${it.name}($parameters): TransactionReceipt",
-                        if (it.inputs.isEmpty()) "GET" else "POST"
+                        "fun ${it.name}($parameters)",
+                        if (it.inputs.isEmpty()) "GET" else "POST",
+                        if (it.inputs.isEmpty()) "String" else "TransactionReceipt"
                     )
                 )
             }

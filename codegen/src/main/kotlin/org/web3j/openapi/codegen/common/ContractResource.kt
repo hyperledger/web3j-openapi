@@ -15,5 +15,6 @@ package org.web3j.openapi.codegen.common
 data class ContractResource(
     val functionName: String,
     val resource: String,
-    val method: String
+    val method: String,
+    val returnType: String
 )
