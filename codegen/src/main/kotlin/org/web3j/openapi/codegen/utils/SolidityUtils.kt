@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.utils
 
+import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 import org.web3j.abi.datatypes.Address
@@ -27,6 +28,8 @@ object SolidityUtils {
             String::class.asTypeName()
         } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
             String::class.asTypeName()
+        } else if (typeName.endsWith("]")) {
+            ANY // TODO: Switch to proper type
         } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
             BigInteger::class.asTypeName()
         } else if (typeName == Utf8String::class.java.simpleName) {
@@ -50,8 +53,6 @@ object SolidityUtils {
             Long::class.asTypeName()
         } else if (typeName == org.web3j.abi.datatypes.primitive.Short::class.java.simpleName) {
             Short::class.asTypeName()
-        } else if (typeName.startsWith("Int")) {
-            BigInteger::class.asTypeName()
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."
