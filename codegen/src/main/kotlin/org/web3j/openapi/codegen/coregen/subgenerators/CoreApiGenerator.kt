@@ -18,7 +18,6 @@ import org.web3j.openapi.codegen.common.ContractResource
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
-import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.nio.file.Path
 
@@ -67,25 +66,18 @@ class CoreApiGenerator(
                         it.name.capitalize(),
                         "fun ${it.name}($parameters)",
                         if (it.inputs.isEmpty()) "GET" else "POST",
-                        getFunctionReturnType(it)
+                        SolidityUtils.getFunctionReturnType(it).toString()
                     )
                 )
             }
         return resources
     }
 
-    private fun getFunctionReturnType(it: AbiDefinition): String {
-        // TODO: Check outputs and return the corresponding type
-        return if(it.inputs.isEmpty() && it.name == "kill")
-                "String"
-        else "TransactionReceipt"
-    }
-
     private fun generateModels() {
         contractDetails.functionsDefintion.forEach {
             logger.debug("Generating ${it.name} model")
 
-            when (it.type) {
+            when (it.type) { // TODO: Check for events
                 "constructor" -> {
                     if (it.inputs.isNotEmpty())
                         CoreDeployModelGenerator(
