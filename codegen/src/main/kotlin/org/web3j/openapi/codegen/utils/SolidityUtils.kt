@@ -16,6 +16,8 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.Utf8String
+import org.web3j.protocol.core.methods.response.AbiDefinition
+import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.math.BigInteger
 
 object SolidityUtils {
@@ -55,5 +57,13 @@ object SolidityUtils {
                 "Unsupported type: $typeName, no native type mapping exists."
             )
         }
+    }
+
+    fun getFunctionReturnType(it: AbiDefinition): TypeName {
+        // TODO: Check outputs and return the corresponding type
+        return if (it.inputs.isEmpty() && it.name != "kill") {
+            if (it.outputs.isEmpty()) String::class.asTypeName()
+            else getNativeType(it.outputs.first().type)
+        } else TransactionReceipt::class.asTypeName()
     }
 }

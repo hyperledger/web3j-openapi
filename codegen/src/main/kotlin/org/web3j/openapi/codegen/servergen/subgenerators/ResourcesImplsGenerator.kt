@@ -20,6 +20,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.asTypeName
 import org.web3j.openapi.codegen.LICENSE
+import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.io.File
@@ -89,7 +90,7 @@ class ResourcesImplsGenerator(
                 val funSpec = if (it.inputs.isEmpty()) {
                     FunSpec.builder(it.name.decapitalize())
                         .returns(
-                            getReturnClassName(it.name)
+                            SolidityUtils.getFunctionReturnType(it)
                         )
                         .addCode(
                             "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
@@ -121,12 +122,6 @@ class ResourcesImplsGenerator(
                 functions.add(funSpec)
             }
         return functions
-    }
-
-    private fun getReturnClassName(name: String): ClassName { // TODO: Add special functions return types
-        return if (name != "kill")
-            String::class.asTypeName()
-        else TransactionReceipt::class.asTypeName()
     }
 
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
