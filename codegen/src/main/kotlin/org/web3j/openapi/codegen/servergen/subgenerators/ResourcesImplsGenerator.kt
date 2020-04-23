@@ -84,15 +84,15 @@ class ResourcesImplsGenerator(
     private fun generateFunctions(): List<FunSpec> {
         val functions = mutableListOf<FunSpec>()
         functionsDefinition
-            .filter { it.type == "function" }
+            .filter { it.type == "function" } // TODO: What about events ?
             .forEach {
                 val funSpec = if (it.inputs.isEmpty()) {
                     FunSpec.builder(it.name.decapitalize())
                         .returns(
-                            if (it.name != "kill") String::class.asTypeName() else TransactionReceipt::class.asTypeName()
+                            getReturnClassName(it.name)
                         )
                         .addCode(
-                            "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send().toString()" // TODO: Remove the trailing toString() and make proper type checking
+                            "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
                         )
                         .addModifiers(KModifier.OVERRIDE)
                         .build()
@@ -121,6 +121,12 @@ class ResourcesImplsGenerator(
                 functions.add(funSpec)
             }
         return functions
+    }
+
+    private fun getReturnClassName(name: String): ClassName { // TODO: Add special functions return types
+        return if (name != "kill")
+            String::class.asTypeName()
+        else TransactionReceipt::class.asTypeName()
     }
 
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
