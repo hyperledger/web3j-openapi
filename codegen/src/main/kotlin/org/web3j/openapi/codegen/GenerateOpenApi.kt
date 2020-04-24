@@ -59,7 +59,10 @@ class GenerateOpenApi(
                         "main",
                         "java"
                     ).toString()
-                )
+                ),
+                useJavaPrimitiveTypes = true,
+                useJavaNativeTypes = true
+
             ).generate()
         }
     }
