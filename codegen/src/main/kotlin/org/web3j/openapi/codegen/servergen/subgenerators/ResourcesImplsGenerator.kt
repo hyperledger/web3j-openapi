@@ -43,7 +43,7 @@ class ResourcesImplsGenerator(
         )
 
         val contractClass = ClassName(
-            "org.web3j.${contractName.decapitalize()}",
+            "${packageName}.wrappers",
             contractName.capitalize()
         )
 

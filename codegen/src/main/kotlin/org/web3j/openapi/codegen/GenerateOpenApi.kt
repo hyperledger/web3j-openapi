@@ -16,7 +16,9 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.CoreGenerator
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.servergen.ServerGenerator
+import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import java.io.File
+import java.nio.file.Path
 
 class GenerateOpenApi(
     private val configuration: GeneratorConfiguration
@@ -25,6 +27,7 @@ class GenerateOpenApi(
         generateGradleResources()
         generateCore()
         generateServer()
+        generateWrappers()
     }
 
     fun generateServer() {
@@ -39,5 +42,25 @@ class GenerateOpenApi(
 
     fun generateGradleResources() {
         GradleResourceCopy.copyProjectResources(File(configuration.outputDir))
+    }
+
+    fun generateWrappers() {
+        configuration.contracts.forEach {
+            SolidityFunctionWrapperGenerator(
+                abiFile = it.abiFile,
+                binFile = it.binFile,
+                contractName = it.abiFile.name.removeSuffix(".abi"),
+                basePackageName = "${configuration.packageName}.wrappers",
+                destinationDir = File(
+                    Path.of(
+                        configuration.outputDir,
+                        "server",
+                        "src",
+                        "main",
+                        "java"
+                    ).toString()
+                )
+            ).generate()
+        }
     }
 }
