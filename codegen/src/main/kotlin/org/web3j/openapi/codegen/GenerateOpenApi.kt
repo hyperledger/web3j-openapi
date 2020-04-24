@@ -62,7 +62,6 @@ class GenerateOpenApi(
                 ),
                 useJavaPrimitiveTypes = true,
                 useJavaNativeTypes = true
-
             ).generate()
         }
     }

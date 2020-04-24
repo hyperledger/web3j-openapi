@@ -43,7 +43,7 @@ class ResourcesImplsGenerator(
         )
 
         val contractClass = ClassName(
-            "${packageName}.wrappers",
+            "$packageName.wrappers",
             contractName.capitalize()
         )
 

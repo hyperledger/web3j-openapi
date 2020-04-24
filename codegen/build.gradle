@@ -17,6 +17,8 @@ dependencies {
     implementation "org.web3j:codegen:4.5.17"
 
     implementation "com.squareup:kotlinpoet:1.5.0"
+
+    implementation 'info.picocli:picocli:4.2.0'
 }
 
 sourceSets {

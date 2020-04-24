@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.utils
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
@@ -19,6 +20,7 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.Utf8String
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import java.io.File
 import java.math.BigInteger
 
 object SolidityUtils {
@@ -66,5 +68,16 @@ object SolidityUtils {
             if (it.outputs.isEmpty()) String::class.asTypeName()
             else getNativeType(it.outputs.first().type)
         } else TransactionReceipt::class.asTypeName()
+    }
+
+    fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
+        val objectMapper: ObjectMapper =
+            org.web3j.protocol.ObjectMapperFactory.getObjectMapper()
+        val abiDefinition: Array<AbiDefinition> =
+            objectMapper.readValue(
+                absFile,
+                Array<AbiDefinition>::class.java
+            )
+        return listOf(*abiDefinition)
     }
 }
