@@ -32,6 +32,7 @@ fun main() {
         listOf(
             ContractConfiguration(
                 File("/home/chamirachid/solidity/Number.abi"),
+                File("/home/chamirachid/solidity/Number.bin"),
                 ContractDetails(
                     "Number",
                     solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Number.abi"))
@@ -39,6 +40,7 @@ fun main() {
             ),
             ContractConfiguration(
                 File("/home/chamirachid/solidity/Greeter.abi"),
+                File("/home/chamirachid/solidity/Greeter.bin"),
                 ContractDetails(
                     "Greeter",
                     solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Greeter.abi"))
