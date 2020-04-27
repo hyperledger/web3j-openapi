@@ -96,7 +96,7 @@ class OpenApiCLI : Callable<Int> {
             val abi = File(it)
             val bin = bins.find { bin ->
                 bin.endsWith("${abi.name.removeSuffix(".abi")}.bin")
-            } ?: throw FileNotFoundException(abi.name.removeSuffix(".abi"))
+            } ?: throw FileNotFoundException("${abi.name.removeSuffix(".abi")}.bin")
             contractsConfig.add(
                 ContractConfiguration(
                     abi,
