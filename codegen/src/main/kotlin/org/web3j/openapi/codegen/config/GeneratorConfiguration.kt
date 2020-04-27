@@ -13,7 +13,6 @@
 package org.web3j.openapi.codegen.config
 
 data class GeneratorConfiguration(
-    val projectName: String,
     val packageName: String,
     val outputDir: String,
     val contracts: List<ContractConfiguration>
