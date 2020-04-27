@@ -31,6 +31,9 @@ class ServerGenerator(
     init {
         context["contracts"] = configuration.contracts
         context["serverImports"] = getServerImports()
+        context["projectName"] = configuration.projectName
+        context["privateKey"] = configuration.privateKey
+        context["endpoint"] = configuration.endpoint
     }
 
     override fun generate() {
