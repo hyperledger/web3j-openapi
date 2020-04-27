@@ -63,7 +63,7 @@ object SolidityUtils {
     }
 
     fun getFunctionReturnType(it: AbiDefinition): TypeName {
-        // TODO: Check outputs and return the corresponding type
+        // TODO: Check outputs and return the corresponding type. eg: Fibonacci
         return if (it.inputs.isEmpty() && it.name != "kill") {
             if (it.outputs.isEmpty()) String::class.asTypeName()
             else getNativeType(it.outputs.first().type)
