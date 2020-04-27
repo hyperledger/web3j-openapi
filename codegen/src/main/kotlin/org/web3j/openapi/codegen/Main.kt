@@ -20,35 +20,5 @@ import picocli.CommandLine
 import java.io.File
 
 fun main(args: Array<String>) {
-
-//    val configuration = GeneratorConfiguration(
-//        "testApp",
-//        "com.app.test",
-//        "/home/chamirachid/tmp/openapi/ClientTest",
-//        listOf(
-//            ContractConfiguration(
-//                File("/home/chamirachid/solidity/Number.abi"),
-//                File("/home/chamirachid/solidity/Number.bin"),
-//                ContractDetails(
-//                    "Number",
-//                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Number.abi"))
-//                )
-//            ),
-//            ContractConfiguration(
-//                File("/home/chamirachid/solidity/Greeter.abi"),
-//                File("/home/chamirachid/solidity/Greeter.bin"),
-//                ContractDetails(
-//                    "Greeter",
-//                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Greeter.abi"))
-//                )
-//            )
-//        )
-//    )
-//    val generator = GenerateOpenApi(configuration)
-//            generator.generateAll()
-
     CommandLine(OpenApiCLI()).execute(*args)
-
-//    val functionsDefinition = solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"))
-    println()
 }
