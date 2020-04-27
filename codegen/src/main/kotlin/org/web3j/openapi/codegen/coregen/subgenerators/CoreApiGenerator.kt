@@ -63,7 +63,7 @@ class CoreApiGenerator(
                     else ""
                 resources.add(
                     ContractResource(
-                        it.name.capitalize(),
+                        it.name,
                         "fun ${it.name}($parameters)",
                         if (it.inputs.isEmpty()) "GET" else "POST",
                         SolidityUtils.getFunctionReturnType(it).toString()
