@@ -50,13 +50,15 @@ class OpenApiCLI : Callable<Int> {
 
     @CommandLine.Option(names = ["-e", "--node-endpoint"],
         description = ["specify the node endpoint."],
-        defaultValue = "")
-    var nodeEndpoint: String = ""
+        defaultValue = "",
+        required = true)
+    lateinit var nodeEndpoint: String
 
-//    @CommandLine.Option(names = ["-c", "--credentials"],
-//        description = ["specify the credentials."],
-//        defaultValue = "")
-//    var creds: String = ""
+    @CommandLine.Option(names = ["-k", "--private-key"],
+        description = ["specify the private key to use in hex format."],
+        defaultValue = "",
+        required = true)
+    lateinit var pkey: String
 
     @CommandLine.Option(names = ["-p", "--package-name"],
         description = ["specify the package name."],
@@ -79,9 +81,12 @@ class OpenApiCLI : Callable<Int> {
         output.mkdirs()
 
         val generatorConfiguration = GeneratorConfiguration(
+            projectName = projectName,
             packageName = packageName,
             outputDir = output.path,
-            contracts = getContractsConfiguration()
+            contracts = getContractsConfiguration(),
+            privateKey = "0x${pkey.removePrefix("0x")}",
+            endpoint = nodeEndpoint
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
