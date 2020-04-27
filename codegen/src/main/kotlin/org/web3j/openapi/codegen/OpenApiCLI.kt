@@ -19,6 +19,7 @@ import org.web3j.openapi.codegen.utils.SolidityUtils
 import picocli.CommandLine
 import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Path
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "generate-openapi",
@@ -70,11 +71,16 @@ class OpenApiCLI : Callable<Int> {
     // TODO: Add possibility to generate only specific modules. eg: GenerateOpenApi(...).generateCore() etc
 
     override fun call(): Int {
+        val output = File(
+            Path.of(
+            outputDirectory,
+            projectName
+        ).toString())
+        output.mkdirs()
 
         val generatorConfiguration = GeneratorConfiguration(
-            projectName = projectName,
             packageName = packageName,
-            outputDir = outputDirectory,
+            outputDir = output.path,
             contracts = getContractsConfiguration()
         )
 
