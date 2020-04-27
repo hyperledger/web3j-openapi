@@ -18,9 +18,10 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import picocli.CommandLine
 import java.io.File
+import java.io.FileNotFoundException
 import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "openapi",
+@CommandLine.Command(name = "generate-openapi",
     description = ["Generates a web3j-openapi project"])
 class OpenApiCLI : Callable<Int> {
 
@@ -31,13 +32,15 @@ class OpenApiCLI : Callable<Int> {
 
     @CommandLine.Option(names = ["-a", "--abi"],
         description = ["specify the abi files and folders."],
+        arity = "1..*",
         required = true)
-    lateinit var abi: String
+    lateinit var abis: List<String>
 
     @CommandLine.Option(names = ["-b", "--bin"],
         description = ["specify the bin."],
+        arity = "1..*",
         required = true)
-    lateinit var bin: String
+    lateinit var bins: List<String>
 
     @CommandLine.Option(names = ["-n", "--project-name"],
         description = ["specify the project name."],
@@ -80,26 +83,23 @@ class OpenApiCLI : Callable<Int> {
     }
 
     private fun getContractsConfiguration(): List<ContractConfiguration> {
-        val abiFile = File(abi)
-        return listOf(
-            ContractConfiguration(
-                abiFile,
-                File(bin),
-                ContractDetails(
-                    abiFile.name.removeSuffix(".abi"),
-                    SolidityUtils.loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
+        val contractsConfig = mutableListOf<ContractConfiguration>()
+        abis.forEach {
+            val abi = File(it)
+            val bin = bins.find { bin ->
+                bin.endsWith("${abi.name.removeSuffix(".abi")}.bin")
+            } ?: throw FileNotFoundException(abi.name.removeSuffix(".abi"))
+            contractsConfig.add(
+                ContractConfiguration(
+                    abi,
+                    File(bin),
+                    ContractDetails(
+                        abi.name.removeSuffix(".abi"),
+                        SolidityUtils.loadContractDefinition(abi) // TODO: Use the web3j.codegen function
+                    )
                 )
             )
-        )
-        // TODO: Add possibility to specify many files and folders and create configuration from them
-
-//        abi.forEach {
-//            val file = File(it)
-//            if(file.isFile) {
-//                ContractConfiguration(
-//
-//                )
-//            }
-//        }
+        }
+        return contractsConfig
     }
 }
