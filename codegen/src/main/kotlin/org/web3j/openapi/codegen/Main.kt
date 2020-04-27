@@ -16,40 +16,38 @@ import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
+import picocli.CommandLine
 import java.io.File
 
-fun main() {
+fun main(args: Array<String>) {
 
-    val solidityFunctionWrapper = SolidityFunctionWrapperGenerator(
-        abiFile = File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"),
-        basePackageName = "com.app",
-        destinationDir = File("/home/chamirachid/tmp/openapi/AbiTst/"))
+//    val configuration = GeneratorConfiguration(
+//        "testApp",
+//        "com.app.test",
+//        "/home/chamirachid/tmp/openapi/ClientTest",
+//        listOf(
+//            ContractConfiguration(
+//                File("/home/chamirachid/solidity/Number.abi"),
+//                File("/home/chamirachid/solidity/Number.bin"),
+//                ContractDetails(
+//                    "Number",
+//                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Number.abi"))
+//                )
+//            ),
+//            ContractConfiguration(
+//                File("/home/chamirachid/solidity/Greeter.abi"),
+//                File("/home/chamirachid/solidity/Greeter.bin"),
+//                ContractDetails(
+//                    "Greeter",
+//                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Greeter.abi"))
+//                )
+//            )
+//        )
+//    )
+//    val generator = GenerateOpenApi(configuration)
+//            generator.generateAll()
 
-    val configuration = GeneratorConfiguration(
-        "testApp",
-        "com.app.test",
-        "/home/chamirachid/tmp/openapi/ClientTest",
-        listOf(
-            ContractConfiguration(
-                File("/home/chamirachid/solidity/Number.abi"),
-                File("/home/chamirachid/solidity/Number.bin"),
-                ContractDetails(
-                    "Number",
-                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Number.abi"))
-                )
-            ),
-            ContractConfiguration(
-                File("/home/chamirachid/solidity/Greeter.abi"),
-                File("/home/chamirachid/solidity/Greeter.bin"),
-                ContractDetails(
-                    "Greeter",
-                    solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/solidity/Greeter.abi"))
-                )
-            )
-        )
-    )
-    val generator = GenerateOpenApi(configuration)
-            generator.generateAll()
+    CommandLine(OpenApiCLI()).execute(*args)
 
 //    val functionsDefinition = solidityFunctionWrapper.loadContractDefinition(File("/home/chamirachid/tmp/openapi/AbiTst/something.abi"))
     println()

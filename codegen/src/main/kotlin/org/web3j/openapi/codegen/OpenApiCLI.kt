@@ -34,7 +34,7 @@ class OpenApiCLI : Callable<Int> {
         required = true)
     lateinit var abi: String
 
-    @CommandLine.Option(names = ["--bin"],
+    @CommandLine.Option(names = ["-b", "--bin"],
         description = ["specify the bin."],
         required = true)
     lateinit var bin: String
@@ -46,8 +46,13 @@ class OpenApiCLI : Callable<Int> {
 
     @CommandLine.Option(names = ["-e", "--node-endpoint"],
         description = ["specify the node endpoint."],
-        defaultValue = "http://localhost/")
-    var nodeEndpoint: String = "http://localhost/"
+        defaultValue = "")
+    var nodeEndpoint: String = ""
+
+//    @CommandLine.Option(names = ["-c", "--credentials"],
+//        description = ["specify the credentials."],
+//        defaultValue = "")
+//    var creds: String = ""
 
     @CommandLine.Option(names = ["-p", "--package-name"],
         description = ["specify the package name."],
