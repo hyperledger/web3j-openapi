@@ -66,7 +66,7 @@ object SolidityUtils {
         val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
         val isFunctionDefinitionConstant = it.isConstant || pureOrView
 
-        return if(isFunctionDefinitionConstant)
+        return if (isFunctionDefinitionConstant)
             getNativeType(it.outputs.first().type)
         else TransactionReceipt::class.asTypeName()
     }

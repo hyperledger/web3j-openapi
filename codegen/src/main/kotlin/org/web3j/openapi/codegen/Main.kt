@@ -12,12 +12,7 @@
  */
 package org.web3j.openapi.codegen
 
-import org.web3j.openapi.codegen.config.ContractConfiguration
-import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.config.ContractDetails
-import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import picocli.CommandLine
-import java.io.File
 
 fun main(args: Array<String>) {
     CommandLine(OpenApiCLI()).execute(*args)

@@ -18,11 +18,9 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.asTypeName
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
-import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.io.File
 
 class ResourcesImplsGenerator(
@@ -55,7 +53,8 @@ class ResourcesImplsGenerator(
 
         val contractResourceClass = ClassName(
             "$packageName.core.${contractName.toLowerCase()}",
-            "${contractName.capitalize()}Resource")
+            "${contractName.capitalize()}Resource"
+        )
 
         val resourcesClass = TypeSpec
             .classBuilder("${contractName.capitalize()}ResourceImpl")
@@ -94,18 +93,18 @@ class ResourcesImplsGenerator(
                     .addModifiers(KModifier.OVERRIDE)
 
                 if (it.inputs.isEmpty()) {
-                        funSpec.addCode(
-                            "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
-                        )
+                    funSpec.addCode(
+                        "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
+                    )
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
                         "${it.name.capitalize()}Parameters"
                     )
-                     funSpec.addParameter(
-                            "${it.name.decapitalize()}Parameters",
-                            nameClass
-                        )
+                    funSpec.addParameter(
+                        "${it.name.decapitalize()}Parameters",
+                        nameClass
+                    )
                         .addCode(
                             """
                                 return ${contractName.decapitalize()}.${it.name.decapitalize()}(
