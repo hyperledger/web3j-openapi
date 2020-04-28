@@ -34,6 +34,8 @@ class ServerGenerator(
         context["projectName"] = configuration.projectName
         context["privateKey"] = configuration.privateKey
         context["endpoint"] = configuration.endpoint
+        context["host"] = configuration.host
+        context["port"] = configuration.port
     }
 
     override fun generate() {

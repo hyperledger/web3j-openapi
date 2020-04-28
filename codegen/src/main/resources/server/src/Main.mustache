@@ -24,6 +24,8 @@ fun main() {
         registerClasses(ContractsApiImpl::class.java)
     }
     org.web3j.openapi.server.main(
-        resourceConfig //FIXME: Dont forget to put back the config line you deleted
+        resourceConfig, //FIXME: Dont forget to put back the config line you deleted
+        "{{host}}",
+        {{port}}
     )
 }

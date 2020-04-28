@@ -70,6 +70,16 @@ class OpenApiCLI : Callable<Int> {
         defaultValue = ".")
     var config: String? = null
 
+    @CommandLine.Option(names = ["-h", "--host"],
+        description = ["specify the host."],
+        defaultValue = "localhost")
+    var host: String = "localhost"
+
+    @CommandLine.Option(names = ["-r", "--port"], // FIXME: Change to appropriate abv
+        description = ["specify the port."],
+        defaultValue = "8080")
+    var port: Int = 8080
+
     // TODO: Add possibility to generate only specific modules. eg: GenerateOpenApi(...).generateCore() etc
 
     override fun call(): Int {
@@ -86,7 +96,9 @@ class OpenApiCLI : Callable<Int> {
             outputDir = output.path,
             contracts = getContractsConfiguration(),
             privateKey = "0x${pkey.removePrefix("0x")}",
-            endpoint = nodeEndpoint
+            endpoint = nodeEndpoint,
+            host = host,
+            port = port
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
