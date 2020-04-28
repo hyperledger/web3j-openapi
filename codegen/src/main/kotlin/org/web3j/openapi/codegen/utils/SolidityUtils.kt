@@ -63,11 +63,12 @@ object SolidityUtils {
     }
 
     fun getFunctionReturnType(it: AbiDefinition): TypeName {
-        // TODO: Check outputs and return the corresponding type. eg: Fibonacci
-        return if (it.inputs.isEmpty() && it.name != "kill") {
-            if (it.outputs.isEmpty()) String::class.asTypeName()
-            else getNativeType(it.outputs.first().type)
-        } else TransactionReceipt::class.asTypeName()
+        val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
+        val isFunctionDefinitionConstant = it.isConstant || pureOrView
+
+        return if(isFunctionDefinitionConstant)
+            getNativeType(it.outputs.first().type)
+        else TransactionReceipt::class.asTypeName()
     }
 
     fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
