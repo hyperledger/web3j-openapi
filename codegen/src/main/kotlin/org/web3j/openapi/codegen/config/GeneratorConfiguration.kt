@@ -18,5 +18,7 @@ data class GeneratorConfiguration(
     val outputDir: String,
     val contracts: List<ContractConfiguration>,
     val privateKey: String,
-    val endpoint: String
+    val endpoint: String,
+    val host: String,
+    val port: Int
 )
