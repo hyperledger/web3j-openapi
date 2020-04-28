@@ -65,7 +65,7 @@ class OpenApiCLI : Callable<Int> {
         required = true)
     lateinit var packageName: String
 
-    @CommandLine.Option(names = ["-c", "--config"],
+    @CommandLine.Option(names = ["-c", "--config"], // TODO
         description = ["specify the openapi configuration json."],
         defaultValue = ".")
     var config: String? = null
