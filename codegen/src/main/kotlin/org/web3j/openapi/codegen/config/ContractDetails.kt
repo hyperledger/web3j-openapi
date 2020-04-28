@@ -23,7 +23,11 @@ class ContractDetails(
     }
 
     fun capitalizedContractName(): String {
-        return contractName.toLowerCase().capitalize()
+        return contractName.capitalize()
+    }
+
+    fun decapitalizedContractName(): String {
+        return contractName.decapitalize()
     }
 
     fun deployParameters(): String {
