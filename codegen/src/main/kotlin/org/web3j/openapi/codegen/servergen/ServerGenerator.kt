@@ -45,7 +45,7 @@ class ServerGenerator(
         configuration.contracts.forEach {
             logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
             LifecycleImplGenerator(
-                configuration.packageName,
+                packageName = configuration.packageName,
                 folderPath = Path.of(
                     folderPath,
                     it.contractDetails.lowerCaseContractName()

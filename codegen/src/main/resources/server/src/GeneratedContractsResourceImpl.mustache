@@ -32,7 +32,7 @@ uriInfo: ExtendedUriInfo
 
 {{#contracts}}
     {{#contractDetails}}
-        override val {{lowerCaseContractName}} = {{capitalizedContractName}}LifecycleImpl(
+        override val {{decapitalizedContractName}} = {{capitalizedContractName}}LifecycleImpl(
         web3j,
         transactionManager,
         defaultGasProvider)

@@ -30,7 +30,7 @@ interface GeneratedContractsResource : ContractResource {
 {{#contractsConfiguration}}
     {{#contractDetails}}
         @get:Path("{{lowerCaseContractName}}")
-        val {{lowerCaseContractName}}: {{capitalizedContractName}}Lifecycle
+        val {{decapitalizedContractName}}: {{capitalizedContractName}}Lifecycle
 
     {{/contractDetails}}
 {{/contractsConfiguration}}

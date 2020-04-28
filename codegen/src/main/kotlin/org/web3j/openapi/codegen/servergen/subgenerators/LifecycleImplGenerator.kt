@@ -26,6 +26,7 @@ class LifecycleImplGenerator(
 
     init {
         context["packageName"] = packageName
+        context["decapitalizedContractName"] = contractDetails.decapitalizedContractName()
         context["lowerCaseContractName"] = contractDetails.lowerCaseContractName()
         context["capitalizedContractName"] = contractDetails.capitalizedContractName()
         context["parameters"] = getParameters()

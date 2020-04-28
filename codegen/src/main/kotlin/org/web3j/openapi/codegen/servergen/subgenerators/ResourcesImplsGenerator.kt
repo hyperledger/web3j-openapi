@@ -38,7 +38,7 @@ class ResourcesImplsGenerator(
 
     private fun generateClass(): FileSpec {
         val resourcesFile = FileSpec.builder(
-            "$packageName.server.${contractName.decapitalize()}",
+            "$packageName.server.${contractName.toLowerCase()}",
             "${contractName.capitalize()}ResourceImpl"
         )
 
@@ -54,7 +54,7 @@ class ResourcesImplsGenerator(
             )
 
         val contractResourceClass = ClassName(
-            "$packageName.core.${contractName.decapitalize()}",
+            "$packageName.core.${contractName.toLowerCase()}",
             "${contractName.capitalize()}Resource")
 
         val resourcesClass = TypeSpec
@@ -87,29 +87,24 @@ class ResourcesImplsGenerator(
         functionsDefinition
             .filter { it.type == "function" } // TODO: What about events ?
             .forEach {
-                val funSpec = if (it.inputs.isEmpty()) {
-                    FunSpec.builder(it.name.decapitalize())
-                        .returns(
-                            SolidityUtils.getFunctionReturnType(it)
-                        )
-                        .addCode(
+                val funSpec = FunSpec.builder(it.name.decapitalize())
+                    .returns(
+                        SolidityUtils.getFunctionReturnType(it)
+                    )
+                    .addModifiers(KModifier.OVERRIDE)
+
+                if (it.inputs.isEmpty()) {
+                        funSpec.addCode(
                             "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
                         )
-                        .addModifiers(KModifier.OVERRIDE)
-                        .build()
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.decapitalize()}.model",
                         "${it.name.capitalize()}Parameters"
                     )
-
-                    FunSpec.builder(it.name.decapitalize())
-                        .addParameter(
+                     funSpec.addParameter(
                             "${it.name.decapitalize()}Parameters",
                             nameClass
-                        )
-                        .returns(
-                            SolidityUtils.getFunctionReturnType(it)
                         )
                         .addCode(
                             """
@@ -118,10 +113,8 @@ class ResourcesImplsGenerator(
                                 ).send()
                             """.trimIndent()
                         )
-                        .addModifiers(KModifier.OVERRIDE)
-                        .build()
                 }
-                functions.add(funSpec)
+                functions.add(funSpec.build())
             }
         return functions
     }
