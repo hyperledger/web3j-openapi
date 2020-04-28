@@ -6,8 +6,5 @@ findProject(':server')?.name = 'web3j-openapi-server'
 include 'core'
 findProject(':core')?.name = 'web3j-openapi-core'
 
-include 'helloworld'
-findProject(':helloworld')?.name = 'web3j-openapi-poc-helloworld'
-
 include 'client'
 findProject(':client')?.name = 'web3j-openapi-client'
