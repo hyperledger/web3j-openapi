@@ -38,11 +38,12 @@ class Config(
 ) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
-        .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
-        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-        .enable(SerializationFeature.INDENT_OUTPUT)
+//        .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
+//        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+//        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+//        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+//        .enable(SerializationFeature.INDENT_OUTPUT)
+//  TODO: Check why in the generated project, when calling the main, why an exception is thrown when having these lines
 
     init {
         register(JsonMappingExceptionMapper::class.java)
