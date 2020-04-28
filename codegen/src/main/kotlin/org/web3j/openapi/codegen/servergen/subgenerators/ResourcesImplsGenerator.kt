@@ -108,7 +108,9 @@ class ResourcesImplsGenerator(
                             "${it.name.decapitalize()}Parameters",
                             nameClass
                         )
-                        .returns(TransactionReceipt::class.asTypeName())
+                        .returns(
+                            SolidityUtils.getFunctionReturnType(it)
+                        )
                         .addCode(
                             """
                                 return ${contractName.decapitalize()}.${it.name.decapitalize()}(
