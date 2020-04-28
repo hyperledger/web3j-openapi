@@ -128,7 +128,7 @@ class OpenApiCLI : Callable<Int> {
         return contractsConfig
     }
 
-    private fun recurseIntoFolders(list: List<String>, extension: String) : List<String>{
+    private fun recurseIntoFolders(list: List<String>, extension: String): List<String> {
         val recs = mutableListOf<String>()
         list
             .filter { it.endsWith(extension) || File(it).isDirectory }
@@ -137,12 +137,11 @@ class OpenApiCLI : Callable<Int> {
                 if (currentFile.isFile) recs.add(currentFile.path)
                 else currentFile.listFiles()
                     .filter { it.name.endsWith(extension) || it.isDirectory }
-                    .forEach {file ->
-                        if(file.isFile) recs.add(file.path)
+                    .forEach { file ->
+                        if (file.isFile) recs.add(file.path)
                         else recs.addAll(
                             recurseIntoFolders(
-                                file.listFiles().map { it.path }
-                                , extension
+                                file.listFiles().map { it.path }, extension
                             )
                         )
                     }
