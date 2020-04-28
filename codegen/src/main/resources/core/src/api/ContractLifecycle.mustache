@@ -29,12 +29,12 @@ import javax.ws.rs.core.MediaType
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 {{#contractDetails}}
-interface {{capitalizedContractName}}Lifecycle : ContractLifecycle<{{deployParameters}}, {{capitalizedContractName}}Resource> {
+interface {{capitalizedContractName}}Lifecycle {
 
 @POST
-override fun deploy(parameters: {{deployParameters}}): TransactionReceipt
+fun deploy{{deployParameters}}: TransactionReceipt
 
 @Path(CONTRACT_ADDRESS_PATH)
-override fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
+fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
 }
 {{/contractDetails}}

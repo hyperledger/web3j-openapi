@@ -34,8 +34,8 @@ class ContractDetails(
         functionsDefintion
             .filter { it.type == "constructor" }
             .forEach {
-                if (it.inputs.isNotEmpty()) return "${capitalizedContractName()}DeployParameters"
+                if (it.inputs.isNotEmpty()) return "(parameters: ${capitalizedContractName()}DeployParameters)"
             }
-        return "Void"
+        return "()"
     }
 }

@@ -42,7 +42,7 @@ class LifecycleImplGenerator(
     }
 
     private fun getParameters(): String {
-        if (contractDetails.deployParameters() == "Void") return ""
+        if (contractDetails.deployParameters() == "()") return ""
         var parameters = ""
         contractDetails.functionsDefintion
             .filter { it.type == "constructor" }
