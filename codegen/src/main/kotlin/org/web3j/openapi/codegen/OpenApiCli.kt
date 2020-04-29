@@ -24,7 +24,7 @@ import java.util.concurrent.Callable
 
 @Command(name = "generate-openapi",
     description = ["Generates a web3j-openapi project"])
-class OpenApiCLI : Callable<Int> {
+class OpenApiCli : Callable<Int> {
 
     @Option(names = ["-o", "--output"],
         description = ["specify the output directory."],
@@ -58,7 +58,7 @@ class OpenApiCLI : Callable<Int> {
         description = ["specify the private key to use in hex format."],
         defaultValue = "",
         required = true)
-    lateinit var pkey: String
+    lateinit var privateKey: String
 
     @Option(names = ["-p", "--package-name"],
         description = ["specify the package name."],
@@ -95,7 +95,7 @@ class OpenApiCLI : Callable<Int> {
             packageName = packageName,
             outputDir = output.path,
             contracts = getContractsConfiguration(),
-            privateKey = "0x${pkey.removePrefix("0x")}",
+            privateKey = "0x${privateKey.removePrefix("0x")}",
             endpoint = nodeEndpoint,
             host = host,
             port = port
