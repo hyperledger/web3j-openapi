@@ -10,19 +10,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen
+package org.web3j.openapi.console
 
+import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.SolidityUtils
-import picocli.CommandLine.*
+import picocli.CommandLine
+import picocli.CommandLine.Option
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.util.concurrent.Callable
 
-@Command(name = "generate-openapi",
+@CommandLine.Command(name = "generate-openapi",
 //    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
     description = ["Generates a web3j-openapi project"])
 class OpenApiCli : Callable<Int> {
