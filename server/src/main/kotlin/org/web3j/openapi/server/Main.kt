@@ -17,16 +17,49 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
-import java.net.InetSocketAddress
+import org.web3j.openapi.core.spi.OpenApiResourceProvider
+import java.util.ServiceLoader
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
 import kotlin.system.exitProcess
 
 @Context lateinit var servletConfig: ServletConfig
 
-fun main(resourceConfig: Config, host: String, port: Int) {
+fun main() {
+//
+//    resourceConfig.registerClasses(OpenApiResource::class.java)
+//
+//    val servletHolder = ServletHolder(ServletContainer(resourceConfig))
+//
+//    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
+//        addServlet(servletHolder, "/*")
+//        contextPath = "/*"
+//    }
+//
+//    val server = Server(InetSocketAddress(host, port)).apply {
+//        handler = servletContextHandler
+//    }
+//
+//    try {
+//        server.start()
+//        server.join()
+//    } catch (ex: Exception) {
+//        exitProcess(1)
+//    } finally {
+//        server.destroy()
+//    }
 
-    resourceConfig.registerClasses(OpenApiResource::class.java)
+    val resourceConfig = Config(
+        "projectName",
+        "https://rinkeby.infura.io/v3/3ab1d29a341d448c8453c5835080dc2a",
+        "0x19FF26B1B1263874C18A1B2AB0DAE3E37BD0944E981B308462FD08824BAA2C63"
+    ).apply {
+        registerClasses(OpenApiResource::class.java)
+    }
+
+    ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
+        resourceConfig.register(it.get())
+    }
 
     val servletHolder = ServletHolder(ServletContainer(resourceConfig))
 
@@ -35,7 +68,7 @@ fun main(resourceConfig: Config, host: String, port: Int) {
         contextPath = "/*"
     }
 
-    val server = Server(InetSocketAddress(host, port)).apply {
+    val server = Server(8080).apply {
         handler = servletContextHandler
     }
 
