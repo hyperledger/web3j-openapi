@@ -15,5 +15,5 @@ package org.web3j.openapi.codegen
 import picocli.CommandLine
 
 fun main(args: Array<String>) {
-    CommandLine(OpenApiCLI()).execute(*args)
+    CommandLine(OpenApiCli()).execute(*args)
 }
