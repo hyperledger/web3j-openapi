@@ -8,6 +8,7 @@ Web3j Open API
  * server: core, Jersey Server, Jetty, integration tests
  * codegen: Mustache, Kotlinpoet?, openapi (Based on CorDappGenerator for Gradle project)
  * client: core, Jersey Client
+ * console: Command-line tools command `epirus-openapi`, sub-commands `generate`, `run`
  * helloworld:
    * openapi
    * server: web3j-openapi-server (org.web3j.openapi.server.MainKt or generated main)
@@ -30,6 +31,12 @@ Also start the server with:
 $ ./gradle shadowJar // Create an executable JAR that starts the server
 $ java -jar helloworld-0.1.0-all.jar
 ...
+```
+
+Or using the CLI:
+
+```ssh
+$ epirus openapi generate/run
 ```
 
 To interact via Java/Kotlin with this API:

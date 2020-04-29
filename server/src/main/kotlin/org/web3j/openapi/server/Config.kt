@@ -34,7 +34,7 @@ import javax.inject.Singleton
 class Config(
     applicationName: String,
     nodeAddress: String,
-    credentials: String
+    privateKey: String
 ) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
@@ -54,7 +54,7 @@ class Config(
 
         property(ServerProperties.APPLICATION_NAME, applicationName)
         property(Properties.NODE_ADDRESS, nodeAddress)
-        property(Properties.CREDENTIALS, credentials)
+        property(Properties.PRIVATE_KEY, privateKey)
     }
 
     private class InjectionBinder : AbstractBinder() {

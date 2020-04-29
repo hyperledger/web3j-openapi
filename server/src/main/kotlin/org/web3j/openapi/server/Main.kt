@@ -17,41 +17,58 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.glassfish.jersey.servlet.ServletContainer
-import org.web3j.openapi.helloworld.server.HelloWorldApiImpl
+import org.web3j.openapi.core.spi.OpenApiResourceProvider
+import java.util.ServiceLoader
+import java.util.concurrent.Callable
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
 import kotlin.system.exitProcess
 
-@Context lateinit var servletConfig: ServletConfig
+@Context
+lateinit var servletConfig: ServletConfig
 
-fun main() {
+open class OpenApiServer: Callable<Int> {
 
-    // FIXME Load contract resources, etc. from args
-    val resourceConfig = Config(
-        "Web3j Open API Greeter PoC",
-        "https://rinkeby.infura.io/v3/3ab1d29a341d448c8453c5835080dc2a",
-        "0x19FF26B1B1263874C18A1B2AB0DAE3E37BD0944E981B308462FD08824BAA2C63"
-    ).apply {
-        registerClasses(HelloWorldApiImpl::class.java, OpenApiResource::class.java)
+    lateinit var projectName: String
+    lateinit var nodeEndpoint: String
+    lateinit var privateKey: String
+
+    override fun call(): Int {
+
+        // FIXME Load contract resources, etc. from args
+        val resourceConfig = Config(
+            projectName,
+            nodeEndpoint,
+            privateKey
+        ).apply {
+            registerClasses(OpenApiResource::class.java)
+        }
+
+        ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
+            resourceConfig.register(it.get())
+        }
+
+        val servletHolder = ServletHolder(ServletContainer(resourceConfig))
+
+        val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
+            addServlet(servletHolder, "/*")
+            contextPath = "/*"
+        }
+
+        val server = Server(8080).apply {
+            handler = servletContextHandler
+        }
+
+        try {
+            server.start()
+            server.join()
+        } catch (ex: Exception) {
+            exitProcess(1)
+        } finally {
+            server.destroy()
+        }
+
+        exitProcess(0)
     }
 
-    val servletHolder = ServletHolder(ServletContainer(resourceConfig))
-
-    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
-        addServlet(servletHolder, "/*")
-        contextPath = "/*"
-    }
-
-    val server = Server(8080).apply {
-        handler = servletContextHandler
-    }
-
-    try {
-        server.start()
-        server.join()
-    } catch (ex: Exception) {
-        exitProcess(1)
-    } finally {
-        server.destroy()
-    }
 }
