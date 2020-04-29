@@ -23,6 +23,7 @@ import java.nio.file.Path
 import java.util.concurrent.Callable
 
 @Command(name = "generate-openapi",
+//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
     description = ["Generates a web3j-openapi project"])
 class OpenApiCli : Callable<Int> {
 
