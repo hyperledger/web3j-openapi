@@ -19,6 +19,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.KModifier
 import org.web3j.openapi.codegen.LICENSE
+import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
@@ -32,6 +33,12 @@ class ResourcesImplsGenerator(
 
     fun generate() {
         generateClass().writeTo(File(folderPath))
+        File(folderPath)
+            .walkTopDown()
+            .filter { file -> file.name.endsWith(".kt") }
+            .forEach { file ->
+                CopyUtils.kotlinFormat(file)
+            }
     }
 
     private fun generateClass(): FileSpec {
