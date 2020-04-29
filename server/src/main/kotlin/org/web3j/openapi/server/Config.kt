@@ -30,7 +30,7 @@ import javax.inject.Singleton
 class Config(
     applicationName: String,
     nodeAddress: String,
-    credentials: String
+    privateKey: String
 ) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
@@ -38,8 +38,7 @@ class Config(
 //        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 //        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 //        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-//        .enable(SerializationFeature.INDENT_OUTPUT)
-//  TODO: Check why in the generated project, when calling the main, why an exception is thrown when having these lines
+//        .enable(SerializationFeature.INDENT_OUTPUT) FIXME: throws exception from the generated project
 
     init {
         register(JsonMappingExceptionMapper::class.java)
@@ -51,7 +50,7 @@ class Config(
 
         property(ServerProperties.APPLICATION_NAME, applicationName)
         property(Properties.NODE_ADDRESS, nodeAddress)
-        property(Properties.CREDENTIALS, credentials)
+        property(Properties.PRIVATE_KEY, privateKey)
     }
 
     private class InjectionBinder : AbstractBinder() {
