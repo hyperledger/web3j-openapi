@@ -45,5 +45,5 @@ Tag(name = "ethereum")
 interface ContractsApi : Web3jOpenApi {
 
 @get:Path("contracts")
-override val contracts: ContractResource
+override val contracts: GeneratedContractsResource
 }
