@@ -100,6 +100,34 @@ class ServerGenerator(
             "server/src/main/resources/logging.properties",
             File(folderPath.substringBefore("server"))
         )
+
+        val spiFolder = File (
+            Path.of(
+                folderPath.substringBefore("server"),
+                "server",
+                "src",
+                "main",
+                "resources",
+                "META-INF",
+                "services"
+            ).toString()
+        ).apply { mkdirs() }
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = spiFolder.absolutePath,
+            template = TemplateUtils.mustacheTemplate(
+                    Path.of(
+                        "server",
+                        "src",
+                        "main",
+                        "resources",
+                        "META-INF",
+                        "services",
+                        "org.web3j.openapi.core.spi.OpenApiResourceProvider.mustache"
+                    ).toString()
+            ),
+            name = "org.web3j.openapi.core.spi.OpenApiResourceProvider"
+        )
     }
 
     private fun copySources(folderPath: String) {
