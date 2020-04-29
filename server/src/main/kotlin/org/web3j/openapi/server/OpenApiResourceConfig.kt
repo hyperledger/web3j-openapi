@@ -17,10 +17,10 @@ import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.aeonbits.owner.ConfigFactory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
@@ -31,8 +31,10 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.inject.Singleton
 
-class OpenApiResourceConfig(
-    openApiServerConfig: OpenApiServerConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
+class Config(
+    applicationName: String,
+    nodeAddress: String,
+    privateKey: String
 ) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
@@ -47,15 +49,12 @@ class OpenApiResourceConfig(
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
-        register(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()) // FIXME Why warning: WARN  o.g.jersey.internal.inject.Providers - A provider java.util.logging.Logger registered in SERVER runtime does not implement any provider interfaces applicable in the SERVER runtime. Due to constraint configuration problems the provider java.util.logging.Logger will be ignored.
-
+        register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt())) // FIXME Why no logs?
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName())
-        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint())
-        property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey())
-        property(Properties.WALLET_FILE, openApiServerConfig.walletFile())
-        property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword())
+        property(ServerProperties.APPLICATION_NAME, applicationName)
+        property(Properties.NODE_ADDRESS, nodeAddress)
+        property(Properties.PRIVATE_KEY, privateKey)
     }
 
     private class InjectionBinder : AbstractBinder() {
@@ -75,6 +74,6 @@ class OpenApiResourceConfig(
             SLF4JBridgeHandler.install()
         }
 
-        private val logger = Logger.getLogger(OpenApiResourceConfig::class.java.canonicalName)!!
+        private val logger = Logger.getLogger(Config::class.java.canonicalName)!!
     }
 }
