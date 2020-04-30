@@ -57,7 +57,7 @@ fun main() {
         registerClasses(OpenApiResource::class.java)
     }
 
-    ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
+    ServiceLoader.load(OpenApiResourceProvider::class.java).forEach { //TODO: Add registration logs
         resourceConfig.register(it.get())
     }
 
