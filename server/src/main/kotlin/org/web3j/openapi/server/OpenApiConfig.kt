@@ -13,6 +13,7 @@
 package org.web3j.openapi.server
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.aeonbits.owner.ConfigFactory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
@@ -27,11 +28,11 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.inject.Singleton
 
-class Config(
-    applicationName: String?,
-    nodeAddress: String,
-    privateKey: String
-) : ResourceConfig() {
+class OpenApiConfig() : ResourceConfig() {
+
+    private val serverConfig = ConfigFactory.create(ServerConfig::class.java)
+    val host = serverConfig.host()
+    val port = serverConfig.port()
 
     private val mapper = jacksonObjectMapper()
 //        .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
@@ -48,9 +49,9 @@ class Config(
         register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt())) // FIXME Why no logs?
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, applicationName)
-        property(Properties.NODE_ADDRESS, nodeAddress)
-        property(Properties.PRIVATE_KEY, privateKey)
+        property(ServerProperties.APPLICATION_NAME, serverConfig.projectName())
+        property(Properties.NODE_ADDRESS, serverConfig.nodeEndpoint())
+        property(Properties.PRIVATE_KEY, serverConfig.privateKey())
     }
 
     private class InjectionBinder : AbstractBinder() {
@@ -70,6 +71,6 @@ class Config(
             SLF4JBridgeHandler.install()
         }
 
-        private val logger = Logger.getLogger(Config::class.java.canonicalName)!!
+        private val logger = Logger.getLogger(OpenApiConfig::class.java.canonicalName)!!
     }
 }
