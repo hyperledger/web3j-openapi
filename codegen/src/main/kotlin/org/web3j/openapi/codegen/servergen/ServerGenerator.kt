@@ -127,18 +127,24 @@ class ServerGenerator(
     }
 
     private fun copySources(folderPath: String) {
-        File("codegen/src/main/resources/server/src/")
-            .listFiles()
-            .filter { !it.isDirectory }
-            .forEach {
-                logger.debug("Generating from ${it.canonicalPath}")
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${it.name.removeSuffix(".mustache")}.kt"
-                )
-            }
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("server/src/ContractsApiImpl.mustache"),
+            name = "ContractsApiImpl.kt"
+        )
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("server/src/ContractsResourceProvider.mustache"),
+            name = "ContractsResourceProvider.kt"
+        )
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("server/src/GeneratedContractsResourceImpl.mustache"),
+            name = "GeneratedContractsResourceImpl.kt"
+        )
     }
 
     companion object : KLogging()
