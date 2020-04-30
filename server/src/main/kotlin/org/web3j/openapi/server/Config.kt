@@ -28,7 +28,7 @@ import java.util.logging.Logger
 import javax.inject.Singleton
 
 class Config(
-    applicationName: String,
+    applicationName: String?,
     nodeAddress: String,
     privateKey: String
 ) : ResourceConfig() {
