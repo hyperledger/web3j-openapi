@@ -40,7 +40,8 @@ class RunCmd : OpenApiCli(), Callable<Int> {
             .forProjectDirectory(projectFolder)
             .connect()
             .newBuild()
-            .forTasks("runShadow")
+            .forTasks("run")
+            .setStandardOutput(System.out)
             .run(object : ResultHandler<Void> {
                 override fun onFailure(failure: GradleConnectionException) {
                     throw GradleConnectionException(failure.message)
