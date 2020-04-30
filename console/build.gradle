@@ -1,4 +1,16 @@
-dependencies{
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+}
+
+mainClassName = 'org.web3j.openapi.console.MainKt'
+
+repositories{
+    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+}
+
+dependencies {
     implementation project(":web3j-openapi-codegen")
-    implementation 'info.picocli:picocli:4.2.0'
+    implementation "info.picocli:picocli:${versions.picocli}"
+    compile "org.gradle:gradle-tooling-api:${versions.gradle}"
 }
