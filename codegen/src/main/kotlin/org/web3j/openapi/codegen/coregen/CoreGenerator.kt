@@ -21,6 +21,7 @@ import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.net.URL
 import java.nio.file.Path
 
 class CoreGenerator(
@@ -59,18 +60,18 @@ class CoreGenerator(
     }
 
     private fun copySources(folderPath: String) {
-        File("codegen/src/main/resources/core/src/")
-            .listFiles()
-            .filter { !it.isDirectory }
-            .forEach {
-                logger.debug("Generating from ${it.canonicalPath}")
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${it.name.removeSuffix(".mustache")}.kt"
-                )
-            }
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("core/src/ContractsApi.mustache"),
+            name = "ContractsApi.kt"
+        )
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
+            name = "GeneratedContractsResource.kt"
+        )
     }
 
     companion object : KLogging()
