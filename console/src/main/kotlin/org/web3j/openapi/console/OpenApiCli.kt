@@ -51,37 +51,10 @@ class OpenApiCli : Callable<Int> {
         required = true)
     lateinit var projectName: String
 
-    @Option(names = ["-e", "--node-endpoint"],
-        description = ["specify the node endpoint."],
-        defaultValue = "",
-        required = true)
-    lateinit var nodeEndpoint: String
-
-    @Option(names = ["-k", "--private-key"],
-        description = ["specify the private key to use in hex format."],
-        defaultValue = "",
-        required = true)
-    lateinit var privateKey: String
-
     @Option(names = ["-p", "--package-name"],
         description = ["specify the package name."],
         required = true)
     lateinit var packageName: String
-
-    @Option(names = ["-c", "--config"], // TODO
-        description = ["specify the openapi configuration json."],
-        defaultValue = ".")
-    var config: String? = null
-
-    @Option(names = ["-h", "--host"],
-        description = ["specify the host."],
-        defaultValue = "localhost")
-    var host: String = "localhost"
-
-    @Option(names = ["-r", "--port"], // FIXME: Change to appropriate abv
-        description = ["specify the port."],
-        defaultValue = "8080")
-    var port: Int = 8080
 
     // TODO: Add possibility to generate only specific modules. eg: GenerateOpenApi(...).generateCore() etc
 
@@ -97,11 +70,7 @@ class OpenApiCli : Callable<Int> {
             projectName = projectName,
             packageName = packageName,
             outputDir = output.path,
-            contracts = getContractsConfiguration(),
-            privateKey = "0x${privateKey.removePrefix("0x")}",
-            endpoint = nodeEndpoint,
-            host = host,
-            port = port
+            contracts = getContractsConfiguration()
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
