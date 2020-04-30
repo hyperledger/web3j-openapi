@@ -10,8 +10,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.console
 
-const val HEX_40 = "0x[a-f0-9]{40}"
-const val CONTRACT_ADDRESS = "contractAddress"
-const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40}"
+import picocli.CommandLine
+import java.util.concurrent.Callable
+
+@CommandLine.Command(name = "generate",
+    description = ["Generates a web3j-openapi project"])
+class GenerateCmd : OpenApiCli(), Callable<Int> {
+    override fun call(): Int {
+        generate()
+        return 0
+    }
+}
