@@ -17,17 +17,12 @@ import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.SolidityUtils
-import picocli.CommandLine
 import picocli.CommandLine.Option
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
-import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "generate-openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["Generates a web3j-openapi project"])
-class OpenApiCli : Callable<Int> {
+abstract class OpenApiCli {
 
     @Option(names = ["-o", "--output"],
         description = ["specify the output directory."],
@@ -58,7 +53,7 @@ class OpenApiCli : Callable<Int> {
 
     // TODO: Add possibility to generate only specific modules. eg: GenerateOpenApi(...).generateCore() etc
 
-    override fun call(): Int {
+    fun generate(): Int {
         val output = File(
             Path.of(
             outputDirectory,
@@ -81,7 +76,7 @@ class OpenApiCli : Callable<Int> {
         abis = recurseIntoFolders(abis, ".abi")
         bins = recurseIntoFolders(bins, ".bin")
         val contractsConfig = mutableListOf<ContractConfiguration>()
-        abis.forEach {abi ->
+        abis.forEach { abi ->
             val abiFile = File(abi)
             val bin = bins.find { bin ->
                 bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
@@ -104,7 +99,7 @@ class OpenApiCli : Callable<Int> {
         val recs = mutableListOf<String>()
         list
             .filter { it.endsWith(extension) || File(it).isDirectory }
-            .forEach {filePath ->
+            .forEach { filePath ->
                 val currentFile = File(filePath)
                 if (currentFile.isFile) recs.add(currentFile.path)
                 else currentFile.listFiles()

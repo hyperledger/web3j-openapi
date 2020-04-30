@@ -10,18 +10,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.console
 
-import javax.ws.rs.GET
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import picocli.CommandLine
+import java.util.concurrent.Callable
 
-interface ContractResource {
-
-    /**
-     * Lists all available contract types.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findAll(): List<String>
+@CommandLine.Command(name = "generate",
+    description = ["Generates a web3j-openapi project"])
+class GenerateCmd : OpenApiCli(), Callable<Int> {
+    override fun call(): Int {
+        generate()
+        return 0
+    }
 }
