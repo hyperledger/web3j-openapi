@@ -36,11 +36,11 @@ interface ServerConfig : Config {
     @Key("privateKey")
     fun privateKey(): String
 
-    @Key("server.host")
+    @Key("server_host")
     @DefaultValue("localhost")
     fun host(): String
 
-    @Key("server.port")
+    @Key("server_port")
     @DefaultValue("8080")
     fun port(): Int
 }
