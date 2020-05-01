@@ -65,6 +65,7 @@ abstract class OpenApiCli {
             projectName = projectName,
             packageName = packageName,
             outputDir = output.path,
+            jarDir = outputDirectory,
             contracts = getContractsConfiguration()
         )
 

@@ -34,7 +34,7 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
 
     override fun call(): Int {
         if (jar) {
-            val tempDir = createTempDir(directory = File(outputDirectory))
+            val tempDir = createTempDir(directory = File(outputDirectory)) // FIXME: delete this folder after finishing the generation of the jar
             generate(tempDir.absolutePath)
             val projectFolder = File(
                 Path.of(
@@ -55,7 +55,6 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                     override fun onFailure(failure: GradleConnectionException) {
                         throw GradleConnectionException(failure.message)
                     }
-
                     override fun onComplete(result: Void?) {
                     }
                 })

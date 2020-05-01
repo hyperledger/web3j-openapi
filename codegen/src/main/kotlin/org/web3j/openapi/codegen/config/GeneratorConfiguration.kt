@@ -16,5 +16,6 @@ data class GeneratorConfiguration(
     val projectName: String,
     val packageName: String,
     val outputDir: String,
+    val jarDir: String,
     val contracts: List<ContractConfiguration>
 )
