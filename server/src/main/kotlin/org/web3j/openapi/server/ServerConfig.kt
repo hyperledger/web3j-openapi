@@ -30,17 +30,17 @@ interface ServerConfig : Config {
     @DefaultValue("Generated Web3j-OpenApi project")
     fun projectName(): String
 
-    @Key("endpoint")
+    @Key("WEB3J_OPENAPI_NODE_ENDPOINT")
     fun nodeEndpoint(): String
 
-    @Key("privateKey")
+    @Key("WEB3J_OPENAPI_PRIVATEKEY")
     fun privateKey(): String
 
-    @Key("server_host")
+    @Key("WEB3J_OPENAPI_SERVER_HOST")
     @DefaultValue("localhost")
     fun host(): String
 
-    @Key("server_port")
+    @Key("WEB3J_OPENAPI_SERVER_PORT")
     @DefaultValue("8080")
     fun port(): Int
 }
