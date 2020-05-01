@@ -6,6 +6,10 @@ plugins {
 
 mainClassName = 'org.web3j.openapi.server.OpenApiServerKt'
 
+shadowJar {
+    destinationDir = file("{{outputDir}}")
+}
+
 dependencies {
     implementation "org.web3j.openapi:web3j-openapi-server:1.0"
     implementation project(':openapi-generated-core')

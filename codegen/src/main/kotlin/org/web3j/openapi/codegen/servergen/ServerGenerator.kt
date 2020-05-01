@@ -32,6 +32,7 @@ class ServerGenerator(
         context["contracts"] = configuration.contracts
         context["serverImports"] = getServerImports()
         context["projectName"] = configuration.projectName
+        context["outputDir"] = File(configuration.jarDir).absolutePath
     }
 
     override fun generate() {
@@ -70,10 +71,12 @@ class ServerGenerator(
     }
 
     private fun copyGradleFile(folderPath: String) {
-        logger.debug("Copying server/build.gradle")
-        CopyUtils.copyResource(
-            "server/build.gradle",
-            File(folderPath.substringBefore("server"))
+        logger.debug("Generating server/build.gradle")
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath.substringBefore("src"),
+            template = TemplateUtils.mustacheTemplate("server/build.gradle.mustache"),
+            name = "build.gradle"
         )
     }
 
@@ -97,7 +100,7 @@ class ServerGenerator(
             File(folderPath.substringBefore("server"))
         )
 
-        val spiFolder = File (
+        val spiFolder = File(
             Path.of(
                 folderPath.substringBefore("server"),
                 "server",
