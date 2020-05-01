@@ -109,18 +109,18 @@ class CoreApiGenerator(
     }
 
     private fun copySources() {
-        File("codegen/src/main/resources/core/src/api")
-            .listFiles()
-            ?.forEach {
-                logger.debug("Generating from ${it.canonicalPath}")
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache")
-                        .removePrefix("Contract")}.kt"
-                )
-            }
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("core/src/api/ContractLifecycle.mustache"),
+            name = "${contractDetails.capitalizedContractName()}Lifecycle.kt"
+        )
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("core/src/api/ContractResource.mustache"),
+            name = "${contractDetails.capitalizedContractName()}Resource.kt"
+        )
     }
 
     companion object : KLogging()

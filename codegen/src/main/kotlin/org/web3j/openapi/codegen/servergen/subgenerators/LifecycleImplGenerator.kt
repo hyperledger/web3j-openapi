@@ -55,17 +55,12 @@ class LifecycleImplGenerator(
     }
 
     private fun copySources() {
-        File("codegen/src/main/resources/server/src/contractImpl")
-            .listFiles()
-            ?.forEach {
-                logger.debug("Generating from ${it.canonicalPath}")
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate(it.path.substringAfter("resources/")),
-                    name = "${contractDetails.capitalizedContractName()}${it.name.removeSuffix(".mustache").removePrefix("Contract")}.kt"
-                )
-            }
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("server/src/contractImpl/ContractLifecycleImpl.mustache"),
+            name = "${contractDetails.capitalizedContractName()}LifecycleImpl.kt"
+        )
     }
 
     companion object : KLogging()
