@@ -33,12 +33,11 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
     var jar: Boolean = false
 
     override fun call(): Int {
+        generate(outputDirectory)
         if (jar) {
-            val tempDir = createTempDir(directory = File(outputDirectory)) // FIXME: delete this folder after finishing the generation of the jar
-            generate(tempDir.absolutePath)
             val projectFolder = File(
                 Path.of(
-                    tempDir.absolutePath,
+                    outputDirectory,
                     projectName
                 ).toString()
             ).apply {
@@ -58,7 +57,7 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                     override fun onComplete(result: Void?) {
                     }
                 })
-        } else generate(outputDirectory)
+        }
         return 0
     }
 }
