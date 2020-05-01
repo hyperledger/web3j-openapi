@@ -20,8 +20,6 @@ import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.utils.TemplateUtils
-import java.io.File
-import java.net.URL
 import java.nio.file.Path
 
 class CoreGenerator(
