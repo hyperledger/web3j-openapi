@@ -17,27 +17,22 @@ import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import picocli.CommandLine
 import java.io.File
-import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "run",
     description = ["Generates then runs a web3j-openapi project"])
-class RunCmd : OpenApiCli(), Callable<Int> {
+class RunCmd : Callable<Int> {
+    @CommandLine.Option(names = ["-p", "--project"],
+        description = ["specify the project directory to be run."],
+        defaultValue = ".",
+        required = true)
+    var projectFolder: String = "."
+
     override fun call(): Int {
-        generate(outputDirectory)
-        val projectFolder = File(
-            Path.of(
-                outputDirectory,
-                projectName
-            ).toString()
-        ).apply {
-            if (!exists()) throw FileNotFoundException(absolutePath)
-        }
 
         GradleConnector.newConnector()
             .useBuildDistribution()
-            .forProjectDirectory(projectFolder)
+            .forProjectDirectory(File(projectFolder))
             .connect()
             .newBuild()
             .forTasks("run")
