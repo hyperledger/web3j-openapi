@@ -12,14 +12,54 @@
  */
 package org.web3j.openapi.console
 
-import picocli.CommandLine
+import org.gradle.api.GradleException
+import org.gradle.tooling.GradleConnectionException
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ResultHandler
+import picocli.CommandLine.Command
+import picocli.CommandLine.Option
+import java.io.File
+import java.io.FileNotFoundException
+import java.nio.file.Path
 import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "generate",
+@Command(name = "generate",
     description = ["Generates a web3j-openapi project"])
 class GenerateCmd : OpenApiCli(), Callable<Int> {
+
+    @Option(names = ["--jar"],
+        description = ["set it true for jar generation."],
+        defaultValue = "false")
+    var jar: Boolean = false
+
     override fun call(): Int {
-        generate()
+        if (jar) {
+            val tempDir = createTempDir(directory = File(outputDirectory))
+            generate(tempDir.absolutePath)
+            val projectFolder = File(
+                Path.of(
+                    tempDir.absolutePath,
+                    projectName
+                ).toString()
+            ).apply {
+                if (!exists()) throw FileNotFoundException(absolutePath)
+            }
+            GradleConnector.newConnector()
+                .useBuildDistribution()
+                .forProjectDirectory(projectFolder)
+                .connect()
+                .newBuild()
+                .forTasks("shadowJar")
+                .setStandardOutput(System.out)
+                .run(object : ResultHandler<Void> {
+                    override fun onFailure(failure: GradleConnectionException) {
+                        throw GradleConnectionException(failure.message)
+                    }
+
+                    override fun onComplete(result: Void?) {
+                    }
+                })
+        } else generate(outputDirectory)
         return 0
     }
 }

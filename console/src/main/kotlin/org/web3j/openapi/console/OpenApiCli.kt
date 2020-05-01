@@ -53,11 +53,11 @@ abstract class OpenApiCli {
 
     // TODO: Add possibility to generate only specific modules. eg: GenerateOpenApi(...).generateCore() etc
 
-    fun generate(): Int {
+    fun generate(outputDir: String): Int {
         val output = File(
             Path.of(
-            outputDirectory,
-            projectName
+                outputDir,
+                projectName
         ).toString())
         output.mkdirs()
 

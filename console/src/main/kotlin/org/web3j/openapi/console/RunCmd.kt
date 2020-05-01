@@ -25,7 +25,7 @@ import java.util.concurrent.Callable
     description = ["Generates then runs a web3j-openapi project"])
 class RunCmd : OpenApiCli(), Callable<Int> {
     override fun call(): Int {
-        generate()
+        generate(outputDirectory)
         val projectFolder = File(
             Path.of(
                 outputDirectory,
