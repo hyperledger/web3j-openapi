@@ -20,7 +20,7 @@ import java.io.File
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "run",
-    description = ["Generates then runs a web3j-openapi project"])
+    description = ["Runs a web3j-openapi project"])
 class RunCmd : Callable<Int> {
     @CommandLine.Option(names = ["-p", "--project"],
         description = ["specify the project directory to be run."],
