@@ -44,7 +44,7 @@ fun main() {
         contextPath = "/*"
     }
 
-    val server = Server(InetSocketAddress(resourceConfig.config.getHost(), resourceConfig.config.getPort())).apply {
+    val server = Server(InetSocketAddress(resourceConfig.host, resourceConfig.port)).apply {
         handler = servletContextHandler
     }
 
