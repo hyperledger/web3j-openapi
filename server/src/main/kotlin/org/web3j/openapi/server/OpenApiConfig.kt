@@ -13,7 +13,6 @@
 package org.web3j.openapi.server
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.aeonbits.owner.ConfigFactory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
@@ -22,6 +21,7 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
+import org.web3j.openapi.server.config.ServerConfig
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.logging.Level
@@ -30,9 +30,7 @@ import javax.inject.Singleton
 
 class OpenApiConfig() : ResourceConfig() {
 
-    private val serverConfig = ConfigFactory.create(ServerConfig::class.java)
-    val host = serverConfig.host()
-    val port = serverConfig.port()
+    val config = ServerConfig()
 
     private val mapper = jacksonObjectMapper()
 //        .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
@@ -49,9 +47,10 @@ class OpenApiConfig() : ResourceConfig() {
         register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt())) // FIXME Why no logs?
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, serverConfig.projectName())
-        property(Properties.NODE_ADDRESS, serverConfig.nodeEndpoint())
-        property(Properties.PRIVATE_KEY, serverConfig.privateKey())
+        property(ServerProperties.APPLICATION_NAME, config.getProjectName())
+        property(Properties.NODE_ADDRESS, config.getNodeEndpoint())
+        // property(Properties.PRIVATE_KEY, config.privateKey()) TODO: Not sure how to do it
+        Properties.CREDENTIALS = config.getCredentials()
     }
 
     private class InjectionBinder : AbstractBinder() {

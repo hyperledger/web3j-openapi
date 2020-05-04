@@ -12,8 +12,10 @@
  */
 package org.web3j.openapi.server
 
+import org.web3j.crypto.Credentials
+
 object Properties {
     const val NODE_ADDRESS = "web3j.openApi.node.address"
-    const val PRIVATE_KEY = "web3j.openApi.privateKey"
+    lateinit var CREDENTIALS: Credentials
     // TODO Add more configurations, eg. gas price/limit
 }

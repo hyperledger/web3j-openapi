@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.server.config
 
 import org.aeonbits.owner.Config
 import org.aeonbits.owner.Config.LoadPolicy
@@ -21,11 +21,11 @@ import org.aeonbits.owner.Config.DefaultValue
 
 @LoadPolicy(LoadType.MERGE)
 @Sources(
-    "system:env",
+    "file:.web3j.openapi.config",
     "system:properties",
-    "file:/.web3j.openapi.config"
+    "system:env"
 )
-interface ServerConfig : Config {
+interface ConfigOptions : Config {
     @Key("projectName")
     @DefaultValue("Generated Web3j-OpenApi project")
     fun projectName(): String
@@ -34,7 +34,13 @@ interface ServerConfig : Config {
     fun nodeEndpoint(): String
 
     @Key("WEB3J_OPENAPI_PRIVATEKEY")
-    fun privateKey(): String
+    fun privateKey(): String?
+
+    @Key("WEB3J_OPENAPI_WALLET_FILE")
+    fun walletFile(): String?
+
+    @Key("WEB3J_OPENAPI_WALLET_PASSWORD")
+    fun walletPassword(): String?
 
     @Key("WEB3J_OPENAPI_SERVER_HOST")
     @DefaultValue("localhost")

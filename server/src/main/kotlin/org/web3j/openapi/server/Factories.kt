@@ -15,7 +15,7 @@ package org.web3j.openapi.server
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
 import org.web3j.openapi.server.Properties.NODE_ADDRESS
-import org.web3j.openapi.server.Properties.PRIVATE_KEY
+import org.web3j.openapi.server.Properties.CREDENTIALS
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.gas.ContractGasProvider
@@ -42,8 +42,7 @@ class CredentialsFactory(
 ) : Factory<Credentials> {
 
     override fun provide(): Credentials {
-        val privateKey = configuration.getProperty(PRIVATE_KEY).toString()
-        return Credentials.create(privateKey)
+        return CREDENTIALS
     }
 
     override fun dispose(credentials: Credentials) {
