@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.console
 
-import org.gradle.api.GradleException
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler

@@ -22,7 +22,7 @@ import org.web3j.protocol.core.methods.response.AbiDefinition
 
 object KPoetUtils {
 
-    fun inputsToDataClass(packageName: String, name: String, inputs: MutableList<AbiDefinition.NamedType>, type: String): FileSpec {
+    fun inputsToDataClass(packageName: String, name: String, inputs: List<AbiDefinition.NamedType>, type: String): FileSpec {
         val outputFile = FileSpec.builder(
             packageName,
             "${name.capitalize()}$type"
