@@ -13,7 +13,6 @@
 package org.web3j.openapi.codegen.web3jCodegenStuff
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.web3j.codegen.Console
 import org.web3j.codegen.Console.exitError
 import org.web3j.codegen.SolidityFunctionWrapper
 import org.web3j.tx.Contract
@@ -116,9 +115,9 @@ class SolidityFunctionWrapperGenerator(
 
     fun run() {
         try {
-            val useJavaTypes: Boolean = !solidityTypes!!
+            val useJavaTypes: Boolean = !solidityTypes
             if (contractName.isNullOrEmpty()) {
-                contractName = FunctionWrapperGenerator.getFileNameNoExtension(abiFile!!.name)
+                contractName = getFileNameNoExtension(abiFile!!.name)
             }
             SolidityFunctionWrapperGenerator(
                 binFile,
@@ -132,7 +131,7 @@ class SolidityFunctionWrapperGenerator(
             )
                 .generate()
         } catch (e: Exception) {
-            Console.exitError(e)
+            exitError(e)
         }
     }
 }
