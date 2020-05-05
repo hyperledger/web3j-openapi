@@ -34,7 +34,7 @@ interface {{capitalizedContractName}}Resource {
         @{{method}}
         @Produces(MediaType.APPLICATION_JSON)
         @Path("{{functionName}}")
-        {{resource}} : {{returnType}}
+        {{resource}} : {{{returnType}}}
 
 {{/contractResources}}
 }
