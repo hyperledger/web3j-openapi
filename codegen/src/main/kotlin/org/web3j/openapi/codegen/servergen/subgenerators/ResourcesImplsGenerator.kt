@@ -15,13 +15,17 @@ package org.web3j.openapi.codegen.servergen.subgenerators
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
+import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.io.File
 
 class ResourcesImplsGenerator(
@@ -77,10 +81,8 @@ class ResourcesImplsGenerator(
             )
             .addSuperinterface(contractResourceClass)
 
-        generateFunctions()
-            .forEach {
-                resourcesClass.addFunction(it)
-            }
+        resourcesClass.addFunctions(generateFunctions())
+        resourcesClass.addFunctions(generateEvents())
 
         return resourcesFile
             .addType(resourcesClass.build())
@@ -88,10 +90,44 @@ class ResourcesImplsGenerator(
             .build()
     }
 
+    private fun generateEvents(): List<FunSpec> {
+        val events = mutableListOf<FunSpec>()
+        functionsDefinition
+            .filter { it.type == "event" }
+            .forEach {
+                val eventResponseClass =
+                    ClassName("kotlin.collections", "List")
+                        .plusParameter(
+                            ClassName(
+                                "${packageName}.wrappers.${contractName.capitalize()}",
+                                "${it.name.capitalize()}EventResponse"
+                            )
+                    )
+                val funSpec = FunSpec.builder("get${it.name.capitalize()}Event")
+                    .returns(
+                        eventResponseClass
+                    )
+                    .addModifiers(KModifier.OVERRIDE)
+
+                funSpec.addParameter(
+                    "transactionReceipt",
+                    TransactionReceipt::class.asClassName()
+                )
+                    .addCode(
+                        """
+                                return ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
+                                    transactionReceipt)
+                            """.trimIndent()
+                    )
+                events.add(funSpec.build())
+            }
+        return events
+    }
+
     private fun generateFunctions(): List<FunSpec> {
         val functions = mutableListOf<FunSpec>()
         functionsDefinition
-            .filter { it.type == "function" } // TODO: What about events ?
+            .filter { it.type == "function" }
             .forEach {
                 val funSpec = FunSpec.builder(it.name.decapitalize())
                     .returns(

@@ -55,20 +55,32 @@ class CoreApiGenerator(
     private fun contractResources(): List<ContractResource> {
         val resources = mutableListOf<ContractResource>()
         contractDetails.functionsDefintion
-            .filter { it.type == "function" }
+            .filter { it.type == "function" || it.type == "event"}
             .forEach {
-                val parameters =
-                    if (it.inputs.isNotEmpty())
-                        "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
-                    else ""
-                resources.add(
-                    ContractResource(
-                        it.name,
-                        "fun ${it.name}($parameters)",
-                        if (it.inputs.isEmpty()) "GET" else "POST",
-                        SolidityUtils.getFunctionReturnType(it).toString()
-                    )
-                )
+                    if(it.type == "function") {
+                        val parameters =
+                            if (it.inputs.isNotEmpty())
+                                "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
+                            else ""
+                        resources.add(
+                            ContractResource(
+                                it.name,
+                                "fun ${it.name}($parameters)",
+                                if (it.inputs.isEmpty()) "GET" else "POST",
+                                SolidityUtils.getFunctionReturnType(it).toString()
+                            )
+                        )
+                    } else {
+                        val parameters = "transactionReceipt: TransactionReceipt"
+                        resources.add(
+                            ContractResource(
+                                it.name.decapitalize(),
+                                "fun get${it.name.capitalize()}Event($parameters)",
+                                "POST",
+                                "List<${packageName}.wrappers.${contractDetails.capitalizedContractName()}.${it.name.capitalize()}EventResponse>"
+                            )
+                        )
+                    }
             }
         return resources
     }
@@ -77,7 +89,7 @@ class CoreApiGenerator(
         contractDetails.functionsDefintion.forEach {
             logger.debug("Generating ${it.name} model")
 
-            when (it.type) { // TODO: Check for events
+            when (it.type) {
                 "constructor" -> {
                     if (it.inputs.isNotEmpty())
                         CoreDeployModelGenerator(
@@ -103,7 +115,6 @@ class CoreApiGenerator(
                             inputs = it.inputs
                         ).generate()
                 }
-                else -> println("Unsupported type of abi types") // TODO: Create corresponding exception
             }
         }
     }
