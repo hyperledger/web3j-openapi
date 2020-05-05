@@ -14,6 +14,8 @@ package org.web3j.openapi.codegen.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 import org.web3j.abi.datatypes.Address
@@ -31,7 +33,10 @@ object SolidityUtils {
         } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
             String::class.asTypeName()
         } else if (typeName.endsWith("]")) {
-            ANY // TODO: Switch to proper type
+            ClassName("kotlin.collections", "List")
+                .plusParameter(
+                    getNativeType(typeName.split("[").first())
+                )
         } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
             BigInteger::class.asTypeName()
         } else if (typeName == Utf8String::class.java.simpleName) {
