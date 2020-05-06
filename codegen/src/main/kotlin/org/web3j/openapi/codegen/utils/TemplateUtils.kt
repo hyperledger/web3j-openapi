@@ -21,10 +21,10 @@ import java.io.PrintWriter
 import java.io.FileOutputStream
 
 object TemplateUtils {
-    fun mustacheTemplate(file: String): Template {
-        return javaClass.classLoader.getResourceAsStream(file)?.run {
+    fun mustacheTemplate(filePath: String): Template {
+        return javaClass.classLoader.getResourceAsStream(filePath)?.run {
             Mustache.compiler().compile(InputStreamReader(this))
-        } ?: throw IllegalStateException("Template not found: $file")
+        } ?: throw IllegalStateException("Template not found: $filePath")
     }
 
     fun generateFromTemplate(context: Map<String, Any>, outputDir: String, name: String, template: Template): File {
