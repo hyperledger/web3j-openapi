@@ -76,7 +76,7 @@ object SolidityUtils {
         else TransactionReceipt::class.asTypeName()
     }
 
-    fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
+    fun loadContractDefinition(absFile: File?): List<AbiDefinition> { // TODO: use web3j-codegen one
         val objectMapper: ObjectMapper =
             org.web3j.protocol.ObjectMapperFactory.getObjectMapper()
         val abiDefinition: Array<AbiDefinition> =
