@@ -54,7 +54,7 @@ class GenerateOpenApi(
                 destinationDir = File(
                     Path.of(
                         configuration.outputDir,
-                        "core",
+                        "server",
                         "src",
                         "main",
                         "java"
