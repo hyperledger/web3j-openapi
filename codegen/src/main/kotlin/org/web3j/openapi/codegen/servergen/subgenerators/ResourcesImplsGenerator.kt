@@ -101,7 +101,7 @@ class ResourcesImplsGenerator(
                                 "$packageName.core.${contractName.decapitalize()}.model",
                                 "${it.name.capitalize()}EventResponse"
                             )
-                    )
+                        )
                 val funSpec = FunSpec.builder("get${it.name.capitalize()}Event")
                     .returns(
                         eventResponseClass
@@ -109,14 +109,16 @@ class ResourcesImplsGenerator(
                     .addModifiers(KModifier.OVERRIDE)
 
                 funSpec.addParameter(
-                    "transactionReceipt",
-                    TransactionReceipt::class.asClassName()
+                    "transactionReceiptModel",
+                    ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
                 )
                     .addCode(
                         """
                                 val eventResponse = ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
-                                    transactionReceipt)
-                                return eventResponse.map{${it.name.capitalize()}EventResponse(${getEventResponseParameters(it)})}
+                                    TransactionReceiptModel.toTransactionReceipt(transactionReceiptModel))
+                                return eventResponse.map{${it.name.capitalize()}EventResponse(${getEventResponseParameters(
+                            it
+                        )})}
                             """.trimIndent()
                     )
                 events.add(funSpec.build())
@@ -137,16 +139,14 @@ class ResourcesImplsGenerator(
         resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
+                val returnType = SolidityUtils.getFunctionReturnType(it)
                 val funSpec = FunSpec.builder(it.name.decapitalize())
                     .returns(
-                        SolidityUtils.getFunctionReturnType(it)
+                        returnType
                     )
                     .addModifiers(KModifier.OVERRIDE)
-
-                if (it.inputs.isEmpty()) {
-                    funSpec.addCode(
-                        "return ${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
-                    )
+                val code = if (it.inputs.isEmpty()) {
+                    "${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
@@ -156,14 +156,16 @@ class ResourcesImplsGenerator(
                         "${it.name.decapitalize()}Parameters",
                         nameClass
                     )
-                        .addCode(
-                            """
-                                return ${contractName.decapitalize()}.${it.name.decapitalize()}(
-                                    ${getCallParameters(it.inputs, it.name)}
-                                ).send()
-                            """.trimIndent()
-                        )
+                    """
+                        ${contractName.decapitalize()}.${it.name.decapitalize()}(
+                                ${getCallParameters(it.inputs, it.name)}
+                            ).send()
+                    """.trimIndent()
                 }
+                if(returnType != ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel"))
+                    funSpec.addCode("return ${code}")
+                else
+                    funSpec.addCode("return TransactionReceiptModel(${code})")
                 functions.add(funSpec.build())
             }
         return functions
