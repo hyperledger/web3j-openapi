@@ -46,9 +46,12 @@ class CoreApiGenerator(
 
     private fun imports(): List<Import> {
         return contractDetails.functionsDefintion
-            .filter { it.type == "function" && it.inputs.isNotEmpty() }
+            .filter { (it.type == "function" || it.type == "event") && it.inputs.isNotEmpty() }
             .map {
-                Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+                if(it.type == "function")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+                else
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}EventResponse")
             }
     }
 
@@ -77,7 +80,7 @@ class CoreApiGenerator(
                                 it.name.decapitalize(),
                                 "fun get${it.name.capitalize()}Event($parameters)",
                                 "POST",
-                                "List<${packageName}.wrappers.${contractDetails.capitalizedContractName()}.${it.name.capitalize()}EventResponse>"
+                                "List<${it.name.capitalize()}EventResponse>"
                             )
                         )
                     }
@@ -113,6 +116,19 @@ class CoreApiGenerator(
                                 "kotlin"
                             ).toString(),
                             inputs = it.inputs
+                        ).generate()
+                }
+                "event" -> {
+                    if (it.inputs.isNotEmpty())
+                        CoreEventsModelGenerator(
+                            packageName = packageName,
+                            contractName = contractDetails.capitalizedContractName(),
+                            eventName = it.name,
+                            folderPath = Path.of(
+                                folderPath.substringBefore("kotlin"),
+                                "kotlin"
+                            ).toString(),
+                            outputs = it.inputs
                         ).generate()
                 }
             }
