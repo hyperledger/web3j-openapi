@@ -16,7 +16,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
@@ -31,7 +30,7 @@ import java.io.File
 class ResourcesImplsGenerator(
     val packageName: String,
     private val contractName: String,
-    private val functionsDefinition: List<AbiDefinition>,
+    private val resourcesDefinition: List<AbiDefinition>,
     private val folderPath: String
 ) {
 
@@ -92,14 +91,14 @@ class ResourcesImplsGenerator(
 
     private fun generateEvents(): List<FunSpec> {
         val events = mutableListOf<FunSpec>()
-        functionsDefinition
+        resourcesDefinition
             .filter { it.type == "event" }
             .forEach {
                 val eventResponseClass =
                     ClassName("kotlin.collections", "List")
                         .plusParameter(
                             ClassName(
-                                "${packageName}.wrappers.${contractName.capitalize()}",
+                                "${packageName}.core.${contractName.decapitalize()}.model",
                                 "${it.name.capitalize()}EventResponse"
                             )
                     )
@@ -115,8 +114,9 @@ class ResourcesImplsGenerator(
                 )
                     .addCode(
                         """
-                                return ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
+                                val eventResponse = ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
                                     transactionReceipt)
+                                return eventResponse.map{${it.name.capitalize()}EventResponse(${getEventResponseParameters(it)})}
                             """.trimIndent()
                     )
                 events.add(funSpec.build())
@@ -124,9 +124,17 @@ class ResourcesImplsGenerator(
         return events
     }
 
+    private fun getEventResponseParameters(abiDef: AbiDefinition) : String{
+        var params = ""
+        abiDef.inputs.forEach {
+            params += ", it.${it.name}"
+        }
+        return params.removePrefix(",")
+    }
+
     private fun generateFunctions(): List<FunSpec> {
         val functions = mutableListOf<FunSpec>()
-        functionsDefinition
+        resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
                 val funSpec = FunSpec.builder(it.name.decapitalize())
