@@ -46,9 +46,9 @@ class CoreApiGenerator(
 
     private fun imports(): List<Import> {
         return contractDetails.functionsDefintion
-            .filter { (it.type == "function" || it.type == "event") && it.inputs.isNotEmpty() }
+            .filter { it.type == "function" || it.type == "event" }
             .map {
-                if(it.type == "function")
+                if (it.type == "function" && it.inputs.isNotEmpty())
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
                 else
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}EventResponse")
@@ -58,32 +58,32 @@ class CoreApiGenerator(
     private fun contractResources(): List<ContractResource> {
         val resources = mutableListOf<ContractResource>()
         contractDetails.functionsDefintion
-            .filter { it.type == "function" || it.type == "event"}
+            .filter { it.type == "function" || it.type == "event" }
             .forEach {
-                    if(it.type == "function") {
-                        val parameters =
-                            if (it.inputs.isNotEmpty())
-                                "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
-                            else ""
-                        resources.add(
-                            ContractResource(
-                                it.name,
-                                "fun ${it.name}($parameters)",
-                                if (it.inputs.isEmpty()) "GET" else "POST",
-                                SolidityUtils.getFunctionReturnType(it).toString()
-                            )
+                if (it.type == "function") {
+                    val parameters =
+                        if (it.inputs.isNotEmpty())
+                            "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
+                        else ""
+                    resources.add(
+                        ContractResource(
+                            it.name,
+                            "fun ${it.name}($parameters)",
+                            if (it.inputs.isEmpty()) "GET" else "POST",
+                            SolidityUtils.getFunctionReturnType(it).toString()
                         )
-                    } else {
-                        val parameters = "transactionReceipt: TransactionReceipt"
-                        resources.add(
-                            ContractResource(
-                                it.name.decapitalize(),
-                                "fun get${it.name.capitalize()}Event($parameters)",
-                                "POST",
-                                "List<${it.name.capitalize()}EventResponse>"
-                            )
+                    )
+                } else {
+                    val parameters = "transactionReceipt: TransactionReceipt"
+                    resources.add(
+                        ContractResource(
+                            it.name.decapitalize(),
+                            "fun get${it.name.capitalize()}Event($parameters)",
+                            "POST",
+                            "List<${it.name.capitalize()}EventResponse>"
                         )
-                    }
+                    )
+                }
             }
         return resources
     }
@@ -119,17 +119,16 @@ class CoreApiGenerator(
                         ).generate()
                 }
                 "event" -> {
-                    if (it.inputs.isNotEmpty())
-                        CoreEventsModelGenerator(
-                            packageName = packageName,
-                            contractName = contractDetails.capitalizedContractName(),
-                            eventName = it.name,
-                            folderPath = Path.of(
-                                folderPath.substringBefore("kotlin"),
-                                "kotlin"
-                            ).toString(),
-                            outputs = it.inputs
-                        ).generate()
+                    CoreEventsModelGenerator(
+                        packageName = packageName,
+                        contractName = contractDetails.capitalizedContractName(),
+                        eventName = it.name,
+                        folderPath = Path.of(
+                            folderPath.substringBefore("kotlin"),
+                            "kotlin"
+                        ).toString(),
+                        outputs = it.inputs
+                    ).generate()
                 }
             }
         }

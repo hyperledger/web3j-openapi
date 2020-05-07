@@ -98,7 +98,7 @@ class ResourcesImplsGenerator(
                     ClassName("kotlin.collections", "List")
                         .plusParameter(
                             ClassName(
-                                "${packageName}.core.${contractName.decapitalize()}.model",
+                                "$packageName.core.${contractName.decapitalize()}.model",
                                 "${it.name.capitalize()}EventResponse"
                             )
                     )
@@ -124,7 +124,7 @@ class ResourcesImplsGenerator(
         return events
     }
 
-    private fun getEventResponseParameters(abiDef: AbiDefinition) : String{
+    private fun getEventResponseParameters(abiDef: AbiDefinition): String {
         var params = ""
         abiDef.inputs.forEach {
             params += ", it.${it.name}"
