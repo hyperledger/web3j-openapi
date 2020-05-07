@@ -59,7 +59,7 @@ class ServerGenerator(
                     folderPath.substringBefore("kotlin"),
                     "kotlin"
                 ).toString(),
-                functionsDefinition = it.contractDetails.functionsDefintion
+                resourcesDefinition = it.contractDetails.functionsDefintion
             ).generate()
         }
     }
