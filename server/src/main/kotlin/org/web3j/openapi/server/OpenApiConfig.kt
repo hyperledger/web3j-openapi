@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.server
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -45,15 +44,6 @@ class OpenApiConfig() : ResourceConfig() {
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
         .enable(SerializationFeature.INDENT_OUTPUT)
-        .apply {
-            setVisibility(
-                serializationConfig
-                .defaultVisibilityChecker
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE))
-        }
 
     init {
         register(JsonMappingExceptionMapper::class.java)
