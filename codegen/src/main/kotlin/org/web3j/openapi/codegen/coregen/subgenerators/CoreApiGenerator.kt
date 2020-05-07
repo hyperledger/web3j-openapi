@@ -74,7 +74,7 @@ class CoreApiGenerator(
                         )
                     )
                 } else {
-                    val parameters = "transactionReceipt: TransactionReceipt"
+                    val parameters = "transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel"
                     resources.add(
                         ContractResource(
                             it.name.decapitalize(),

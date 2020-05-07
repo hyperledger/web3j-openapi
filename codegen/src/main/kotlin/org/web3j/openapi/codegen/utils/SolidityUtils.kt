@@ -80,7 +80,7 @@ object SolidityUtils {
 
         return if (isFunctionDefinitionConstant)
             getNativeType(it.outputs.first().type, false)
-        else TransactionReceipt::class.asTypeName()
+        else ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
     }
 
     fun loadContractDefinition(absFile: File?): List<AbiDefinition> { // TODO: use web3j-codegen one
