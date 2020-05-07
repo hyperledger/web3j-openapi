@@ -27,16 +27,23 @@ import java.math.BigInteger
 
 object SolidityUtils {
 
-    fun getNativeType(typeName: String): TypeName {
+    fun getNativeType(typeName: String, param: Boolean = true): TypeName {
         return if (typeName == Address::class.java.simpleName) {
             String::class.asTypeName()
         } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
             String::class.asTypeName()
         } else if (typeName.endsWith("]")) {
-            ClassName("kotlin.collections", "List")
-                .plusParameter(
-                    getNativeType(typeName.split("[").first())
-                )
+            if (param) {
+                ClassName("kotlin.collections", "MutableList")
+                    .plusParameter(
+                        getNativeType(typeName.split("[").first())
+                    )
+            } else {
+                ClassName("kotlin.collections", "MutableList")
+                    .plusParameter(
+                        ANY.copy(true)
+                    ).copy(true)
+            }
         } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
             BigInteger::class.asTypeName()
         } else if (typeName == Utf8String::class.java.simpleName) {
@@ -72,7 +79,7 @@ object SolidityUtils {
         val isFunctionDefinitionConstant = it.isConstant || pureOrView
 
         return if (isFunctionDefinitionConstant)
-            getNativeType(it.outputs.first().type)
+            getNativeType(it.outputs.first().type, false)
         else TransactionReceipt::class.asTypeName()
     }
 
