@@ -30,7 +30,8 @@ object KPoetUtils {
 
         val constructor = TypeSpec
             .classBuilder("${name.capitalize()}$type")
-            .addModifiers(KModifier.DATA)
+
+        if (inputs.isNotEmpty()) constructor.addModifiers(KModifier.DATA) // FIXME: Events with no parameters require no field class
 
         val constructorBuilder = FunSpec.constructorBuilder()
 
