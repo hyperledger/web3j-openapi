@@ -14,11 +14,15 @@ package org.web3j.openapi.server
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
 import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.util.Loader.getResource
+import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
 import org.web3j.openapi.core.spi.OpenApiResourceProvider
 import java.net.InetSocketAddress
+import java.net.URI
 import java.util.ServiceLoader
 import javax.servlet.ServletConfig
 import javax.ws.rs.core.Context
@@ -37,11 +41,22 @@ fun main() {
         resourceConfig.register(it.get())
     }
 
-    val servletHolder = ServletHolder(ServletContainer(resourceConfig))
+    val openApiServletHolder = ServletHolder(ServletContainer(resourceConfig))
+
+    val swaggerResource: URI = getResource("static/swagger-ui")
+        .toURI()
+        .resolve("./")
+        .normalize()
+        ?: throw RuntimeException("Unable to find swagger-ui resource")
+
+    val swaggerServletHolder = ServletHolder("default", DefaultServlet::class.java)
+    swaggerServletHolder.setInitParameter("dirAllowed", "false")
 
     val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
-        addServlet(servletHolder, "/*")
-        contextPath = "/*"
+        contextPath = "/"
+        baseResource = Resource.newResource(swaggerResource)
+        addServlet(swaggerServletHolder, "/swagger-ui/*")
+        addServlet(openApiServletHolder, "/*")
     }
 
     val server = Server(InetSocketAddress(resourceConfig.host, resourceConfig.port)).apply {
