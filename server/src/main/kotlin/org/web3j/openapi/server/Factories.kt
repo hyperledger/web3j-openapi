@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.server
 
+import mu.KLogging
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.WalletUtils
@@ -26,6 +27,7 @@ import org.web3j.tx.gas.DefaultGasProvider
 import java.io.File
 import javax.ws.rs.core.Configuration
 import javax.ws.rs.core.Context
+import kotlin.system.exitProcess
 
 class Web3jFactory(
     @Context private val configuration: Configuration
@@ -43,18 +45,23 @@ class Web3jFactory(
 
 class CredentialsFactory(
     @Context private val configuration: Configuration
-) : Factory<Credentials> {
+) : Factory<Credentials>, KLogging() {
 
     override fun provide(): Credentials {
         val privateKey = configuration.getProperty(PRIVATE_KEY).toString()
         val walletFilePath = configuration.getProperty(WALLET_FILE).toString()
         return if (!walletFilePath.isBlank()) {
+            logger.debug("Loading credentials from wallet file")
             val walletFile = File(walletFilePath)
             val walletPassword = configuration.getProperty(WALLET_PASSWORD).toString()
             WalletUtils.loadCredentials(walletPassword, walletFile)
-        } else if (!privateKey.isBlank())
+        } else if (!privateKey.isBlank()) {
+            logger.debug("Loading credentials from raw private key")
             Credentials.create(privateKey)
-        else throw NoSuchFieldException("Credentials missing!")
+        } else {
+            logger.warn("Missing credentials! Aborting.")
+            exitProcess(1)
+        }
     }
 
     override fun dispose(credentials: Credentials) {
