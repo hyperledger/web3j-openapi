@@ -27,7 +27,6 @@ import org.web3j.tx.gas.DefaultGasProvider
 import java.io.File
 import javax.ws.rs.core.Configuration
 import javax.ws.rs.core.Context
-import kotlin.system.exitProcess
 
 class Web3jFactory(
     @Context private val configuration: Configuration
