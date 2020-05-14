@@ -91,14 +91,6 @@ class ServerGenerator(
             mkdirs()
         }
         logger.debug("Copying server/resources")
-        CopyUtils.copyResource(
-            "server/src/main/resources/logback.xml",
-            File(folderPath.substringBefore("server"))
-        )
-        CopyUtils.copyResource(
-            "server/src/main/resources/logging.properties",
-            File(folderPath.substringBefore("server"))
-        )
 
         val spiFolder = File(
             Path.of(
