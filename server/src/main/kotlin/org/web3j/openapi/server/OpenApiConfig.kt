@@ -34,9 +34,7 @@ import javax.inject.Singleton
 
 class OpenApiConfig() : ResourceConfig() {
 
-    private val serverConfig: ServerConfig = ConfigFactory.create(ServerConfig::class.java)
-    val host = serverConfig.host()
-    val port = serverConfig.port()
+    val serverConfig: ServerConfig = ConfigFactory.create(ServerConfig::class.java)
 
     private val mapper = jacksonObjectMapper()
         .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))

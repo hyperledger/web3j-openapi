@@ -60,7 +60,7 @@ fun main() {
         }
     }
 
-    val server = Server(InetSocketAddress(resourceConfig.host, resourceConfig.port)).apply {
+    val server = Server(InetSocketAddress(resourceConfig.serverConfig.host(), resourceConfig.serverConfig.port())).apply {
         handler = servletContextHandler
     }
 
