@@ -21,7 +21,6 @@ import org.eclipse.jetty.util.Loader.getResource
 import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
 import org.web3j.openapi.core.spi.OpenApiResourceProvider
-import java.io.File
 import java.net.InetSocketAddress
 import java.net.URI
 import java.util.ServiceLoader
