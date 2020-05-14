@@ -21,7 +21,6 @@ import com.squareup.kotlinpoet.asTypeName
 import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.Utf8String
 import org.web3j.protocol.core.methods.response.AbiDefinition
-import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.io.File
 import java.math.BigInteger
 

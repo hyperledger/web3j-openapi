@@ -2,6 +2,8 @@ plugins {
     id 'org.web3j' version '4.5.11'
     id 'application'
     id 'com.github.johnrengelman.shadow'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.1.2"
 }
 
 mainClassName = 'org.web3j.openapi.server.OpenApiServerKt'
@@ -16,6 +18,8 @@ dependencies {
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
 
+    swaggerUI 'org.webjars:swagger-ui:3.10.0'
+
     testImplementation "org.web3j.openapi:web3j-openapi-server:1.0"
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
 }
@@ -27,4 +31,33 @@ web3j {
 sourceSets {
     main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
     test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
+}
+
+repositories{
+    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+}
+
+swaggerSources {
+    openapi {
+        inputFile = file('src/main/resources/static/openapiSpecs.yaml')
+    }
+}
+
+task moveSwaggerUiToResources {
+    doLast{
+        ant.move file: "$buildDir/swagger-ui-openapi",
+                todir: "$rootDir/server/src/main/resources/static"
+
+        file("$rootDir/server/src/main/resources/static/swagger-ui-openapi")
+                .renameTo(file("$rootDir/server/src/main/resources/static/swagger-ui"))
+    }
+}
+
+resolve {
+    outputFileName = 'openapiSpecs'
+    outputFormat = 'YAML'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    resourcePackages = ['org.web3j.openapi', '{{packageName}}']
+    outputDir = file('src/main/resources/static')
 }
