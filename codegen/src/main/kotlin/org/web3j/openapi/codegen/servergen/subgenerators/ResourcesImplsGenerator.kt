@@ -18,13 +18,11 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.protocol.core.methods.response.AbiDefinition
-import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.io.File
 
 class ResourcesImplsGenerator(
@@ -162,10 +160,10 @@ class ResourcesImplsGenerator(
                             ).send()
                     """.trimIndent()
                 }
-                if(returnType != ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel"))
-                    funSpec.addCode("return ${code}")
+                if (returnType != ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel"))
+                    funSpec.addCode("return $code")
                 else
-                    funSpec.addCode("return TransactionReceiptModel(${code})")
+                    funSpec.addCode("return TransactionReceiptModel($code)")
                 functions.add(funSpec.build())
             }
         return functions
