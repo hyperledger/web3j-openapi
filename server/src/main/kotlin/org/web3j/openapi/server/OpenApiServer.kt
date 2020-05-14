@@ -33,7 +33,7 @@ lateinit var servletConfig: ServletConfig
 
 fun main() {
 
-    val resourceConfig = OpenApiConfig().apply {
+    val resourceConfig = OpenApiResourceConfig().apply {
         registerClasses(OpenApiResource::class.java)
     }
 
@@ -60,7 +60,7 @@ fun main() {
         }
     }
 
-    val server = Server(InetSocketAddress(resourceConfig.serverConfig.host(), resourceConfig.serverConfig.port())).apply {
+    val server = Server(InetSocketAddress(resourceConfig.openApiServerConfig.host(), resourceConfig.openApiServerConfig.port())).apply {
         handler = servletContextHandler
     }
 

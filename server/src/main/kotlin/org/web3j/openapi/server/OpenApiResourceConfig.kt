@@ -32,9 +32,9 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.inject.Singleton
 
-class OpenApiConfig() : ResourceConfig() {
+class OpenApiResourceConfig() : ResourceConfig() {
 
-    val serverConfig: ServerConfig = ConfigFactory.create(ServerConfig::class.java)
+    val openApiServerConfig: OpenApiServerConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
 
     private val mapper = jacksonObjectMapper()
         .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
@@ -51,11 +51,11 @@ class OpenApiConfig() : ResourceConfig() {
         register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt())) // FIXME Why no logs?
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, serverConfig.projectName())
-        property(Properties.NODE_ADDRESS, serverConfig.nodeEndpoint())
-        property(Properties.PRIVATE_KEY, serverConfig.privateKey())
-        property(Properties.WALLET_FILE, serverConfig.walletFile())
-        property(Properties.WALLET_PASSWORD, serverConfig.walletPassword())
+        property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName())
+        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint())
+        property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey())
+        property(Properties.WALLET_FILE, openApiServerConfig.walletFile())
+        property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword())
     }
 
     private class InjectionBinder : AbstractBinder() {
@@ -75,6 +75,6 @@ class OpenApiConfig() : ResourceConfig() {
             SLF4JBridgeHandler.install()
         }
 
-        private val logger = Logger.getLogger(OpenApiConfig::class.java.canonicalName)!!
+        private val logger = Logger.getLogger(OpenApiResourceConfig::class.java.canonicalName)!!
     }
 }

@@ -26,7 +26,7 @@ import org.aeonbits.owner.Config.DefaultValue
     "system:properties",
     "system:env"
 )
-interface ServerConfig : Config {
+interface OpenApiServerConfig : Config {
     @Key("WEB3J_OPENAPI_PROJECT_NAME")
     @DefaultValue("Generated Web3j-OpenApi project")
     fun projectName(): String
