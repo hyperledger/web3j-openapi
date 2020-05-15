@@ -28,7 +28,7 @@ import org.aeonbits.owner.Config.DefaultValue
 )
 interface OpenApiServerConfig : Config {
     @Key("WEB3J_OPENAPI_PROJECT_NAME")
-    @DefaultValue("Generated Web3j-OpenApi project")
+    @DefaultValue("Web3j-OpenApi")
     fun projectName(): String
 
     @Key("WEB3J_OPENAPI_NODE_ENDPOINT")
