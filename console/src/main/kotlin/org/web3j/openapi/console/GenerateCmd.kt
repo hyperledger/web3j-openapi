@@ -59,8 +59,8 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
             runGradleTask(projectFolder, "generateSwaggerUI")
             runGradleTask(projectFolder, "moveSwaggerUiToResources")
         }
-        if (jar)
-            runGradleTask(projectFolder, "shadowJar")
+        if (jar) runGradleTask(projectFolder, "shadowJar")
+        if (jar || swaggerUi) runGradleTask(projectFolder, "clean")
 
         return 0
     }
