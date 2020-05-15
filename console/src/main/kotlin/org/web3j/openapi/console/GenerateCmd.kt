@@ -17,6 +17,7 @@ import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.util.concurrent.Callable
@@ -53,37 +54,35 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                     if (!exists()) throw FileNotFoundException(absolutePath)
                 }
 
-        if (swaggerUi)
-            GradleConnector.newConnector()
-                .useBuildDistribution()
-                .forProjectDirectory(projectFolder)
-                .connect()
-                .newBuild()
-                .forTasks("resolve", "generateSwaggerUI", "moveSwaggerUiToResources")
-                .setStandardOutput(System.out)
-                .run(object : ResultHandler<Void> {
-                    override fun onFailure(failure: GradleConnectionException) {
-                        throw GradleConnectionException(failure.message)
-                    }
-                    override fun onComplete(result: Void?) {
-                    }
-                })
-
+        if (swaggerUi) {
+            runGradleTask(projectFolder, "resolve")
+            runGradleTask(projectFolder, "generateSwaggerUI")
+            runGradleTask(projectFolder, "moveSwaggerUiToResources")
+        }
         if (jar)
-            GradleConnector.newConnector()
-                .useBuildDistribution()
-                .forProjectDirectory(projectFolder)
-                .connect()
-                .newBuild()
-                .forTasks("shadowJar")
-                .setStandardOutput(System.out)
-                .run(object : ResultHandler<Void> {
-                    override fun onFailure(failure: GradleConnectionException) {
-                        throw GradleConnectionException(failure.message)
-                    }
-                    override fun onComplete(result: Void?) {
-                    }
-                })
+            runGradleTask(projectFolder, "shadowJar")
+
         return 0
+    }
+
+    private fun runGradleTask(projectFolder: File, task: String) {
+        GradleConnector.newConnector()
+            .useBuildDistribution()
+            .forProjectDirectory(projectFolder)
+            .connect()
+            .apply {
+                newBuild()
+                    .forTasks(task)
+                    .setStandardOutput(System.out)
+                    .run(object : ResultHandler<Void> {
+                        override fun onFailure(failure: GradleConnectionException) {
+                            throw GradleConnectionException(failure.message)
+                        }
+
+                        override fun onComplete(result: Void?) {
+                        }
+                    })
+                close()
+            }
     }
 }
