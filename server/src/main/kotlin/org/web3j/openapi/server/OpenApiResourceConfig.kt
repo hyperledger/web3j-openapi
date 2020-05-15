@@ -48,7 +48,7 @@ class OpenApiResourceConfig() : ResourceConfig() {
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
-        register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt())) // FIXME Why no logs?
+        register(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()) // FIXME Why no logs?
         register(InjectionBinder())
 
         property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName())
