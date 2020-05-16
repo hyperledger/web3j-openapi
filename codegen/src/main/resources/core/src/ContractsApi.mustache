@@ -28,22 +28,24 @@ import javax.ws.rs.core.MediaType
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(
-info = Info(
-title = "Web3j Hello World PoC",
-contact = Contact(
-name = "Ivaylo",
-email = "hi@web3labs.com",
-url = "http://web3labs.com"
-)
-),
-tags = [
-Tag(name = "web3j"),
-Tag(name = "ethereum")
-]
+    info = Info(
+        title = "Web3j OpenApi",
+        contact = Contact(
+            name = "Web3 Labs",
+            email = "hi@web3labs.com",
+            url = "http://web3labs.com"
+        )
+    ),
+     tags = [
+          Tag(name = "default", description = "List existing contracts names"),
+          {{#tags}}
+            Tag(name = "{{name}}", description = "{{description}}"){{lastComma}}
+          {{/tags}}
+          ]
 )
 @Generated
 interface ContractsApi : Web3jOpenApi {
 
-@get:Path("contracts")
-override val contracts: GeneratedContractsResource
+    @get:Path("contracts")
+    override val contracts: GeneratedContractsResource
 }
