@@ -11,65 +11,71 @@
  * specific language governing permissions and limitations under the License.
  */
 package org.web3j.openapi.server
-
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
+import org.aeonbits.owner.ConfigFactory
 import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
+import org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.Loader.getResource
 import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
 import org.web3j.openapi.core.spi.OpenApiResourceProvider
-import java.net.InetSocketAddress
 import java.net.URI
 import java.util.ServiceLoader
-import javax.servlet.ServletConfig
-import javax.ws.rs.core.Context
 import kotlin.system.exitProcess
 
-@Context
-lateinit var servletConfig: ServletConfig
-
-fun main() {
-
-    val resourceConfig = OpenApiResourceConfig().apply {
-        registerClasses(OpenApiResource::class.java)
+class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
+    init {
+        addConnector(ServerConnector(this).apply {
+            host = serverConfig.host()
+            port = serverConfig.port()
+        })
+        handler = ServletContextHandler(NO_SESSIONS)
+        configureSwaggerUi()
+        configureOpenApi()
     }
 
-    ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
-        resourceConfig.register(it.get())
-    }
-
-    val openApiServletHolder = ServletHolder(ServletContainer(resourceConfig))
-    val servletContextHandler = ServletContextHandler(ServletContextHandler.NO_SESSIONS).apply {
-        contextPath = "/"
-        addServlet(openApiServletHolder, "/*")
-    }
-
-    val swaggerResourceUrl = getResource("static/swagger-ui/index.html")
-    if (swaggerResourceUrl != null) {
-        val swaggerResourceUri = URI.create(swaggerResourceUrl.toURI().toASCIIString().substringBefore("swagger-ui/"))
-
-        val swaggerServletHolder = ServletHolder("default", DefaultServlet::class.java)
-        swaggerServletHolder.setInitParameter("dirAllowed", "true")
-
-        servletContextHandler.apply {
-            baseResource = Resource.newResource(swaggerResourceUri)
-            addServlet(swaggerServletHolder, "/swagger-ui/*")
+    private fun configureOpenApi() {
+        val resourceConfig = OpenApiResourceConfig(serverConfig).apply {
+            registerClasses(OpenApiResource::class.java)
+        }
+        ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
+            resourceConfig.register(it.get())
+        }
+        val servletHolder = ServletHolder(ServletContainer(resourceConfig))
+        (handler as ServletContextHandler).apply {
+            addServlet(servletHolder, "/*")
+            contextPath = "/"
         }
     }
 
-    val server = Server(InetSocketAddress(resourceConfig.openApiServerConfig.host(), resourceConfig.openApiServerConfig.port())).apply {
-        handler = servletContextHandler
+    private fun configureSwaggerUi() {
+        getResource("static/swagger-ui/index.html")?.also {
+            val swaggerResourceUri = URI.create(it.toURI().toASCIIString().substringBefore("swagger-ui/"))
+            val swaggerServletHolder = ServletHolder("default", DefaultServlet::class.java).apply {
+                setInitParameter("dirAllowed", "true")
+            }
+            (handler as ServletContextHandler).apply {
+                baseResource = Resource.newResource(swaggerResourceUri)
+                addServlet(swaggerServletHolder, "/swagger-ui/*")
+            }
+        }
     }
+}
 
-    try {
-        server.start()
-        server.join()
-    } catch (ex: Exception) {
-        exitProcess(1)
-    } finally {
-        server.destroy()
+fun main() {
+    val serverConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
+    OpenApiServer(serverConfig).apply {
+        try {
+            start()
+            join()
+        } catch (ex: Exception) {
+            exitProcess(1)
+        } finally {
+            destroy()
+        }
     }
 }

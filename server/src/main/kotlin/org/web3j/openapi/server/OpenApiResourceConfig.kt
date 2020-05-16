@@ -21,7 +21,6 @@ import org.aeonbits.owner.ConfigFactory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
-import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
@@ -32,9 +31,9 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.inject.Singleton
 
-class OpenApiResourceConfig() : ResourceConfig() {
-
-    val openApiServerConfig: OpenApiServerConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
+class OpenApiResourceConfig(
+    openApiServerConfig: OpenApiServerConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
+) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
         .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
