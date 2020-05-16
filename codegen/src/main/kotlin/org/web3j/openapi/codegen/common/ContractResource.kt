@@ -16,5 +16,6 @@ data class ContractResource(
     val functionName: String,
     val resource: String,
     val method: String,
-    val returnType: String
+    val returnType: String,
+    val contractName: String
 )

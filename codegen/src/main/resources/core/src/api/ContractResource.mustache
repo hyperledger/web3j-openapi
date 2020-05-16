@@ -15,6 +15,7 @@ package {{packageName}}.core.{{contractName}}
 {{#imports}}
     {{import}}
 {{/imports}}
+import io.swagger.v3.oas.annotations.Operation
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -33,6 +34,8 @@ interface {{capitalizedContractName}}Resource {
         @{{method}}
         @Produces(MediaType.APPLICATION_JSON)
         @Path("{{functionName}}")
+        @Operation(tags = ["{{contractName}}"],
+            summary = "Executes the {{functionName}} method")
         {{resource}} : {{{returnType}}}
 
 {{/contractResources}}

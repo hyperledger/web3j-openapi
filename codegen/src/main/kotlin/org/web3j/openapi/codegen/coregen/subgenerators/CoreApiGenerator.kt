@@ -70,7 +70,8 @@ class CoreApiGenerator(
                             it.name,
                             "fun ${it.name}($parameters)",
                             if (it.inputs.isEmpty()) "GET" else "POST",
-                            SolidityUtils.getFunctionReturnType(it).toString()
+                            SolidityUtils.getFunctionReturnType(it).toString(),
+                            contractDetails.capitalizedContractName()
                         )
                     )
                 } else {
@@ -80,7 +81,8 @@ class CoreApiGenerator(
                             it.name.decapitalize(),
                             "fun get${it.name.capitalize()}Event($parameters)",
                             "POST",
-                            "List<${it.name.capitalize()}EventResponse>"
+                            "List<${it.name.capitalize()}EventResponse>",
+                            contractDetails.capitalizedContractName()
                         )
                     )
                 }

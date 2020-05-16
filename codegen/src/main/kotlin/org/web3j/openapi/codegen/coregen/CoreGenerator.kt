@@ -19,6 +19,7 @@ import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.common.Import
+import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.nio.file.Path
 
@@ -49,6 +50,18 @@ class CoreGenerator(
     private fun setContext() {
         context["contractsConfiguration"] = configuration.contracts
         context["apiImports"] = getApiImports()
+        context["tags"] = getTags()
+    }
+
+    private fun getTags() : List<Tag> {
+        val tags = configuration.contracts.map {
+            Tag(
+                it.contractDetails.capitalizedContractName(),
+                "List ${it.contractDetails.capitalizedContractName()} method's calls"
+            )
+        }
+        tags.last().lastComma = ""
+        return tags
     }
 
     private fun getApiImports(): List<Import> {
