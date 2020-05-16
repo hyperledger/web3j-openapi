@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.console
 
+import mu.KLogging
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
@@ -26,7 +27,7 @@ import java.util.concurrent.Callable
     name = "generate",
     description = ["Generates a web3j-openapi project"]
 )
-class GenerateCmd : OpenApiCli(), Callable<Int> {
+class GenerateCmd : OpenApiCli(), Callable<Int>{
 
     @Option(
         names = ["--jar"],
@@ -55,17 +56,19 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                 }
 
         if (swaggerUi) {
-            runGradleTask(projectFolder, "resolve")
-            runGradleTask(projectFolder, "generateSwaggerUI")
-            runGradleTask(projectFolder, "moveSwaggerUiToResources")
+            runGradleTask(projectFolder, "resolve", "Generating OpenApi specs")
+            runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
+            runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
         }
-        if (jar) runGradleTask(projectFolder, "shadowJar")
-        if (jar || swaggerUi) runGradleTask(projectFolder, "clean")
+        if (jar) runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
+        if (jar || swaggerUi) runGradleTask(projectFolder, "clean", "Cleaning up")
 
+        println("Done.")
         return 0
     }
 
-    private fun runGradleTask(projectFolder: File, task: String) {
+    private fun runGradleTask(projectFolder: File, task: String, description: String) {
+        println(description)
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(projectFolder)
@@ -73,9 +76,9 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
             .apply {
                 newBuild()
                     .forTasks(task)
-                    .setStandardOutput(System.out)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
+                            logger.debug(failure.message)
                             throw GradleConnectionException(failure.message)
                         }
 
@@ -85,4 +88,6 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                 close()
             }
     }
+
+    companion object : KLogging()
 }
