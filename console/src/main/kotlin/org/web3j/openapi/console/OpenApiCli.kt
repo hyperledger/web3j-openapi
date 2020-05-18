@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.console
 
+import org.apache.logging.log4j.Level
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
@@ -23,6 +24,16 @@ import java.io.FileNotFoundException
 import java.nio.file.Path
 
 abstract class OpenApiCli {
+
+    // TODO: Add logs level specification
+//    @Option(
+//        names = ["-l", "--logging"],
+//        converter = [LogTypeConverter::class],
+//        paramLabel = "<LOG VERBOSITY LEVEL>",
+//        description = ["Logging verbosity levels: OFF, FATAL, WARN, INFO, DEBUG, TRACE, ALL (default: INFO)."],
+//        arity = "1"
+//    )
+//    private var logLevel: Level? = null
 
     @Option(names = ["-o", "--output"],
         description = ["specify the output directory."],
