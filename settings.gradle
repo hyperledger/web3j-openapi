@@ -16,4 +16,4 @@ include 'utils'
 findProject(':utils')?.name = 'web3j-openapi-utils'
 
 include 'console'
-findProject(':console')?.name = 'web3j-openapi-console'
+findProject(':console')?.name = 'web3j-openapi-codegen-console'
