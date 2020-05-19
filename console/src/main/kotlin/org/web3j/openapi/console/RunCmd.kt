@@ -12,9 +12,6 @@
  */
 package org.web3j.openapi.console
 
-import org.gradle.tooling.GradleConnectionException
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ResultHandler
 import org.web3j.openapi.console.utils.GradleUtils
 import picocli.CommandLine
 import java.io.File

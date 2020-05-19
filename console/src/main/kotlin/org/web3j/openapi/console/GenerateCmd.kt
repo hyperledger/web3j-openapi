@@ -13,13 +13,9 @@
 package org.web3j.openapi.console
 
 import mu.KLogging
-import org.gradle.tooling.GradleConnectionException
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ResultHandler
 import org.web3j.openapi.console.utils.GradleUtils
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.util.concurrent.Callable
@@ -28,7 +24,7 @@ import java.util.concurrent.Callable
     name = "generate",
     description = ["Generates a web3j-openapi project"]
 )
-class GenerateCmd : OpenApiCli(), Callable<Int>{
+class GenerateCmd : OpenApiCli(), Callable<Int> {
 
     @Option(
         names = ["--jar"],
