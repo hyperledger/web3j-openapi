@@ -12,12 +12,11 @@
  */
 package org.web3j.openapi.core.models
 
-import org.web3j.openapi.core.models.LogsModel.Companion.fromLogs
-import org.web3j.openapi.core.models.LogsModel.Companion.toLogs
+import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.math.BigInteger
 
-class TransactionReceiptModel(
+data class TransactionReceiptModel(
     val transactionHash: String,
     val transactionIndex: BigInteger,
     val blockHash: String,
@@ -33,7 +32,7 @@ class TransactionReceiptModel(
     val logsBloom: String?,
     val revertReason: String?
 ) {
-    constructor(txReceipt: TransactionReceipt) : this (
+    constructor(txReceipt: TransactionReceipt) : this(
         txReceipt.transactionHash,
         txReceipt.transactionIndex,
         txReceipt.blockHash,
@@ -45,29 +44,41 @@ class TransactionReceiptModel(
         txReceipt.status,
         txReceipt.from,
         txReceipt.to,
-        fromLogs(txReceipt.logs),
+        txReceipt.logs.map { LogsModel(it) },
         txReceipt.logsBloom,
         txReceipt.revertReason
-    ) {}
+    ) {
+    }
 
-    companion object {
-        fun toTransactionReceipt(transactionReceiptModel: TransactionReceiptModel): TransactionReceipt {
-            return TransactionReceipt(
-                transactionReceiptModel.transactionHash,
-                transactionReceiptModel.transactionIndex.toString(16),
-                transactionReceiptModel.blockHash,
-                transactionReceiptModel.blockNumber.toString(16),
-                transactionReceiptModel.cumulativeGasUsed.toString(16),
-                transactionReceiptModel.gasUsed.toString(16),
-                transactionReceiptModel.contractAddress,
-                transactionReceiptModel.root,
-                transactionReceiptModel.status,
-                transactionReceiptModel.from,
-                transactionReceiptModel.to,
-                toLogs(transactionReceiptModel.logs),
-                transactionReceiptModel.logsBloom,
-                transactionReceiptModel.revertReason
-            )
-        }
+    fun toTransactionReceipt(): TransactionReceipt {
+        return TransactionReceipt(
+            this.transactionHash,
+            this.transactionIndex.toString(16),
+            this.blockHash,
+            this.blockNumber.toString(16),
+            this.cumulativeGasUsed.toString(16),
+            this.gasUsed.toString(16),
+            this.contractAddress,
+            this.root,
+            this.status,
+            this.from,
+            this.to,
+            this.logs?.map {
+                Log(
+                    it.removed,
+                    it.logIndex.toString(16),
+                    it.transactionIndex.toString(16),
+                    it.transactionHash,
+                    it.blockHash,
+                    it.blockNumber.toString(16),
+                    it.address,
+                    it.data,
+                    it.type,
+                    it.topics
+                )
+            },
+            this.logsBloom,
+            this.revertReason
+        )
     }
 }

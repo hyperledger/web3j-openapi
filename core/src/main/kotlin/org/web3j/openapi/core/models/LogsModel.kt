@@ -15,76 +15,28 @@ package org.web3j.openapi.core.models
 import org.web3j.protocol.core.methods.response.Log
 import java.math.BigInteger
 
-class LogsModel() {
-
-    constructor(
-        _removed: Boolean,
-        _logIndex: BigInteger,
-        _transactionIndex: BigInteger,
-        _transactionHash: String?,
-        _blockHash: String?,
-        _blockNumber: BigInteger,
-        _address: String?,
-        _data: String?,
-        _type: String?,
-        _topics: List<String>?
-    ) : this() {
-        removed = _removed
-        logIndex = _logIndex
-        transactionHash = _transactionHash
-        transactionIndex = _transactionIndex
-        blockHash = _blockHash
-        blockNumber = _blockNumber
-        address = _address
-        data = _data
-        type = _type
-        topics = _topics
-    }
-
-    var removed: Boolean = false
-    lateinit var logIndex: BigInteger
-    lateinit var transactionIndex: BigInteger
-    var transactionHash: String? = null
-    var blockHash: String? = null
-    lateinit var blockNumber: BigInteger
-    var address: String? = null
-    var data: String? = null
-    var type: String? = null
+data class LogsModel(
+    var removed: Boolean = false,
+    var logIndex: BigInteger = BigInteger.ZERO,
+    var transactionIndex: BigInteger = BigInteger.ZERO,
+    var transactionHash: String? = null,
+    var blockHash: String? = null,
+    var blockNumber: BigInteger = BigInteger.ZERO,
+    var address: String? = null,
+    var data: String? = null,
+    var type: String? = null,
     var topics: List<String>? = null
-
-    companion object {
-        fun fromLogs(logs: List<Log>): List<LogsModel> {
-            return logs.map { log ->
-                LogsModel(
-                    log.isRemoved,
-                    log.logIndex,
-                    log.transactionIndex,
-                    log.transactionHash,
-                    log.blockHash,
-                    log.blockNumber,
-                    log.address,
-                    log.data,
-                    log.type,
-                    log.topics
-                )
-            }
-        }
-
-        fun toLogs(logsModel: List<LogsModel>?): List<Log>? {
-            return logsModel?.map { logModel ->
-                Log(
-                    logModel.removed,
-                    logModel.logIndex.toString(16),
-                    logModel.transactionIndex.toString(16),
-                    logModel.transactionHash,
-                    logModel.blockHash,
-                    logModel.blockNumber.toString(16),
-                    logModel.address,
-                    logModel.data,
-                    logModel.type,
-                    logModel.topics
-                )
-            }
-        }
-    }
+) {
+    constructor(log: Log) : this (
+        log.isRemoved,
+        log.logIndex,
+        log.transactionIndex,
+        log.transactionHash,
+        log.blockHash,
+        log.blockNumber,
+        log.address,
+        log.data,
+        log.type,
+        log.topics
+    )
 }
