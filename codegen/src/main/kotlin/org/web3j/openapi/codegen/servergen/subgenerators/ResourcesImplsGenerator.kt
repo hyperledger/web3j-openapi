@@ -113,7 +113,7 @@ class ResourcesImplsGenerator(
                     .addCode(
                         """
                                 val eventResponse = ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
-                                    TransactionReceiptModel.toTransactionReceipt(transactionReceiptModel))
+                                    transactionReceiptModel.toTransactionReceipt())
                                 return eventResponse.map{${it.name.capitalize()}EventResponse(${getEventResponseParameters(
                             it
                         )})}
