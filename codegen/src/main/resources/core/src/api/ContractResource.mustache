@@ -35,7 +35,7 @@ interface {{capitalizedContractName}}Resource {
         @Produces(MediaType.APPLICATION_JSON)
         @Path("{{functionName}}")
         @Operation(tags = ["{{contractName}}"],
-            summary = "Executes the {{functionName}} method")
+            summary = "{{description}}")
         {{resource}} : {{{returnType}}}
 
 {{/contractResources}}
