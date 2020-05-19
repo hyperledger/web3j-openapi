@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.console
 
+import org.apache.logging.log4j.Level
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails

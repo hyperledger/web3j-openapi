@@ -10,16 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen
+package org.web3j.openapi.server
 
-import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.glassfish.jersey.server.ExtendedUriInfo
+import org.glassfish.jersey.server.internal.routing.UriRoutingContext
+import org.glassfish.jersey.server.model.Resource
+import org.web3j.openapi.core.ContractResource
 
-abstract class DefaultGenerator(
-    val configuration: GeneratorConfiguration
-) {
-    protected val packageDir = configuration.packageName.split(".").joinToString("/")
+abstract class ContractResourceImpl(
+    private val uriInfo: ExtendedUriInfo
+) : ContractResource {
 
-    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
-
-    abstract fun generate()
+    override fun findAll(): List<String> {
+        val resourceClass = (uriInfo as UriRoutingContext).resourceClass
+        return Resource.builder(resourceClass).build().childResources.map { it.path }
+    }
 }

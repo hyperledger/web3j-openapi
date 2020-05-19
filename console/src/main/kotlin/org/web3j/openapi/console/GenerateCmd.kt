@@ -13,9 +13,12 @@
 package org.web3j.openapi.console
 
 import mu.KLogging
-import org.web3j.openapi.console.utils.GradleUtils
+import org.gradle.tooling.GradleConnectionException
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ResultHandler
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.util.concurrent.Callable
@@ -24,7 +27,7 @@ import java.util.concurrent.Callable
     name = "generate",
     description = ["Generates a web3j-openapi project"]
 )
-class GenerateCmd : OpenApiCli(), Callable<Int> {
+class GenerateCmd : OpenApiCli(), Callable<Int>{
 
     @Option(
         names = ["--jar"],
@@ -53,15 +56,37 @@ class GenerateCmd : OpenApiCli(), Callable<Int> {
                 }
 
         if (swaggerUi) {
-            GradleUtils.runGradleTask(projectFolder, "resolve", "Generating OpenApi specs")
-            GradleUtils.runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
-            GradleUtils.runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
+            runGradleTask(projectFolder, "resolve", "Generating OpenApi specs")
+            runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
+            runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
         }
-        if (jar) GradleUtils.runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
-        if (jar || swaggerUi) GradleUtils.runGradleTask(projectFolder, "clean", "Cleaning up")
+        if (jar) runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
+        if (jar || swaggerUi) runGradleTask(projectFolder, "clean", "Cleaning up")
 
         println("Done.")
         return 0
+    }
+
+    private fun runGradleTask(projectFolder: File, task: String, description: String) {
+        println(description)
+        GradleConnector.newConnector()
+            .useBuildDistribution()
+            .forProjectDirectory(projectFolder)
+            .connect()
+            .apply {
+                newBuild()
+                    .forTasks(task)
+                    .run(object : ResultHandler<Void> {
+                        override fun onFailure(failure: GradleConnectionException) {
+                            logger.debug(failure.message)
+                            throw GradleConnectionException(failure.message)
+                        }
+
+                        override fun onComplete(result: Void?) {
+                        }
+                    })
+                close()
+            }
     }
 
     companion object : KLogging()

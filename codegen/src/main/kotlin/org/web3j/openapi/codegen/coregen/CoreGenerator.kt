@@ -53,7 +53,7 @@ class CoreGenerator(
         context["tags"] = getTags()
     }
 
-    private fun getTags(): List<Tag> {
+    private fun getTags() : List<Tag> {
         val tags = configuration.contracts.map {
             Tag(
                 it.contractDetails.capitalizedContractName(),

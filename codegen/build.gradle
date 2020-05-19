@@ -14,7 +14,7 @@ dependencies {
         exclude group: 'javax.xml.bind'
     }
 
-    implementation "org.web3j:codegen:4.5.17"
+    implementation "org.web3j:codegen:${versions.web3jCodegen}"
 
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
 }

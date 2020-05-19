@@ -1,0 +1,25 @@
+plugins {
+    id 'org.web3j' version '4.5.11'
+}
+
+dependencies {
+    api project(':web3j-openapi-core')
+
+    implementation "org.aeonbits.owner:owner:${versions.owner}"
+
+    implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jerseyContainerServlet}"
+    implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jerseyHk2}"
+    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jerseyMediaJsonJackson}"
+
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jacksonModuleKotlin}"
+
+    implementation "org.slf4j:jul-to-slf4j:${versions.julToSlf4j}"
+
+    implementation "org.eclipse.jetty:jetty-server:${versions.jettyServer}"
+    implementation "org.eclipse.jetty:jetty-servlet:${versions.jettyServlet}"
+
+    implementation "io.swagger.core.v3:swagger-annotations:${versions.swaggerAnnotations}"
+    implementation "io.swagger.core.v3:swagger-jaxrs2:${versions.swaggerJaxRs}"
+
+    testImplementation project(':web3j-openapi-client')
+}

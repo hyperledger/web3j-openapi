@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -10,16 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen
+package org.web3j.openapi.client
 
-import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import javax.ws.rs.client.ClientRequestContext
+import javax.ws.rs.client.ClientRequestFilter
+import javax.ws.rs.core.HttpHeaders
 
-abstract class DefaultGenerator(
-    val configuration: GeneratorConfiguration
-) {
-    protected val packageDir = configuration.packageName.split(".").joinToString("/")
+class AuthenticationFilter private constructor(private val token: String) : ClientRequestFilter {
 
-    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
+    override fun filter(requestContext: ClientRequestContext) {
+        requestContext.headers.putSingle(HttpHeaders.AUTHORIZATION, "Bearer $token")
+    }
 
-    abstract fun generate()
+    companion object {
+        fun token(token: String) = AuthenticationFilter(token)
+    }
 }
