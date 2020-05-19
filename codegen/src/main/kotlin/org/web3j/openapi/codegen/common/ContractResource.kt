@@ -18,5 +18,5 @@ data class ContractResource(
     val method: String,
     val returnType: String,
     val contractName: String,
-
+    val description: String = ""
 )
