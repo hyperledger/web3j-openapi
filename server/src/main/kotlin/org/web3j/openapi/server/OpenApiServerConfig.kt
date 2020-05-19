@@ -22,7 +22,7 @@ import org.aeonbits.owner.Config.DefaultValue
 @LoadPolicy(LoadType.MERGE)
 @Sources(
     "file:.web3j.openapi.config",
-    "file:~/.web3j/.web3j.openapi.config",
+    "file:~/.epirus/.web3j.openapi.config",
     "system:properties",
     "system:env"
 )
