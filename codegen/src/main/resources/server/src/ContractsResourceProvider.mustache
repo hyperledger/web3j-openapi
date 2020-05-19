@@ -1,0 +1,8 @@
+package {{packageName}}.server
+
+import {{packageName}}.server.ContractsApiImpl
+import org.web3j.openapi.core.spi.OpenApiResourceProvider
+
+class ContractsResourceProvider : OpenApiResourceProvider {
+    override fun get() = ContractsApiImpl::class.java
+}

@@ -24,6 +24,7 @@ subprojects {
     apply from: "$rootProject.projectDir/gradle/versions.gradle"
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
     }
@@ -56,13 +57,14 @@ subprojects {
 
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
-        implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+        implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
 
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
-        testImplementation "org.junit.jupiter:junit-jupiter:${versions.junit}"
-        testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunit}"
+        testImplementation "org.junit.jupiter:junit-jupiter:${versions.junitVersion}"
+        testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunitVersion}"
     }
+
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"

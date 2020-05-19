@@ -1,0 +1,18 @@
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+}
+
+mainClassName = 'org.web3j.openapi.console.MainKt'
+
+repositories{
+    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+}
+
+dependencies {
+    implementation project(":web3j-openapi-codegen")
+    implementation "info.picocli:picocli:${versions.picocli}"
+    implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
+    implementation "org.apache.logging.log4j:log4j-to-slf4j:${versions.log4j}"
+    implementation "ch.qos.logback:logback-classic:${versions.logback}"
+}

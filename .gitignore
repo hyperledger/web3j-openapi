@@ -51,3 +51,11 @@ docs/build
 **/bin
 
 web3j.asc
+
+gradle/bintray
+gradle/jacoco
+gradle/java
+gradle/javadoc
+gradle/publish
+gradle/repositories
+gradle/spotless

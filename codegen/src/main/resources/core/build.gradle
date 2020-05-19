@@ -1,0 +1,12 @@
+dependencies {
+    implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
+
+    implementation "org.web3j.openapi:web3j-openapi-core:1.0"
+
+    implementation "org.web3j:core:4.5.12"
+    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.29"
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation "org.slf4j:jul-to-slf4j:1.7.25"
+
+    testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
+}
