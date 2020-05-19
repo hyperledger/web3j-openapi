@@ -27,7 +27,7 @@ import java.math.BigInteger
 object SolidityUtils {
 
     fun getNativeType(typeName: String, param: Boolean = true): TypeName {
-        return if (typeName == Address::class.java.simpleName) {
+        return if (typeName == "address") {
             String::class.asTypeName()
         } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
             String::class.asTypeName()
