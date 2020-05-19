@@ -1,4 +1,5 @@
 dependencies {
+    implementation project(":web3j-openapi-core")
 
     implementation "org.glassfish.jersey.core:jersey-client:2.29"
     implementation "org.glassfish.jersey.ext:jersey-proxy-client:2.29"
@@ -8,6 +9,4 @@ dependencies {
 
     implementation "org.slf4j:jul-to-slf4j:1.7.25"
     implementation 'io.github.microutils:kotlin-logging:1.7.9'
-
-    implementation "io.swagger.core.v3:swagger-annotations:2.1.2"
 }

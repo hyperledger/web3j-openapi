@@ -14,6 +14,8 @@ package org.web3j.openapi.server
 
 object Properties {
     const val NODE_ADDRESS = "web3j.openApi.node.address"
-    const val CREDENTIALS = "web3j.openApi.credentials"
+    const val PRIVATE_KEY = "web3j.openApi.privateKey"
+    const val WALLET_FILE = "web3j.openApi.wallet.file"
+    const val WALLET_PASSWORD = "web3j.openApi.wallet.password"
     // TODO Add more configurations, eg. gas price/limit
 }

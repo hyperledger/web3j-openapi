@@ -5,11 +5,16 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
 plugins {
+    id 'de.undercouch.download' version '4.0.0'
     id "com.diffplug.gradle.spotless" version "3.25.0"
+    id 'io.codearte.nexus-staging' version '0.21.1'
+    id "de.marcphilipp.nexus-publish" version '0.4.0'
 }
 
 description = 'Web3j-openapi-poc project.'
@@ -28,7 +33,6 @@ ext {
 
 
 subprojects {
-
     apply plugin: "kotlin"
 
     repositories {
@@ -38,11 +42,21 @@ subprojects {
 
     apply {
         [
-            'java',
-            'javadoc',
-            'repositories',
-            'spotless'
+                'bintray',
+                'publish',
+                'jacoco',
+                'java',
+                'javadoc',
+                'repositories',
+                'spotless'
         ].each { buildScript ->
+            download {
+                src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
+                dest "$rootDir/gradle/$buildScript/build.gradle"
+                overwrite true
+                quiet true
+                onlyIfModified true
+            }
             from("$rootDir/gradle/$buildScript/build.gradle")
         }
     }
@@ -70,7 +84,4 @@ subprojects {
     }
 
     sourceCompatibility = 1.8
-
-
-
 }

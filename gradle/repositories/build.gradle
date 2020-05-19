@@ -1,6 +1,0 @@
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}

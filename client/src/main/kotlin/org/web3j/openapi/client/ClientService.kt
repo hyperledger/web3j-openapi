@@ -42,7 +42,6 @@ class ClientService(
         .enable(SerializationFeature.INDENT_OUTPUT)
 
     internal val client: Client by lazy {
-
         val config = ClientConfig().apply {
             // Redirect ALL logs to SLF4J using logging.properties
             register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()))
@@ -50,7 +49,6 @@ class ClientService(
             property(ClientProperties.READ_TIMEOUT, readTimeout)
             property(ClientProperties.CONNECT_TIMEOUT, connectTimeout)
         }
-
         ClientBuilder.newClient(config)
     }
 

@@ -10,13 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.core.spi
 
-import org.web3j.protocol.core.methods.response.TransactionReceipt
+import org.web3j.openapi.core.Web3jOpenApi
+import java.util.function.Supplier
 
-interface ContractLifecycle<P, R> {
-
-    fun deploy(parameters: P): TransactionReceipt
-
-    fun load(contractAddress: String): R
-}
+interface OpenApiResourceProvider : Supplier<Class<out Web3jOpenApi>>
