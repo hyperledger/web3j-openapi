@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        mavenLocal()
         mavenCentral()
     }
 
@@ -34,9 +33,7 @@ ext {
 
 
 subprojects {
-
     apply plugin: "kotlin"
-
 
     repositories {
         mavenCentral()
@@ -87,7 +84,4 @@ subprojects {
     }
 
     sourceCompatibility = 1.8
-
-
-
 }
