@@ -79,7 +79,7 @@ class CoreApiGenerator(
                     val parameters = "transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel"
                     resources.add(
                         ContractResource(
-                            it.name.decapitalize(),
+                            "${it.name}Event",
                             "fun get${it.name.capitalize()}Event($parameters)",
                             "POST",
                             "List<${it.name.capitalize()}EventResponse>",
