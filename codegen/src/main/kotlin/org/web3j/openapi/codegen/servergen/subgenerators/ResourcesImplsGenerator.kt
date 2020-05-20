@@ -138,13 +138,13 @@ class ResourcesImplsGenerator(
             .filter { it.type == "function" }
             .forEach {
                 val returnType = SolidityUtils.getFunctionReturnType(it)
-                val funSpec = FunSpec.builder(it.name.decapitalize())
+                val funSpec = FunSpec.builder(it.name)
                     .returns(
                         returnType
                     )
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
-                    "${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
+                    "${contractName.decapitalize()}.${it.name}().send()"
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
@@ -155,7 +155,7 @@ class ResourcesImplsGenerator(
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${it.name.decapitalize()}(
+                        ${contractName.decapitalize()}.${it.name}(
                                 ${getCallParameters(it.inputs, it.name)}
                             ).send()
                     """.trimIndent()
@@ -172,7 +172,7 @@ class ResourcesImplsGenerator(
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
         var callParameters = ""
         inputs.forEach {
-            callParameters += "${functionName.decapitalize()}Parameters.${it.name.decapitalize()},"
+            callParameters += "${functionName.decapitalize()}Parameters.${it.name},"
         }
         return callParameters.removeSuffix(",")
     }
