@@ -27,49 +27,47 @@ import java.math.BigInteger
 object SolidityUtils {
 
     fun getNativeType(typeName: String, param: Boolean = true): TypeName {
+        // TODO: support for Fixed point numbers, enums, mappings, struct, library, multiple returns
         return if (typeName == "address") {
             String::class.asTypeName()
-        } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
+        } else if (typeName == "string" || typeName == "") {
             String::class.asTypeName()
         } else if (typeName.endsWith("]")) {
-            if (param) {
-                ClassName("kotlin.collections", "MutableList")
-                    .plusParameter(
-                        getNativeType(typeName.split("[").first())
-                    )
-            } else {
-                ClassName("kotlin.collections", "MutableList")
-                    .plusParameter(
-                        ANY.copy(true)
-                    ).copy(true)
-            }
-        } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
+            getNativeArrayType(typeName, param) // TODO
+        } else if (
+            typeName.startsWith("uint")
+            || typeName.startsWith("int")
+            || typeName == "float"
+            || typeName == "double"
+            || typeName == "short"
+            || typeName == "long"
+        ) {
             BigInteger::class.asTypeName()
-        } else if (typeName == Utf8String::class.java.simpleName) {
-            String::class.asTypeName()
-        } else if (typeName.toLowerCase().startsWith("bytes") || typeName == "dynamicbytes") {
+        } else if (typeName =="byte") {
+            Byte::class.asTypeName()
+        } else if (typeName.startsWith("bytes") || typeName == "dynamicbytes") {
             ByteArray::class.asTypeName()
-        } else if (typeName.toLowerCase().startsWith("bool")) {
+        } else if (typeName == "bool") {
             Boolean::class.asTypeName()
             // boolean cannot be a parameterized type
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Byte::class.java.simpleName) {
-            Byte::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Char::class.java.simpleName) {
-            Char::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Double::class.java.simpleName) {
-            Double::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Float::class.java.simpleName) {
-            Float::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Int::class.java.simpleName) {
-            Int::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Long::class.java.simpleName) {
-            Long::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Short::class.java.simpleName) {
-            Short::class.asTypeName()
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."
             )
+        }
+    }
+
+    private fun getNativeArrayType(typeName: String, param: Boolean): TypeName {
+        return if (param) {
+            ClassName("kotlin.collections", "MutableList")
+                .plusParameter(
+                    getNativeType(typeName.substringBeforeLast("["), param)
+                )
+        } else {
+            ClassName("kotlin.collections", "MutableList")
+                .plusParameter(
+                    ANY.copy(true)
+                ).copy(true)
         }
     }
 
