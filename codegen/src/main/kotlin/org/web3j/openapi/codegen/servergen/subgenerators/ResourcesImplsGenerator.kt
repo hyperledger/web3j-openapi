@@ -96,7 +96,7 @@ class ResourcesImplsGenerator(
                     ClassName("kotlin.collections", "List")
                         .plusParameter(
                             ClassName(
-                                "$packageName.core.${contractName.decapitalize()}.model",
+                                "$packageName.core.${contractName.toLowerCase()}.model",
                                 "${it.name.capitalize()}EventResponse"
                             )
                         )
