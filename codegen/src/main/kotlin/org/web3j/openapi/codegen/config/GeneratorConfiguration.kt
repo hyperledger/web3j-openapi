@@ -17,5 +17,6 @@ data class GeneratorConfiguration(
     val packageName: String,
     val outputDir: String,
     val jarDir: String,
-    val contracts: List<ContractConfiguration>
+    val contracts: List<ContractConfiguration>,
+    var onlyCore: Boolean = false
 )

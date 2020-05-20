@@ -12,12 +12,10 @@
  */
 package org.web3j.openapi.console
 
-import org.gradle.tooling.GradleConnectionException
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ResultHandler
 import picocli.CommandLine
 import java.io.File
 import java.util.concurrent.Callable
+import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 
 @CommandLine.Command(name = "run",
     description = ["Runs a web3j-openapi project"])
@@ -30,20 +28,7 @@ class RunCmd : Callable<Int> {
 
     override fun call(): Int {
 
-        GradleConnector.newConnector()
-            .useBuildDistribution()
-            .forProjectDirectory(File(projectFolder))
-            .connect()
-            .newBuild()
-            .forTasks("run")
-            .setStandardOutput(System.out)
-            .run(object : ResultHandler<Void> {
-                override fun onFailure(failure: GradleConnectionException) {
-                    throw GradleConnectionException(failure.message)
-                }
-
-                override fun onComplete(result: Void) {}
-            })
+        runGradleTask(File(projectFolder), "run", "Running the project in $projectFolder", false)
         return 0
     }
 }

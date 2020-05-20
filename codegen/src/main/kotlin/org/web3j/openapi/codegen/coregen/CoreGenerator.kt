@@ -30,7 +30,7 @@ class CoreGenerator(
 ) {
     override fun generate() {
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
+        if (!configuration.onlyCore) GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
         setContext()
         copySources(folderPath)
 
