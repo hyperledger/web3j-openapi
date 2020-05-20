@@ -30,8 +30,8 @@ object GradleUtils {
                     .forTasks(task)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
-                            GenerateCmd.logger.debug(failure.message)
-                            if (delete) projectFolder.delete()
+                            GenerateCmd.logger.debug(failure.message) // FIXME: throw information concerning this failure
+                            if (delete) projectFolder.delete() // FIXME: why is this not deleting the project folder
                             throw GradleConnectionException(failure.message)
                         }
 
