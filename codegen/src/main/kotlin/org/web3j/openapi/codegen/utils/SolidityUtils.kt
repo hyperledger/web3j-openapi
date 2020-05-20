@@ -18,38 +18,35 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
-import org.web3j.abi.datatypes.Address
-import org.web3j.abi.datatypes.Utf8String
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.math.BigInteger
 
 object SolidityUtils {
 
-    fun getNativeType(typeName: String, param: Boolean = true): TypeName {
+    fun getNativeType(typeName: String, isParameter: Boolean = true): TypeName {
         // TODO: support for Fixed point numbers, enums, mappings, struct, library, multiple returns
         return if (typeName == "address") {
             String::class.asTypeName()
-        } else if (typeName == "string" || typeName == "") {
+        } else if (typeName == "string" || typeName == "char") {
             String::class.asTypeName()
         } else if (typeName.endsWith("]")) {
-            getNativeArrayType(typeName, param) // TODO
+            getNativeArrayType(typeName, isParameter) // TODO
         } else if (
-            typeName.startsWith("uint")
-            || typeName.startsWith("int")
-            || typeName == "float"
-            || typeName == "double"
-            || typeName == "short"
-            || typeName == "long"
+            typeName.startsWith("uint") ||
+            typeName.startsWith("int") ||
+            typeName == "float" ||
+            typeName == "double" ||
+            typeName == "short" ||
+            typeName == "long"
         ) {
             BigInteger::class.asTypeName()
-        } else if (typeName =="byte") {
+        } else if (typeName == "byte") {
             Byte::class.asTypeName()
         } else if (typeName.startsWith("bytes") || typeName == "dynamicbytes") {
             ByteArray::class.asTypeName()
-        } else if (typeName == "bool") {
+        } else if (typeName == "bool" || typeName == "boolean") { // FIXME: Do we really have a boolean type or just bool ?
             Boolean::class.asTypeName()
-            // boolean cannot be a parameterized type
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."
@@ -57,11 +54,11 @@ object SolidityUtils {
         }
     }
 
-    private fun getNativeArrayType(typeName: String, param: Boolean): TypeName {
-        return if (param) {
+    private fun getNativeArrayType(typeName: String, isParameter: Boolean): TypeName {
+        return if (isParameter) {
             ClassName("kotlin.collections", "MutableList")
                 .plusParameter(
-                    getNativeType(typeName.substringBeforeLast("["), param)
+                    getNativeType(typeName.substringBeforeLast("["), isParameter)
                 )
         } else {
             ClassName("kotlin.collections", "MutableList")
