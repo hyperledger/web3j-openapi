@@ -24,11 +24,16 @@ class RunCmd : Callable<Int> {
         description = ["specify the project directory to be run."],
         defaultValue = ".",
         required = true)
-    var projectFolder: String = "."
+    lateinit var projectFolder: File
 
     override fun call(): Int {
 
-        runGradleTask(File(projectFolder), "run", "Running the project in $projectFolder")
+        runGradleTask(
+            projectFolder,
+            "run",
+            "Running the project in ${projectFolder.canonicalPath}",
+            System.out)
+
         return 0
     }
 }
