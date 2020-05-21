@@ -28,25 +28,28 @@ object SolidityUtils {
         // TODO: support for Fixed point numbers, enums, mappings, struct, library, multiple returns
         return if (typeName == "address") {
             String::class.asTypeName()
-        } else if (typeName == "string" || typeName == "char") {
+        } else if (typeName == "string") {
             String::class.asTypeName()
         } else if (typeName.endsWith("]")) {
-            getNativeArrayType(typeName, isParameter) // TODO
-        } else if (
-            typeName.startsWith("uint") ||
-            typeName.startsWith("int") ||
-            typeName == "float" ||
-            typeName == "double" ||
-            typeName == "short" ||
-            typeName == "long"
-        ) {
+            getNativeArrayType(typeName, isParameter)
+        } else if (typeName.startsWith("uint") || typeName.startsWith("int")) {
             BigInteger::class.asTypeName()
         } else if (typeName == "byte") {
             Byte::class.asTypeName()
         } else if (typeName.startsWith("bytes") || typeName == "dynamicbytes") {
             ByteArray::class.asTypeName()
-        } else if (typeName == "bool" || typeName == "boolean") { // FIXME: Do we really have a boolean type or just bool ?
+        } else if (typeName == "bool" || typeName == "boolean") {
             Boolean::class.asTypeName()
+        } else if (typeName.toLowerCase() == "float") {
+            Float::class.asTypeName()
+        } else if (typeName.toLowerCase() == "double") {
+            Double::class.asTypeName()
+        } else if (typeName.toLowerCase() == "short") {
+            Short::class.asTypeName()
+        } else if (typeName.toLowerCase() == "long") {
+            Long::class.asTypeName()
+        } else if (typeName.toLowerCase() == "char") {
+            Character::class.asTypeName()
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."

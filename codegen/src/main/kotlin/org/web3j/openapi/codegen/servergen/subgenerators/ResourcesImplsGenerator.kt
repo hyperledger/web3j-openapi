@@ -171,8 +171,8 @@ class ResourcesImplsGenerator(
 
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
         var callParameters = ""
-        inputs.forEach {
-            callParameters += "${functionName.decapitalize()}Parameters.${it.name},"
+        inputs.forEachIndexed { index, input ->
+            callParameters += "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"},"
         }
         return callParameters.removeSuffix(",")
     }
