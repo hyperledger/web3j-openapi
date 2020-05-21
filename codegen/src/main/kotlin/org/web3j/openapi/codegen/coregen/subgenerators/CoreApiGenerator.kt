@@ -61,6 +61,7 @@ class CoreApiGenerator(
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
                 if (it.type == "function") {
+                    if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"

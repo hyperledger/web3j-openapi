@@ -137,6 +137,7 @@ class ResourcesImplsGenerator(
         resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
+                if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
                 val returnType = SolidityUtils.getFunctionReturnType(it)
                 val funSpec = FunSpec.builder(it.name)
                     .returns(

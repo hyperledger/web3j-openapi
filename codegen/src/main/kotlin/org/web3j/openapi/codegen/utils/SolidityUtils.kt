@@ -73,8 +73,16 @@ object SolidityUtils {
     }
 
     fun getFunctionReturnType(it: AbiDefinition): TypeName {
+        return if (isFunctionDefinitionConstant(it)) {
+            if (it.outputs.size == 1) getNativeType(it.outputs.first().type, false)
+            else getMultipleReturnType(it.outputs)
+        } else ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
+    }
+
+    fun isFunctionDefinitionConstant(it: AbiDefinition): Boolean {
         val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
-        val isFunctionDefinitionConstant = it.isConstant || pureOrView
+        return it.isConstant || pureOrView
+    }
 
     private fun getMultipleReturnType(outputs: List<AbiDefinition.NamedType>): TypeName {
         return ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
