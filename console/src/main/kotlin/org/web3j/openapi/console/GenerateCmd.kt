@@ -74,6 +74,11 @@ class GenerateCmd : Callable<Int> {
         defaultValue = "false")
     var core: Boolean = false
 
+    @Option(names = ["--dev"],
+        description = ["not delete the failed build files."],
+        defaultValue = "false")
+    var dev: Boolean = false
+
     override fun call(): Int {
         val projectFolder = File(
             Path.of(
@@ -81,13 +86,14 @@ class GenerateCmd : Callable<Int> {
                 projectName
             ).toString()
         ).apply {
-            delete()
+            deleteRecursively()
             mkdirs()
         }
+
         try {
             generate(projectFolder)
         } catch (e: Exception) {
-            projectFolder.deleteRecursively()
+            if (!dev) projectFolder.deleteRecursively()
             throw e
         }
         return 0
