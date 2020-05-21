@@ -28,7 +28,7 @@ class RunCmd : Callable<Int> {
 
     override fun call(): Int {
 
-        runGradleTask(File(projectFolder), "run", "Running the project in $projectFolder", false)
+        runGradleTask(File(projectFolder), "run", "Running the project in $projectFolder")
         return 0
     }
 }

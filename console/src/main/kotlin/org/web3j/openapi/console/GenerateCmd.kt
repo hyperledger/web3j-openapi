@@ -84,6 +84,16 @@ class GenerateCmd : Callable<Int> {
             delete()
             mkdirs()
         }
+        try {
+            generate(projectFolder)
+        } catch (e: Exception) {
+            projectFolder.deleteRecursively()
+            throw e
+        }
+        return 0
+    }
+
+    private fun generate(projectFolder: File): Int {
 
         val generatorConfiguration = GeneratorConfiguration(
             projectName = projectName,

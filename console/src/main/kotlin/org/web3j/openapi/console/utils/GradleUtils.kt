@@ -19,7 +19,7 @@ import org.web3j.openapi.console.GenerateCmd
 import java.io.File
 
 object GradleUtils {
-    fun runGradleTask(projectFolder: File, task: String, description: String, delete: Boolean = true) {
+    fun runGradleTask(projectFolder: File, task: String, description: String) {
         println("$description\n")
         GradleConnector.newConnector()
             .useBuildDistribution()
@@ -31,7 +31,6 @@ object GradleUtils {
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
                             GenerateCmd.logger.debug(failure.message) // FIXME: throw information concerning this failure
-                            if (delete) projectFolder.delete() // FIXME: why is this not deleting the project folder
                             throw GradleConnectionException(failure.message)
                         }
 
