@@ -61,7 +61,8 @@ class GenerateOpenApi(
                     ).toString()
                 ),
                 useJavaPrimitiveTypes = true,
-                useJavaNativeTypes = true
+                useJavaNativeTypes = true,
+                addressLength = configuration.addressLength
             ).generate()
         }
     }

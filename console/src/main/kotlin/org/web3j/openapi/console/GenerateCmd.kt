@@ -79,6 +79,11 @@ class GenerateCmd : Callable<Int> {
         defaultValue = "false")
     var dev: Boolean = false
 
+    @Option(names = ["--address-length"],
+        description = ["specify the address length."],
+        defaultValue = "160")
+    var addressLength: Int = 160
+
     override fun call(): Int {
         val projectFolder = File(
             Path.of(
@@ -106,7 +111,8 @@ class GenerateCmd : Callable<Int> {
             packageName = packageName,
             outputDir = projectFolder.path,
             jarDir = outputDirectory,
-            contracts = getContractsConfiguration()
+            contracts = getContractsConfiguration(),
+            addressLength = addressLength
         )
 
         if (core) {

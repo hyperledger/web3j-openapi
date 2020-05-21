@@ -29,7 +29,7 @@ class SolidityFunctionWrapperGenerator(
     override val useJavaPrimitiveTypes: Boolean = false,
     val generateSendTxForCalls: Boolean = false,
     override val contractClass: Class<out Contract?> = Contract::class.java,
-    val addressLength: Int = 0
+    val addressLength: Int
 ) : FunctionWrapperGenerator(
     contractClass,
     destinationDir,
