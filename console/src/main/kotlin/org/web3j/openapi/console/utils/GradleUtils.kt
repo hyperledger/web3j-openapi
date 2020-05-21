@@ -20,7 +20,7 @@ import java.io.File
 import java.io.OutputStream
 
 object GradleUtils {
-    fun runGradleTask(projectFolder: File, task: String, description: String, outputStream : OutputStream? = null) {
+    fun runGradleTask(projectFolder: File, task: String, description: String, outputStream: OutputStream? = null) {
         println("$description\n")
         GradleConnector.newConnector()
             .useBuildDistribution()

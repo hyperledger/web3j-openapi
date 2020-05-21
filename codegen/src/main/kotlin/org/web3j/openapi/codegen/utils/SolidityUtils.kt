@@ -13,18 +13,20 @@
 package org.web3j.openapi.codegen.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asTypeName
 import org.web3j.protocol.core.methods.response.AbiDefinition
-import org.web3j.tuples.generated.Tuple4
 import java.io.File
 import java.math.BigInteger
 
 object SolidityUtils {
 
     fun getNativeType(typeName: String, isParameter: Boolean = true): TypeName {
-        // TODO: support for Fixed point numbers, enums, mappings, struct, library, multiple returns
+        // TODO: support for Fixed point numbers, enums, mappings, struct, library
         return if (typeName == "address") {
             String::class.asTypeName()
         } else if (typeName == "string") {
