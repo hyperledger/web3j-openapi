@@ -13,12 +13,11 @@
 package org.web3j.openapi.codegen.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.squareup.kotlinpoet.ANY
-import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import org.web3j.protocol.core.methods.response.AbiDefinition
+import org.web3j.tuples.generated.Tuple4
 import java.io.File
 import java.math.BigInteger
 
@@ -30,6 +29,8 @@ object SolidityUtils {
             String::class.asTypeName()
         } else if (typeName == "string") {
             String::class.asTypeName()
+        } else if (typeName == "int") {
+            Integer::class.asTypeName()
         } else if (typeName.endsWith("]")) {
             getNativeArrayType(typeName, isParameter)
         } else if (typeName.startsWith("uint") || typeName.startsWith("int")) {
@@ -75,9 +76,11 @@ object SolidityUtils {
         val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
         val isFunctionDefinitionConstant = it.isConstant || pureOrView
 
-        return if (isFunctionDefinitionConstant)
-            getNativeType(it.outputs.first().type, false)
-        else ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
+    private fun getMultipleReturnType(outputs: List<AbiDefinition.NamedType>): TypeName {
+        return ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
+            .parameterizedBy(
+                outputs.map { output -> getNativeType(output.type) }
+        )
     }
 
     fun loadContractDefinition(absFile: File?): List<AbiDefinition> { // TODO: use web3j-codegen one
