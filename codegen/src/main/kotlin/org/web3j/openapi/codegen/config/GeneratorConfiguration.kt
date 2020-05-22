@@ -12,11 +12,13 @@
  */
 package org.web3j.openapi.codegen.config
 
+import java.io.File
+
 data class GeneratorConfiguration(
     val projectName: String,
     val packageName: String,
     val outputDir: String,
-    val jarDir: String,
+    val jarDir: File,
     val contracts: List<ContractConfiguration>,
     val addressLength: Int,
     var onlyCore: Boolean = false
