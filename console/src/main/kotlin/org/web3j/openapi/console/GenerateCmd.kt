@@ -45,19 +45,19 @@ class GenerateCmd : Callable<Int> {
     @Option(names = ["-o", "--output"],
         description = ["specify the output directory."],
         defaultValue = ".")
-    var outputDirectory: String = "."
+    lateinit var outputDirectory: File
 
     @Option(names = ["-a", "--abi"],
         description = ["specify the abi files and folders."],
         arity = "1..*",
         required = true)
-    lateinit var abis: List<String>
+    lateinit var abis: List<File>
 
     @Option(names = ["-b", "--bin"],
         description = ["specify the bin."],
         arity = "1..*",
         required = true)
-    lateinit var bins: List<String>
+    lateinit var bins: List<File>
 
     @Option(names = ["-n", "--project-name"],
         description = ["specify the project name."],
@@ -97,7 +97,7 @@ class GenerateCmd : Callable<Int> {
     override fun call(): Int {
         val projectFolder = File(
             Path.of(
-                outputDirectory,
+                outputDirectory.canonicalPath,
                 projectName
             ).toString()
         ).apply {
@@ -150,18 +150,18 @@ class GenerateCmd : Callable<Int> {
     }
 
     private fun getContractsConfiguration(): List<ContractConfiguration> {
-        abis = recurseIntoFolders(abis, ".abi")
-        bins = recurseIntoFolders(bins, ".bin")
+        abis = recurseIntoFolders(abis, "abi")
+        bins = recurseIntoFolders(bins, "bin")
         val contractsConfig = mutableListOf<ContractConfiguration>()
-        abis.forEach { abi ->
-            val abiFile = File(abi)
+        abis.forEach { abiFile ->
             val bin = bins.find { bin ->
                 bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
             } ?: throw FileNotFoundException("${abiFile.name.removeSuffix(".abi")}.bin")
+
             contractsConfig.add(
                 ContractConfiguration(
                     abiFile,
-                    File(bin),
+                    bin,
                     ContractDetails(
                         abiFile.name.removeSuffix(".abi"),
                         SolidityUtils.loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
@@ -172,22 +172,21 @@ class GenerateCmd : Callable<Int> {
         return contractsConfig
     }
 
-    private fun recurseIntoFolders(list: List<String>, extension: String): List<String> {
-        val recs = mutableListOf<String>()
+    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
+        val recs = mutableListOf<File>()
         list
-            .filter { it.endsWith(extension) || File(it).isDirectory }
-            .forEach { filePath ->
-                val currentFile = File(filePath)
-                if (currentFile.isFile) recs.add(currentFile.path)
+            .filter { file -> file.extension == extension || file.isDirectory }
+            .forEach { currentFile ->
+                if (currentFile.isFile) recs.add(currentFile)
                 else currentFile.listFiles()
                     .filter { file ->
-                        file.name.endsWith(extension) || file.isDirectory
+                        file.extension == extension || file.isDirectory
                     }
                     .forEach { file ->
-                        if (file.isFile) recs.add(file.path)
+                        if (file.isFile) recs.add(file)
                         else recs.addAll(
                             recurseIntoFolders(
-                                file.listFiles().map { it.path }, extension
+                                file.listFiles().map { it }, extension
                             )
                         )
                     }
