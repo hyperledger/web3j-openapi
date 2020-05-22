@@ -15,10 +15,11 @@ package org.web3j.openapi.codegen.utils
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.asClassName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.math.BigInteger
@@ -27,32 +28,45 @@ object SolidityUtils {
 
     fun getNativeType(typeName: String, isParameter: Boolean = true): TypeName {
         // TODO: support for Fixed point numbers, enums, mappings, struct, library
+        val primitivesModel = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
         return if (typeName == "address") {
-            String::class.asTypeName()
+            if (isParameter) String::class.asTypeName()
+            else primitivesModel.parameterizedBy(String::class.asClassName())
         } else if (typeName == "string") {
-            String::class.asTypeName()
+            if (isParameter) String::class.asTypeName()
+            else primitivesModel.parameterizedBy(String::class.asClassName())
         } else if (typeName == "int") {
-            Integer::class.asTypeName()
+            if (isParameter) Integer::class.asTypeName()
+            else primitivesModel.parameterizedBy(Integer::class.asClassName())
         } else if (typeName.endsWith("]")) {
             getNativeArrayType(typeName, isParameter)
         } else if (typeName.startsWith("uint") || typeName.startsWith("int")) {
-            BigInteger::class.asTypeName()
+            if (isParameter) BigInteger::class.asTypeName()
+            else primitivesModel.parameterizedBy(BigInteger::class.asClassName())
         } else if (typeName == "byte") {
-            Byte::class.asTypeName()
+            if (isParameter) Byte::class.asTypeName()
+            else primitivesModel.parameterizedBy(Byte::class.asClassName())
         } else if (typeName.startsWith("bytes") || typeName == "dynamicbytes") {
-            ByteArray::class.asTypeName()
+            if (isParameter) ByteArray::class.asTypeName()
+            else primitivesModel.parameterizedBy(ByteArray::class.asClassName())
         } else if (typeName == "bool" || typeName == "boolean") {
-            Boolean::class.asTypeName()
+            if (isParameter) Boolean::class.asTypeName()
+            else primitivesModel.parameterizedBy(Boolean::class.asClassName())
         } else if (typeName.toLowerCase() == "float") {
-            Float::class.asTypeName()
+            if (isParameter) Float::class.asTypeName()
+            else primitivesModel.parameterizedBy(Float::class.asClassName())
         } else if (typeName.toLowerCase() == "double") {
-            Double::class.asTypeName()
+            if (isParameter) Double::class.asTypeName()
+            else primitivesModel.parameterizedBy(Double::class.asClassName())
         } else if (typeName.toLowerCase() == "short") {
-            Short::class.asTypeName()
+            if (isParameter) Short::class.asTypeName()
+            else primitivesModel.parameterizedBy(Short::class.asClassName())
         } else if (typeName.toLowerCase() == "long") {
-            Long::class.asTypeName()
+            if (isParameter) Long::class.asTypeName()
+            else primitivesModel.parameterizedBy(Long::class.asClassName())
         } else if (typeName.toLowerCase() == "char") {
-            Character::class.asTypeName()
+            if (isParameter) Character::class.asTypeName()
+            else primitivesModel.parameterizedBy(Character::class.asClassName())
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."
@@ -90,7 +104,7 @@ object SolidityUtils {
         return ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
             .parameterizedBy(
                 outputs.map { output -> getNativeType(output.type) }
-        )
+            )
     }
 
     fun loadContractDefinition(absFile: File?): List<AbiDefinition> { // TODO: use web3j-codegen one
