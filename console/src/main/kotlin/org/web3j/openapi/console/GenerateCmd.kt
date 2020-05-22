@@ -79,6 +79,16 @@ class GenerateCmd : Callable<Int> {
         defaultValue = "false")
     var dev: Boolean = false
 
+    @Option(names = ["--jar"],
+        description = ["set to true to generate the jar only."],
+        defaultValue = "false")
+    var jar: Boolean = false
+
+    @Option(names = ["--swagger-ui"],
+        description = ["set to false to ignore the generation of the swagger-ui."],
+        defaultValue = "true")
+    var swagger: Boolean = true
+
     @Option(names = ["--address-length"],
         description = ["specify the address length."],
         defaultValue = "160")
@@ -121,13 +131,18 @@ class GenerateCmd : Callable<Int> {
             GenerateOpenApi(generatorConfiguration).generateCore()
         } else {
             GenerateOpenApi(generatorConfiguration).generateAll()
-            runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs")
-            runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
-            runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
+            if (swagger) {
+                runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs")
+                runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
+                runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
+            }
 
             runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
-
             runGradleTask(projectFolder, "clean", "Cleaning up")
+
+            if (jar) {
+                projectFolder.deleteRecursively()
+            }
         }
 
         println("Done.")
