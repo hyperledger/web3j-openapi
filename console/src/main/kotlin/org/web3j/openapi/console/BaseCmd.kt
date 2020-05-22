@@ -18,7 +18,10 @@ import java.util.concurrent.Callable
 @CommandLine.Command(name = "openapi",
 //    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
     description = ["web3j-openapi cli"],
-    subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class])
+    subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class],
+    version = ["1.0"],
+    mixinStandardHelpOptions = true
+    )
 class BaseCmd : Callable<Int> {
     override fun call(): Int {
         return 0
