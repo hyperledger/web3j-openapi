@@ -156,7 +156,7 @@ class ResourcesImplsGenerator(
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${it.name}(
+                        ${contractName.decapitalize()}.${getFunctionName(it.name)}(
                                 ${getCallParameters(it.inputs, it.name)}
                             ).send()
                     """.trimIndent()
@@ -168,6 +168,11 @@ class ResourcesImplsGenerator(
                 functions.add(funSpec.build())
             }
         return functions
+    }
+
+    private fun getFunctionName(name: String): String {
+        return if (name == "short" || name == "long" || name == "double" || name == "float" || name == "char") "_$name"
+        else name
     }
 
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
