@@ -13,24 +13,22 @@
 package org.web3j.openapi.server.cli
 
 import org.web3j.openapi.server.OpenApiServer
-import org.web3j.openapi.server.config.OpenApiServerConfig
 import org.web3j.openapi.server.cli.options.CredentialsOptions
 import org.web3j.openapi.server.cli.options.NetworksOptions
 import org.web3j.openapi.server.cli.options.ServerOptions
+import org.web3j.openapi.server.config.OpenApiServerConfig
 import org.web3j.openapi.server.config.OpenApiServerConfigBuilder
+import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
-import picocli.CommandLine
-import java.util.Optional
 import java.io.File
+import java.util.Optional
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 @Command(
-    defaultValueProvider = ConfigDefaultProvider::class,
-    mixinStandardHelpOptions = true,
-    showDefaultValues = true
+    defaultValueProvider = ConfigDefaultProvider::class
 )
 class ConfigCLI : Callable<Int> {
 
@@ -44,11 +42,11 @@ class ConfigCLI : Callable<Int> {
     private val networksOptions = NetworksOptions()
 
     @Option(
-        names = ["-p", "--project-name"],
+        names = ["-n", "--name"],
         description = ["specify the project name"],
         defaultValue = "Web3j-OpenAPI"
     )
-    val projectName: String = environment["WEB3J_OPENAPI_PROJECT_NAME"] ?: "Web3j-OpenAPI"
+    lateinit var projectName: String
 
     @Option(
         names = ["-c", "--config-file"],
@@ -88,6 +86,7 @@ class ConfigCLI : Callable<Int> {
 
         val configFile = getConfigFileFromCliOrEnv(configFileCommand)
 
+        println(configFile.isPresent)
         // final pass
         val configCommandLine = CommandLine(this)
         configCommandLine.defaultValueProvider = ConfigDefaultProvider(configFile, environment)
@@ -115,7 +114,7 @@ class ConfigCLI : Callable<Int> {
     private fun serverConfig(): OpenApiServerConfig {
         return OpenApiServerConfigBuilder()
             .setHost(serverOptions.host.hostName)
-            .setPort(serverOptions.port)
+            .setPort(8080)
             .setNodeEndpoint(networksOptions.endpoint)
             .setPrivateKey(credentials.privateKey)
             .setWalletFilePath(credentials.walletOptions.walletFile.canonicalPath)

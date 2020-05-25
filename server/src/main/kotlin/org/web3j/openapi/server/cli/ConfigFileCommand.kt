@@ -12,10 +12,14 @@
  */
 package org.web3j.openapi.server.cli
 
+import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
 
 // allows two pass approach to obtain optional config file
+@Command(
+    showDefaultValues = true
+)
 class ConfigFileCommand {
     @Option(
         names = ["-c", "--config-file"],

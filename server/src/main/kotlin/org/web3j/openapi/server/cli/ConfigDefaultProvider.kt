@@ -32,13 +32,13 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
     lateinit var properties: Properties
 
     override fun defaultValue(argSpec: ArgSpec): String? {
-        if (configFile.isPresent) {
+        return if (configFile.isPresent) {
             properties = Properties()
             FileReader(configFile.get()).use { reader -> properties.load(reader) }
-            return properties.getProperty((argSpec as OptionSpec).longestName())
+            properties.getProperty((argSpec as OptionSpec).longestName())
         } else {
             val envVarName = "WEB3J_OPENAPI_${argSpec.getValue<String>().toUpperCase().replace("-", "_")}"
-            return environment[envVarName]
+            environment[envVarName]
         }
     }
 }

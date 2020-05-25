@@ -14,21 +14,19 @@ package org.web3j.openapi.server.cli.options
 
 import picocli.CommandLine.Option
 import java.net.InetAddress
-import picocli.CommandLine.Command
 
-@Command(mixinStandardHelpOptions = true)
 class ServerOptions {
     @Option(
-        names = ["-a", "--host"], // FIXME: correct this name
+        names = ["--host"],
         description = ["specify the host name"],
         defaultValue = "localhost"
     )
-    var host: InetAddress = InetAddress.getLocalHost()
+    lateinit var host: InetAddress
 
     @Option(
-        names = ["-p", "--port"],
+        names = ["--port"],
         description = ["specify the port number"],
         defaultValue = "8080"
     )
-    val port: Int = 8080
+    var port: Int = 8080
 }

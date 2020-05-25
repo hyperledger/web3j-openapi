@@ -14,7 +14,6 @@ package org.web3j.openapi.server.cli.options
 
 import picocli.CommandLine
 
-@CommandLine.Command(mixinStandardHelpOptions = true)
 class NetworksOptions {
     @CommandLine.Option(
         names = ["-e", "--endpoint"],

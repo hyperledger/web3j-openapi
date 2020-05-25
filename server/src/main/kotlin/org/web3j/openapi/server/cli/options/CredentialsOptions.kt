@@ -14,12 +14,10 @@ package org.web3j.openapi.server.cli.options
 
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
-import picocli.CommandLine.Command
 
-@Command(mixinStandardHelpOptions = true)
 class CredentialsOptions {
     @Option(
-        names = ["privateKey"],
+        names = ["--privateKey"],
         description = ["specify the private key"]
     )
     var privateKey: String = ""

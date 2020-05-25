@@ -12,11 +12,9 @@
  */
 package org.web3j.openapi.server.cli.options
 
-import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
 
-@Command(mixinStandardHelpOptions = true)
 class WalletOptions {
 
     @Option(
@@ -26,7 +24,7 @@ class WalletOptions {
     lateinit var walletFile: File
 
     @Option(
-        names = ["-p", "--wallet-password"],
+        names = ["--wallet-password"],
         description = ["specify the wallet file password"]
     )
     var walletPassword: String = ""
