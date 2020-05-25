@@ -47,7 +47,7 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
         return environment[getEnvironmentName(argSpec)]
     }
 
-    private fun getPropertyName(argSpec: ArgSpec) : String {
+    private fun getPropertyName(argSpec: ArgSpec): String {
         return (argSpec as OptionSpec)
             .longestName()
             .removePrefix("--")
@@ -55,7 +55,7 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
             .prependIndent("web3j.openapi.")
     }
 
-    private fun getEnvironmentName(argSpec: ArgSpec) : String {
+    private fun getEnvironmentName(argSpec: ArgSpec): String {
         return (argSpec as OptionSpec)
             .longestName()
             .toUpperCase()
