@@ -12,8 +12,13 @@
  */
 package org.web3j.openapi.codegen.servergen.subgenerators
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
+import com.squareup.kotlinpoet.PropertySpec
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
@@ -156,11 +161,11 @@ class ResourcesImplsGenerator(
                             ).send()
                     """.trimIndent()
                 }
-                when (returnType.toString().substringBefore("<")){
+                when (returnType.toString().substringBefore("<")) {
                     ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel").toString() ->
                         funSpec.addCode("return TransactionReceiptModel($code)")
                     ClassName("org.web3j.openapi.core.models", "PrimitivesModel").toString() ->
-                        funSpec.addCode("return ${returnType}($code)")
+                        funSpec.addCode("return $returnType($code)")
                     else -> funSpec.addCode("return $code")
                 }
                 functions.add(funSpec.build())
