@@ -22,23 +22,45 @@ import java.util.Properties
 
 class ConfigDefaultProvider() : IDefaultValueProvider {
 
-    constructor(configFile: Optional<File>, environment: Map<String, String>) : this() {
+    constructor(configFile: Optional<File>, environment: Map<String, String>, defaultFile: File) : this() {
         this.configFile = configFile
         this.environment = environment
+        this.defaultFile = defaultFile
     }
 
     lateinit var configFile: Optional<File>
     lateinit var environment: Map<String, String>
     lateinit var properties: Properties
+    lateinit var defaultFile: File
 
     override fun defaultValue(argSpec: ArgSpec): String? {
-        return if (configFile.isPresent) {
+        if (configFile.isPresent) {
             properties = Properties()
             FileReader(configFile.get()).use { reader -> properties.load(reader) }
-            properties.getProperty((argSpec as OptionSpec).longestName())
-        } else {
-            val envVarName = "WEB3J_OPENAPI_${argSpec.getValue<String>().toUpperCase().replace("-", "_")}"
-            environment[envVarName]
+            return properties.getProperty(getPropertyName(argSpec))
         }
+        if (defaultFile.exists()) {
+            properties = Properties()
+            FileReader(defaultFile).use { reader -> properties.load(reader) }
+            return properties.getProperty(getPropertyName(argSpec))
+        }
+        return environment[getEnvironmentName(argSpec)]
+    }
+
+    private fun getPropertyName(argSpec: ArgSpec) : String {
+        return (argSpec as OptionSpec)
+            .longestName()
+            .removePrefix("--")
+            .replace("-", ".")
+            .prependIndent("web3j.openapi.")
+    }
+
+    private fun getEnvironmentName(argSpec: ArgSpec) : String {
+        return (argSpec as OptionSpec)
+            .longestName()
+            .toUpperCase()
+            .removePrefix("--")
+            .replace("-", "_")
+            .prependIndent("WEB3J_OPENAPI_")
     }
 }

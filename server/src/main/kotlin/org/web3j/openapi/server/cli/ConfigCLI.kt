@@ -33,6 +33,8 @@ import kotlin.system.exitProcess
 class ConfigCLI : Callable<Int> {
 
     private val environment = System.getenv()
+    private val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
+    private val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
 
     @Mixin
     private val credentials = CredentialsOptions()
@@ -86,17 +88,16 @@ class ConfigCLI : Callable<Int> {
 
         val configFile = getConfigFileFromCliOrEnv(configFileCommand)
 
-        println(configFile.isPresent)
         // final pass
         val configCommandLine = CommandLine(this)
-        configCommandLine.defaultValueProvider = ConfigDefaultProvider(configFile, environment)
+        configCommandLine.defaultValueProvider = ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
         return configCommandLine.execute(*args)
     }
 
     private fun getConfigFileFromCliOrEnv(configFileCommand: ConfigFileCommand): Optional<File> {
         return Optional.ofNullable<File>(configFileCommand.configFile)
             .or {
-                Optional.ofNullable<String>(environment["WEB3J_OPENAPI_CONFIG_FILE"])
+                Optional.ofNullable<String>(environment[CONFIG_FILE_ENV_NAME])
                     .map { pathname -> File(pathname) }
             }
     }
