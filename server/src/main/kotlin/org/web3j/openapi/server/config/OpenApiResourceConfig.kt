@@ -10,14 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.server.config
 
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.aeonbits.owner.ConfigFactory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
@@ -25,6 +24,13 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
+import org.web3j.openapi.server.JsonMappingExceptionMapper
+import org.web3j.openapi.server.ContractCallExceptionMapper
+import org.web3j.openapi.server.CredentialsFactory
+import org.web3j.openapi.server.IllegalArgumentExceptionMapper
+import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.Properties
+import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.logging.Level
@@ -32,7 +38,7 @@ import java.util.logging.Logger
 import javax.inject.Singleton
 
 class OpenApiResourceConfig(
-    openApiServerConfig: OpenApiServerConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
+    openApiServerConfig: OpenApiServerConfig
 ) : ResourceConfig() {
 
     private val mapper = jacksonObjectMapper()
@@ -51,11 +57,11 @@ class OpenApiResourceConfig(
 
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName())
-        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint())
-        property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey())
-        property(Properties.WALLET_FILE, openApiServerConfig.walletFile())
-        property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword())
+        property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName)
+        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint)
+        property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey)
+        property(Properties.WALLET_FILE, openApiServerConfig.walletFilePath)
+        property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword)
     }
 
     private class InjectionBinder : AbstractBinder() {
