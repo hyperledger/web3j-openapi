@@ -18,7 +18,7 @@ import java.io.File
 
 // allows two pass approach to obtain optional config file
 @Command(
-    showDefaultValues = true
+    mixinStandardHelpOptions = true
 )
 class ConfigFileCommand {
     @Option(

@@ -28,4 +28,8 @@ class WalletOptions {
         description = ["specify the wallet file password"]
     )
     var walletPassword: String = ""
+
+    fun isWalletFileInitialized(): Boolean {
+        return this::walletFile.isInitialized
+    }
 }

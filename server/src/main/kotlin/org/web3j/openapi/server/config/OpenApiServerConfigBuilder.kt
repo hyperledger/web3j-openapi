@@ -53,9 +53,9 @@ class OpenApiServerConfigBuilder() {
     }
 
     fun build(): OpenApiServerConfig {
-        if (privateKey.isNullOrBlank() && walletFilePath.isNullOrBlank()) {
+        if (privateKey.isBlank() && walletFilePath.isBlank()) {
             throw NotFoundException("Credentials not found!")
-        } else if (!walletFilePath.isNullOrBlank() && walletPassword.isNullOrBlank()) {
+        } else if (!walletFilePath.isBlank() && walletPassword.isBlank()) {
             throw NotFoundException("Wallet file $walletFilePath password not found !")
         }
         return OpenApiServerConfig(

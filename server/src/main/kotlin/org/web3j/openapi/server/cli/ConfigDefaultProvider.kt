@@ -34,16 +34,9 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
     lateinit var defaultFile: File
 
     override fun defaultValue(argSpec: ArgSpec): String? {
-        if (configFile.isPresent) {
-            properties = Properties()
-            FileReader(configFile.get()).use { reader -> properties.load(reader) }
-            return properties.getProperty(getPropertyName(argSpec))
-        }
-        if (defaultFile.exists()) {
-            properties = Properties()
-            FileReader(defaultFile).use { reader -> properties.load(reader) }
-            return properties.getProperty(getPropertyName(argSpec))
-        }
+        if (configFile.isPresent) getPropertyFromFile(configFile.get(), argSpec)?.let { value -> return value }
+        getPropertyFromFile(defaultFile, argSpec)?.let { value -> return value }
+
         return environment[getEnvironmentName(argSpec)]
     }
 
@@ -62,5 +55,12 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
             .removePrefix("--")
             .replace("-", "_")
             .prependIndent("WEB3J_OPENAPI_")
+    }
+
+    private fun getPropertyFromFile(configFile: File, argSpec: ArgSpec): String? {
+        properties = Properties()
+        if (!configFile.exists()) return null
+        FileReader(configFile).use { reader -> properties.load(reader) }
+        return properties.getProperty(getPropertyName(argSpec))
     }
 }

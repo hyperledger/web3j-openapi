@@ -14,7 +14,7 @@ package org.web3j.openapi.server.cli
 
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.cli.options.CredentialsOptions
-import org.web3j.openapi.server.cli.options.NetworksOptions
+import org.web3j.openapi.server.cli.options.NetworkOptions
 import org.web3j.openapi.server.cli.options.ServerOptions
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import org.web3j.openapi.server.config.OpenApiServerConfigBuilder
@@ -27,9 +27,7 @@ import java.util.Optional
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
-@Command(
-    defaultValueProvider = ConfigDefaultProvider::class
-)
+@Command(mixinStandardHelpOptions = true) // FIXME: Why help not showing
 class ConfigCLI : Callable<Int> {
 
     private val environment = System.getenv()
@@ -41,7 +39,7 @@ class ConfigCLI : Callable<Int> {
     @Mixin
     private val serverOptions = ServerOptions()
     @Mixin
-    private val networksOptions = NetworksOptions()
+    private val networkOptions = NetworkOptions()
 
     @Option(
         names = ["-n", "--name"],
@@ -115,10 +113,14 @@ class ConfigCLI : Callable<Int> {
     private fun serverConfig(): OpenApiServerConfig {
         return OpenApiServerConfigBuilder()
             .setHost(serverOptions.host.hostName)
-            .setPort(8080)
-            .setNodeEndpoint(networksOptions.endpoint)
+            .setPort(serverOptions.port)
+            .setNodeEndpoint(networkOptions.endpoint)
             .setPrivateKey(credentials.privateKey)
-            .setWalletFilePath(credentials.walletOptions.walletFile.canonicalPath)
+            .setWalletFilePath(
+                if (credentials.walletOptions.isWalletFileInitialized())
+                    credentials.walletOptions.walletFile.canonicalPath
+                else ""
+            )
             .setWalletPassword(credentials.walletOptions.walletPassword)
             .setProjectName(projectName)
             .build()
