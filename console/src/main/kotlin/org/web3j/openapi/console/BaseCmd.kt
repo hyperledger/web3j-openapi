@@ -20,7 +20,8 @@ import java.util.concurrent.Callable
     description = ["web3j-openapi cli"],
     subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class],
     version = ["1.0"],
-    mixinStandardHelpOptions = true
+    mixinStandardHelpOptions = true,
+    showDefaultValues = true
     )
 class BaseCmd : Callable<Int> {
     override fun call(): Int {

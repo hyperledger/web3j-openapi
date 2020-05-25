@@ -28,6 +28,7 @@ import java.util.concurrent.Callable
 
 @Command(
     name = "generate",
+    showDefaultValues = true,
     description = ["Generates a web3j-openapi project"]
 )
 class GenerateCmd : Callable<Int> {

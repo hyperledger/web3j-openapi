@@ -18,6 +18,7 @@ import java.util.concurrent.Callable
 import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 
 @CommandLine.Command(name = "run",
+    showDefaultValues = true,
     description = ["Runs a web3j-openapi project"])
 class RunCmd : Callable<Int> {
     @CommandLine.Option(names = ["-p", "--project"],
