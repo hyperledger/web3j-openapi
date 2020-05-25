@@ -21,5 +21,7 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swaggerAnnotations}"
     implementation "io.swagger.core.v3:swagger-jaxrs2:${versions.swaggerJaxRs}"
 
+    implementation "info.picocli:picocli:${versions.picocli}"
+
     testImplementation project(':web3j-openapi-client')
 }
