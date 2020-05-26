@@ -27,7 +27,10 @@ import java.util.Optional
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
-@Command(mixinStandardHelpOptions = true) // FIXME: Why help not showing
+@Command(
+    mixinStandardHelpOptions = true, // FIXME: Why help not showing
+    version = ["1.0"] // TODO: Make version not hardcoded
+)
 class ConfigCLI : Callable<Int> {
 
     private val environment = System.getenv()
