@@ -39,7 +39,7 @@ import javax.ws.rs.core.MediaType
      tags = [
           Tag(name = "default", description = "List existing contracts names"),
           {{#tags}}
-            Tag(name = "{{name}}", description = "{{description}}"){{lastComma}}
+            Tag(name = "{{name}}", description = "{{description}}"){{lastCharacter}}
           {{/tags}}
           ]
 )
