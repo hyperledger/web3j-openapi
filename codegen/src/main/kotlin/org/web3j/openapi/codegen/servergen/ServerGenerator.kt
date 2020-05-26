@@ -21,6 +21,7 @@ import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplsGenerator
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
+import java.io.FileNotFoundException
 import java.nio.file.Path
 
 class ServerGenerator(
@@ -32,10 +33,11 @@ class ServerGenerator(
         context["contracts"] = configuration.contracts
         context["serverImports"] = getServerImports()
         context["projectName"] = configuration.projectName
-        context["outputDir"] = File(configuration.jarDir).absolutePath
+        context["outputDir"] = configuration.jarDir.absolutePath
     }
 
     override fun generate() {
+        if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
         copyGradleFile(folderPath)
         copyResources(folderPath)

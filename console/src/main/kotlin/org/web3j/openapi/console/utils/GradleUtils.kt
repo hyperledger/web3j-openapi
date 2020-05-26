@@ -17,10 +17,11 @@ import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import org.web3j.openapi.console.GenerateCmd
 import java.io.File
+import java.io.OutputStream
 
 object GradleUtils {
-    fun runGradleTask(projectFolder: File, task: String, description: String) {
-        println(description)
+    fun runGradleTask(projectFolder: File, task: String, description: String, outputStream: OutputStream? = null) {
+        println("$description\n")
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(projectFolder)
@@ -28,9 +29,10 @@ object GradleUtils {
             .apply {
                 newBuild()
                     .forTasks(task)
+                    .setStandardOutput(outputStream)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
-                            GenerateCmd.logger.debug(failure.message)
+                            GenerateCmd.logger.debug(failure.message) // FIXME: throw information concerning this failure
                             throw GradleConnectionException(failure.message)
                         }
 

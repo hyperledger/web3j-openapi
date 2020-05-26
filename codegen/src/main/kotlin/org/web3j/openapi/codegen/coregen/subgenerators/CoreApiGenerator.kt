@@ -61,6 +61,7 @@ class CoreApiGenerator(
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
                 if (it.type == "function") {
+                    if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
@@ -79,7 +80,7 @@ class CoreApiGenerator(
                     val parameters = "transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel"
                     resources.add(
                         ContractResource(
-                            it.name.decapitalize(),
+                            "${it.name}Event",
                             "fun get${it.name.capitalize()}Event($parameters)",
                             "POST",
                             "List<${it.name.capitalize()}EventResponse>",

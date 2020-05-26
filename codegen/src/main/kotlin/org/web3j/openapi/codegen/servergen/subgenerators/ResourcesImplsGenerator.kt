@@ -12,13 +12,13 @@
  */
 package org.web3j.openapi.codegen.servergen.subgenerators
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
+import com.squareup.kotlinpoet.PropertySpec
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
@@ -96,7 +96,7 @@ class ResourcesImplsGenerator(
                     ClassName("kotlin.collections", "List")
                         .plusParameter(
                             ClassName(
-                                "$packageName.core.${contractName.decapitalize()}.model",
+                                "$packageName.core.${contractName.toLowerCase()}.model",
                                 "${it.name.capitalize()}EventResponse"
                             )
                         )
@@ -137,14 +137,15 @@ class ResourcesImplsGenerator(
         resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
+                if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
                 val returnType = SolidityUtils.getFunctionReturnType(it)
-                val funSpec = FunSpec.builder(it.name.decapitalize())
+                val funSpec = FunSpec.builder(it.name)
                     .returns(
                         returnType
                     )
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
-                    "${contractName.decapitalize()}.${it.name.decapitalize()}().send()"
+                    "${contractName.decapitalize()}.${it.name}().send()"
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
@@ -155,24 +156,32 @@ class ResourcesImplsGenerator(
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${it.name.decapitalize()}(
+                        ${contractName.decapitalize()}.${getFunctionName(it.name)}(
                                 ${getCallParameters(it.inputs, it.name)}
                             ).send()
                     """.trimIndent()
                 }
-                if (returnType != ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel"))
-                    funSpec.addCode("return $code")
-                else
-                    funSpec.addCode("return TransactionReceiptModel($code)")
+                when (returnType.toString().substringBefore("<")) {
+                    ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel").toString() ->
+                        funSpec.addCode("return TransactionReceiptModel($code)")
+                    ClassName("org.web3j.openapi.core.models", "PrimitivesModel").toString() ->
+                        funSpec.addCode("return $returnType($code)")
+                    else -> funSpec.addCode("return $code")
+                }
                 functions.add(funSpec.build())
             }
         return functions
     }
 
+    private fun getFunctionName(name: String): String {
+        return if (name == "short" || name == "long" || name == "double" || name == "float" || name == "char") "_$name"
+        else name
+    }
+
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
         var callParameters = ""
-        inputs.forEach {
-            callParameters += "${functionName.decapitalize()}Parameters.${it.name.decapitalize()},"
+        inputs.forEachIndexed { index, input ->
+            callParameters += "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"},"
         }
         return callParameters.removeSuffix(",")
     }

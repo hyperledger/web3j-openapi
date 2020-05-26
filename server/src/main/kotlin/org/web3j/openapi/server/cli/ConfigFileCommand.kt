@@ -10,10 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen.common
+package org.web3j.openapi.server.cli
 
-data class Tag(
-    val name: String,
-    val description: String,
-    var lastComma: String = ","
+import picocli.CommandLine.Command
+import picocli.CommandLine.Option
+import java.io.File
+
+// allows two pass approach to obtain optional config file
+@Command(
+    mixinStandardHelpOptions = true
 )
+class ConfigFileCommand {
+    @Option(
+        names = ["-c", "--config-file"],
+        arity = "1"
+    )
+    var configFile: File? = null
+}

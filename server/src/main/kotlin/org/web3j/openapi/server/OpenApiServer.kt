@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.server
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
-import org.aeonbits.owner.ConfigFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -23,15 +22,17 @@ import org.eclipse.jetty.util.Loader.getResource
 import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
 import org.web3j.openapi.core.spi.OpenApiResourceProvider
+import org.web3j.openapi.server.cli.OpenApiServerCommand
+import org.web3j.openapi.server.config.OpenApiResourceConfig
+import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.net.URI
 import java.util.ServiceLoader
-import kotlin.system.exitProcess
 
 class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
     init {
         addConnector(ServerConnector(this).apply {
-            host = serverConfig.host()
-            port = serverConfig.port()
+            host = serverConfig.host
+            port = serverConfig.port
         })
         handler = ServletContextHandler(NO_SESSIONS)
         configureSwaggerUi()
@@ -66,16 +67,6 @@ class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
     }
 }
 
-fun main() {
-    val serverConfig = ConfigFactory.create(OpenApiServerConfig::class.java)
-    OpenApiServer(serverConfig).apply {
-        try {
-            start()
-            join()
-        } catch (ex: Exception) {
-            exitProcess(1)
-        } finally {
-            destroy()
-        }
-    }
+fun main(args: Array<String>) {
+    OpenApiServerCommand().parse(*args)
 }

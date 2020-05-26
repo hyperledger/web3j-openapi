@@ -13,6 +13,7 @@
 package org.web3j.openapi.codegen.coregen
 
 import mu.KLogging
+import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
 import org.web3j.openapi.codegen.DefaultGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
@@ -21,6 +22,7 @@ import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import java.io.FileNotFoundException
 import java.nio.file.Path
 
 class CoreGenerator(
@@ -29,8 +31,9 @@ class CoreGenerator(
     configuration
 ) {
     override fun generate() {
+        if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
+        if (!configuration.onlyCore) GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
         setContext()
         copySources(folderPath)
 
@@ -53,14 +56,14 @@ class CoreGenerator(
         context["tags"] = getTags()
     }
 
-    private fun getTags() : List<Tag> {
+    private fun getTags(): List<Tag> {
         val tags = configuration.contracts.map {
             Tag(
                 it.contractDetails.capitalizedContractName(),
                 "List ${it.contractDetails.capitalizedContractName()} method's calls"
             )
         }
-        tags.last().lastComma = ""
+        tags.ifNotEmpty { last().lastComma = "" }
         return tags
     }
 

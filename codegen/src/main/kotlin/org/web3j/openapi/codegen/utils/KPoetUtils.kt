@@ -35,17 +35,18 @@ object KPoetUtils {
 
         val constructorBuilder = FunSpec.constructorBuilder()
 
-        inputs.forEach {
+        inputs.forEachIndexed { index, input ->
+            val inputName = input.name ?: "input$index"
             constructorBuilder.addParameter(
-                it.name,
-                SolidityUtils.getNativeType(it.type)
+                inputName,
+                SolidityUtils.getNativeType(input.type)
             )
             constructor.addProperty(
                 PropertySpec.builder(
-                    it.name,
-                    SolidityUtils.getNativeType(it.type)
+                    inputName,
+                    SolidityUtils.getNativeType(input.type)
                 )
-                    .initializer(it.name)
+                    .initializer(inputName)
                     .build()
             )
         }

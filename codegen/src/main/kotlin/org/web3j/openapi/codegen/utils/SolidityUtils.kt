@@ -15,57 +15,58 @@ package org.web3j.openapi.codegen.utils
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
-import org.web3j.abi.datatypes.Address
-import org.web3j.abi.datatypes.Utf8String
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asClassName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.math.BigInteger
 
 object SolidityUtils {
 
-    fun getNativeType(typeName: String, param: Boolean = true): TypeName {
-        return if (typeName == Address::class.java.simpleName) {
-            String::class.asTypeName()
-        } else if (typeName.toLowerCase() == "string") { // FIXME: Is this correct ?
-            String::class.asTypeName()
+    fun getNativeType(typeName: String, isParameter: Boolean = true): TypeName {
+        // TODO: support for Fixed point numbers, enums, mappings, struct, library
+        val primitivesModel = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
+        return if (typeName == "address") {
+            if (isParameter) String::class.asTypeName()
+            else primitivesModel.parameterizedBy(String::class.asClassName())
+        } else if (typeName == "string") {
+            if (isParameter) String::class.asTypeName()
+            else primitivesModel.parameterizedBy(String::class.asClassName())
+        } else if (typeName == "int") {
+            if (isParameter) Integer::class.asTypeName()
+            else primitivesModel.parameterizedBy(Integer::class.asClassName())
         } else if (typeName.endsWith("]")) {
-            if (param) {
-                ClassName("kotlin.collections", "MutableList")
-                    .plusParameter(
-                        getNativeType(typeName.split("[").first())
-                    )
-            } else {
-                ClassName("kotlin.collections", "MutableList")
-                    .plusParameter(
-                        ANY.copy(true)
-                    ).copy(true)
-            }
-        } else if (typeName.toLowerCase().startsWith("uint") || typeName.toLowerCase().startsWith("int")) {
-            BigInteger::class.asTypeName()
-        } else if (typeName == Utf8String::class.java.simpleName) {
-            String::class.asTypeName()
-        } else if (typeName.toLowerCase().startsWith("bytes") || typeName == "dynamicbytes") {
-            ByteArray::class.asTypeName()
-        } else if (typeName.toLowerCase().startsWith("bool")) {
-            Boolean::class.asTypeName()
-            // boolean cannot be a parameterized type
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Byte::class.java.simpleName) {
-            Byte::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Char::class.java.simpleName) {
-            Char::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Double::class.java.simpleName) {
-            Double::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Float::class.java.simpleName) {
-            Float::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Int::class.java.simpleName) {
-            Int::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Long::class.java.simpleName) {
-            Long::class.asTypeName()
-        } else if (typeName == org.web3j.abi.datatypes.primitive.Short::class.java.simpleName) {
-            Short::class.asTypeName()
+            getNativeArrayType(typeName, isParameter)
+        } else if (typeName.startsWith("uint") || typeName.startsWith("int")) {
+            if (isParameter) BigInteger::class.asTypeName()
+            else primitivesModel.parameterizedBy(BigInteger::class.asClassName())
+        } else if (typeName == "byte") {
+            if (isParameter) Byte::class.asTypeName()
+            else primitivesModel.parameterizedBy(Byte::class.asClassName())
+        } else if (typeName.startsWith("bytes") || typeName == "dynamicbytes") {
+            if (isParameter) ByteArray::class.asTypeName()
+            else primitivesModel.parameterizedBy(ByteArray::class.asClassName())
+        } else if (typeName == "bool" || typeName == "boolean") {
+            if (isParameter) Boolean::class.asTypeName()
+            else primitivesModel.parameterizedBy(Boolean::class.asClassName())
+        } else if (typeName.toLowerCase() == "float") {
+            if (isParameter) Float::class.asTypeName()
+            else primitivesModel.parameterizedBy(Float::class.asClassName())
+        } else if (typeName.toLowerCase() == "double") {
+            if (isParameter) Double::class.asTypeName()
+            else primitivesModel.parameterizedBy(Double::class.asClassName())
+        } else if (typeName.toLowerCase() == "short") {
+            if (isParameter) Short::class.asTypeName()
+            else primitivesModel.parameterizedBy(Short::class.asClassName())
+        } else if (typeName.toLowerCase() == "long") {
+            if (isParameter) Long::class.asTypeName()
+            else primitivesModel.parameterizedBy(Long::class.asClassName())
+        } else if (typeName.toLowerCase() == "char") {
+            if (isParameter) Character::class.asTypeName()
+            else primitivesModel.parameterizedBy(Character::class.asClassName())
         } else {
             throw UnsupportedOperationException(
                 "Unsupported type: $typeName, no native type mapping exists."
@@ -73,13 +74,37 @@ object SolidityUtils {
         }
     }
 
-    fun getFunctionReturnType(it: AbiDefinition): TypeName {
-        val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
-        val isFunctionDefinitionConstant = it.isConstant || pureOrView
+    private fun getNativeArrayType(typeName: String, isParameter: Boolean): TypeName {
+        return if (isParameter) {
+            ClassName("kotlin.collections", "MutableList")
+                .plusParameter(
+                    getNativeType(typeName.substringBeforeLast("["), isParameter)
+                )
+        } else {
+            ClassName("kotlin.collections", "MutableList")
+                .plusParameter(
+                    ANY.copy(true)
+                ).copy(true)
+        }
+    }
 
-        return if (isFunctionDefinitionConstant)
-            getNativeType(it.outputs.first().type, false)
-        else ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
+    fun getFunctionReturnType(it: AbiDefinition): TypeName {
+        return if (isFunctionDefinitionConstant(it)) {
+            if (it.outputs.size == 1) getNativeType(it.outputs.first().type, false)
+            else getMultipleReturnType(it.outputs)
+        } else ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
+    }
+
+    fun isFunctionDefinitionConstant(it: AbiDefinition): Boolean {
+        val pureOrView = "pure" == it.stateMutability || "view" == it.stateMutability
+        return it.isConstant || pureOrView
+    }
+
+    private fun getMultipleReturnType(outputs: List<AbiDefinition.NamedType>): TypeName {
+        return ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
+            .parameterizedBy(
+                outputs.map { output -> getNativeType(output.type) }
+            )
     }
 
     fun loadContractDefinition(absFile: File?): List<AbiDefinition> { // TODO: use web3j-codegen one

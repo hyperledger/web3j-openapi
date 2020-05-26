@@ -5,8 +5,6 @@ plugins {
 dependencies {
     api project(':web3j-openapi-core')
 
-    implementation "org.aeonbits.owner:owner:${versions.owner}"
-
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jerseyContainerServlet}"
     implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jerseyHk2}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jerseyMediaJsonJackson}"
@@ -20,6 +18,8 @@ dependencies {
 
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swaggerAnnotations}"
     implementation "io.swagger.core.v3:swagger-jaxrs2:${versions.swaggerJaxRs}"
+
+    implementation "info.picocli:picocli:${versions.picocli}"
 
     testImplementation project(':web3j-openapi-client')
 }
