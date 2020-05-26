@@ -18,7 +18,7 @@ import java.io.File
 class WalletOptions {
 
     @Option(
-        names = ["-f", "--wallet-file"],
+        names = ["--wallet-file"],
         description = ["specify the wallet file path"]
     )
     lateinit var walletFile: File

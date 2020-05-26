@@ -22,7 +22,7 @@ import org.eclipse.jetty.util.Loader.getResource
 import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
 import org.web3j.openapi.core.spi.OpenApiResourceProvider
-import org.web3j.openapi.server.cli.ConfigCLI
+import org.web3j.openapi.server.cli.OpenApiServerCommand
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.net.URI
@@ -68,5 +68,5 @@ class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
 }
 
 fun main(args: Array<String>) {
-    ConfigCLI().parse(*args)
+    OpenApiServerCommand().parse(*args)
 }

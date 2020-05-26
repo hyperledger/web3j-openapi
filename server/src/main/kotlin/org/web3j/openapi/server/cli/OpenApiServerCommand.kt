@@ -31,7 +31,7 @@ import kotlin.system.exitProcess
     mixinStandardHelpOptions = true, // FIXME: Why help not showing
     version = ["1.0"] // TODO: Make version not hardcoded
 )
-class ConfigCLI : Callable<Int> {
+class OpenApiServerCommand : Callable<Int> {
 
     private val environment = System.getenv()
     private val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
