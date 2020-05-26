@@ -10,20 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.server.config
 
-import picocli.CommandLine
-import java.util.concurrent.Callable
-
-@CommandLine.Command(name = "openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["web3j-openapi cli"],
-    subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class],
-    version = ["1.0"],
-    mixinStandardHelpOptions = true
+data class OpenApiServerConfig(
+    val projectName: String,
+    val nodeEndpoint: String,
+    val privateKey: String,
+    val walletFilePath: String,
+    val walletPassword: String,
+    val host: String,
+    val port: Int
 )
-class BaseCmd : Callable<Int> {
-    override fun call(): Int {
-        return 0
-    }
-}

@@ -10,20 +10,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.server.cli
 
-import picocli.CommandLine
-import java.util.concurrent.Callable
+import picocli.CommandLine.Command
+import picocli.CommandLine.Option
+import java.io.File
 
-@CommandLine.Command(name = "openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["web3j-openapi cli"],
-    subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class],
-    version = ["1.0"],
+// allows two pass approach to obtain optional config file
+@Command(
     mixinStandardHelpOptions = true
 )
-class BaseCmd : Callable<Int> {
-    override fun call(): Int {
-        return 0
-    }
+class ConfigFileCommand {
+    @Option(
+        names = ["-c", "--config-file"],
+        arity = "1"
+    )
+    var configFile: File? = null
 }

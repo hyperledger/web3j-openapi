@@ -10,20 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.server.cli.options
 
-import picocli.CommandLine
-import java.util.concurrent.Callable
+import picocli.CommandLine.Mixin
+import picocli.CommandLine.Option
 
-@CommandLine.Command(name = "openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["web3j-openapi cli"],
-    subcommands = [GenerateCmd::class, RunCmd::class, CommandLine.HelpCommand::class],
-    version = ["1.0"],
-    mixinStandardHelpOptions = true
-)
-class BaseCmd : Callable<Int> {
-    override fun call(): Int {
-        return 0
-    }
+class CredentialsOptions {
+    @Option(
+        names = ["--privateKey"],
+        description = ["specify the private key"]
+    )
+    var privateKey: String = ""
+
+    @Mixin
+    val walletOptions = WalletOptions()
 }
