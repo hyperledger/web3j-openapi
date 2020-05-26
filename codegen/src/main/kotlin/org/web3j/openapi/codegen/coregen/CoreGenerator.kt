@@ -33,7 +33,7 @@ class CoreGenerator(
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        if (!configuration.onlyCore) GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
+        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
         setContext()
         copySources(folderPath)
 
@@ -63,7 +63,7 @@ class CoreGenerator(
                 "List ${it.contractDetails.capitalizedContractName()} method's calls"
             )
         }
-        tags.ifNotEmpty { last().lastComma = "" }
+        tags.ifNotEmpty { last().lastCharacter = "" }
         return tags
     }
 

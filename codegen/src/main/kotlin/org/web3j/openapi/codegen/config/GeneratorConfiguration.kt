@@ -20,6 +20,5 @@ data class GeneratorConfiguration(
     val outputDir: String,
     val jarDir: File,
     val contracts: List<ContractConfiguration>,
-    val addressLength: Int,
-    var onlyCore: Boolean = false
+    val addressLength: Int
 )

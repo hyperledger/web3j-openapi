@@ -70,10 +70,10 @@ class GenerateCmd : Callable<Int> {
         required = true)
     lateinit var packageName: String
 
-    @Option(names = ["--core"],
-        description = ["only generate the core interfaces of the OpenAPI."],
-        defaultValue = "false")
-    var core: Boolean = false
+    @Option(names = ["--server"],
+        description = ["set to false to only generate the core interfaces of the OpenAPI."],
+        defaultValue = "true")
+    var isServerGenerated: Boolean = true
 
     @Option(names = ["--dev"],
         description = ["not delete the failed build files."],
@@ -83,7 +83,7 @@ class GenerateCmd : Callable<Int> {
     @Option(names = ["--jar"],
         description = ["set to true to generate the jar only."],
         defaultValue = "false")
-    var jar: Boolean = false
+    var isJarOnly: Boolean = false
 
     @Option(names = ["--swagger-ui"],
         description = ["set to false to ignore the generation of the swagger-ui."],
@@ -126,11 +126,7 @@ class GenerateCmd : Callable<Int> {
             addressLength = addressLength
         )
 
-        if (core) {
-            println("Generating Core interfaces")
-            generatorConfiguration.onlyCore = true
-            GenerateOpenApi(generatorConfiguration).generateCore()
-        } else {
+        if (isServerGenerated) {
             GenerateOpenApi(generatorConfiguration).generateAll()
             if (swagger) {
                 runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs")
@@ -141,9 +137,12 @@ class GenerateCmd : Callable<Int> {
             runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
             runGradleTask(projectFolder, "clean", "Cleaning up")
 
-            if (jar) {
+            if (isJarOnly) {
                 projectFolder.deleteRecursively()
             }
+        } else {
+            println("Generating Core interfaces")
+            GenerateOpenApi(generatorConfiguration).generateCore()
         }
 
         println("Done.")
@@ -175,22 +174,8 @@ class GenerateCmd : Callable<Int> {
 
     private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
         val recs = mutableListOf<File>()
-        list
-            .filter { file -> file.extension == extension || file.isDirectory }
-            .forEach { currentFile ->
-                if (currentFile.isFile) recs.add(currentFile)
-                else currentFile.listFiles()
-                    .filter { file ->
-                        file.extension == extension || file.isDirectory
-                    }
-                    .forEach { file ->
-                        if (file.isFile) recs.add(file)
-                        else recs.addAll(
-                            recurseIntoFolders(
-                                file.listFiles().map { it }, extension
-                            )
-                        )
-                    }
+        list.forEach { folder ->
+                recs.addAll(folder.walkTopDown().filter { file -> file.extension == extension })
             }
         return recs
     }
