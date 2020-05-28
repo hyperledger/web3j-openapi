@@ -19,7 +19,7 @@ import org.web3j.openapi.console.GenerateCommand
 import java.io.File
 import java.io.OutputStream
 
-object GradleUtils {
+internal object GradleUtils {
     fun runGradleTask(projectFolder: File, task: String, description: String, outputStream: OutputStream? = null) {
         println("$description\n")
         GradleConnector.newConnector()

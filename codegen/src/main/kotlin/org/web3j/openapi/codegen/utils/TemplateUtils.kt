@@ -20,7 +20,7 @@ import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.io.FileOutputStream
 
-object TemplateUtils {
+internal object TemplateUtils {
     fun mustacheTemplate(filePath: String): Template {
         return javaClass.classLoader.getResourceAsStream(filePath)?.run {
             Mustache.compiler().compile(InputStreamReader(this))

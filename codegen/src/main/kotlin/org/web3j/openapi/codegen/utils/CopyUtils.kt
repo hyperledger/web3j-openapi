@@ -23,7 +23,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
-object CopyUtils {
+internal object CopyUtils {
 
     private val logger: Logger = LoggerFactory.getLogger(CopyUtils::class.java)
 
