@@ -44,7 +44,7 @@ class LifecycleImplGenerator(
     private fun getParameters(): String {
         if (contractDetails.deployParameters() == "()") return ""
         var parameters = ""
-        contractDetails.functionsDefintion
+        contractDetails.functionsDefinition
             .filter { it.type == "constructor" }
             .map { it.inputs }
             .first()
