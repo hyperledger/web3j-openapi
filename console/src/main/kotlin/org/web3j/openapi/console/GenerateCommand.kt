@@ -31,7 +31,7 @@ import java.util.concurrent.Callable
     showDefaultValues = true,
     description = ["Generates a web3j-openapi project"]
 )
-class GenerateCmd : Callable<Int> {
+class GenerateCommand : Callable<Int> {
 
     // TODO: Add logs level specification
 //    @Option(

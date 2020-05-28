@@ -13,17 +13,27 @@
 package org.web3j.openapi.console
 
 import picocli.CommandLine
+import java.io.File
 import java.util.concurrent.Callable
+import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 
-@CommandLine.Command(name = "openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["web3j-openapi cli"],
-    subcommands = [GenerateCmd::class, RunCmd::class],
-    version = ["1.0"],
-    mixinStandardHelpOptions = true
-)
-class BaseCmd : Callable<Int> {
+@CommandLine.Command(name = "run",
+    description = ["Runs a web3j-openapi project"])
+class RunCommand : Callable<Int> {
+    @CommandLine.Option(names = ["-p", "--project"],
+        description = ["specify the project directory to be run."],
+        defaultValue = ".",
+        required = true)
+    lateinit var projectFolder: File
+
     override fun call(): Int {
+
+        runGradleTask(
+            projectFolder,
+            "run",
+            "Running the project in ${projectFolder.canonicalPath}",
+            System.out)
+
         return 0
     }
 }

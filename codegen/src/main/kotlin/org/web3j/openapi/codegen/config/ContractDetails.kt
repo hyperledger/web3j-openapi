@@ -16,7 +16,7 @@ import org.web3j.protocol.core.methods.response.AbiDefinition
 
 class ContractDetails(
     val contractName: String,
-    val functionsDefintion: List<AbiDefinition>
+    val functionsDefinition: List<AbiDefinition>
 ) {
     fun lowerCaseContractName(): String {
         return contractName.toLowerCase()
@@ -31,7 +31,7 @@ class ContractDetails(
     }
 
     fun deployParameters(): String {
-        functionsDefintion
+        functionsDefinition
             .filter { it.type == "constructor" }
             .forEach {
                 if (it.inputs.isNotEmpty()) return "(parameters: ${capitalizedContractName()}DeployParameters)"
