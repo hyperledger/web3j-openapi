@@ -1,3 +1,7 @@
+repositories{
+    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+}
+
 dependencies {
     implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
         exclude group: 'org.apache.commons'
@@ -17,6 +21,8 @@ dependencies {
     implementation "org.web3j:codegen:${versions.web3jCodegen}"
 
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
+
+    testImplementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 }
 
 sourceSets {

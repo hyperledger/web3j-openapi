@@ -1,0 +1,1 @@
+[{"constant":true,"inputs":[{"name":"numArr","type":"uint256[5]"}],"name":"idNum","outputs":[{"name":"result","type":"uint256[5]"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[],"name":"getNum","outputs":[{"name":"result","type":"uint256[3]"}],"payable":false,"stateMutability":"pure","type":"function"}]

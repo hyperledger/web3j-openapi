@@ -14,15 +14,12 @@ package org.web3j.openapi.console
 
 import mu.KLogging
 import org.web3j.openapi.codegen.GenerateOpenApi
-import org.web3j.openapi.codegen.config.ContractConfiguration
-import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.openapi.codegen.utils.GeneratorUtils.getContractsConfiguration
 import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
-import java.io.FileNotFoundException
 import java.nio.file.Path
 import java.util.concurrent.Callable
 
@@ -122,7 +119,7 @@ class GenerateCommand : Callable<Int> {
             packageName = packageName,
             outputDir = projectFolder.path,
             jarDir = outputDirectory,
-            contracts = getContractsConfiguration(),
+            contracts = getContractsConfiguration(abis, bins),
             addressLength = addressLength
         )
 
@@ -147,37 +144,6 @@ class GenerateCommand : Callable<Int> {
 
         println("Done.")
         return 0
-    }
-
-    private fun getContractsConfiguration(): List<ContractConfiguration> {
-        abis = recurseIntoFolders(abis, "abi")
-        bins = recurseIntoFolders(bins, "bin")
-        val contractsConfig = mutableListOf<ContractConfiguration>()
-        abis.forEach { abiFile ->
-            val bin = bins.find { bin ->
-                bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
-            } ?: throw FileNotFoundException("${abiFile.name.removeSuffix(".abi")}.bin")
-
-            contractsConfig.add(
-                ContractConfiguration(
-                    abiFile,
-                    bin,
-                    ContractDetails(
-                        abiFile.name.removeSuffix(".abi"),
-                        SolidityUtils.loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
-                    )
-                )
-            )
-        }
-        return contractsConfig
-    }
-
-    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
-        val recs = mutableListOf<File>()
-        list.forEach { folder ->
-                recs.addAll(folder.walkTopDown().filter { file -> file.extension == extension })
-            }
-        return recs
     }
 
     companion object : KLogging()
