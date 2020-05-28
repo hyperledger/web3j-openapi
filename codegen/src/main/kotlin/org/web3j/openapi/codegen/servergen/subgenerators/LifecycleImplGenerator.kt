@@ -22,7 +22,7 @@ class LifecycleImplGenerator(
     val folderPath: String,
     val contractDetails: ContractDetails
 ) {
-    val context = mutableMapOf<String, Any>()
+    private val context = mutableMapOf<String, Any>()
 
     init {
         context["packageName"] = packageName
@@ -34,7 +34,7 @@ class LifecycleImplGenerator(
     }
 
     fun generate() {
-        File("$folderPath")
+        File(folderPath)
             .apply {
                 mkdirs()
             }
@@ -44,7 +44,7 @@ class LifecycleImplGenerator(
     private fun getParameters(): String {
         if (contractDetails.deployParameters() == "()") return ""
         var parameters = ""
-        contractDetails.functionsDefintion
+        contractDetails.functionsDefinition
             .filter { it.type == "constructor" }
             .map { it.inputs }
             .first()

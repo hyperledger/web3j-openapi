@@ -23,9 +23,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
-object CopyUtils {
+internal object CopyUtils {
 
-    val logger: Logger = LoggerFactory.getLogger(CopyUtils::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(CopyUtils::class.java)
 
     private val ruleSets = listOf(
         StandardRuleSetProvider().get(),

@@ -15,11 +15,11 @@ package org.web3j.openapi.console.utils
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
-import org.web3j.openapi.console.GenerateCmd
+import org.web3j.openapi.console.GenerateCommand
 import java.io.File
 import java.io.OutputStream
 
-object GradleUtils {
+internal object GradleUtils {
     fun runGradleTask(projectFolder: File, task: String, description: String, outputStream: OutputStream? = null) {
         println("$description\n")
         GradleConnector.newConnector()
@@ -32,7 +32,7 @@ object GradleUtils {
                     .setStandardOutput(outputStream)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
-                            GenerateCmd.logger.debug(failure.message) // FIXME: throw information concerning this failure
+                            GenerateCommand.logger.debug(failure.message) // FIXME: throw information concerning this failure
                             throw GradleConnectionException(failure.message)
                         }
 

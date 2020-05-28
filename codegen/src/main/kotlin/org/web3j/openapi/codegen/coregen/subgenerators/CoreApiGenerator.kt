@@ -45,7 +45,7 @@ class CoreApiGenerator(
     }
 
     private fun imports(): List<Import> {
-        return contractDetails.functionsDefintion
+        return contractDetails.functionsDefinition
             .filter { it.type == "function" || it.type == "event" }
             .map {
                 if (it.type == "function" && it.inputs.isNotEmpty())
@@ -57,7 +57,7 @@ class CoreApiGenerator(
 
     private fun contractResources(): List<ContractResource> {
         val resources = mutableListOf<ContractResource>()
-        contractDetails.functionsDefintion
+        contractDetails.functionsDefinition
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
                 if (it.type == "function") {
@@ -94,7 +94,7 @@ class CoreApiGenerator(
     }
 
     private fun generateModels() {
-        contractDetails.functionsDefintion.forEach {
+        contractDetails.functionsDefinition.forEach {
             logger.debug("Generating ${it.name} model")
 
             when (it.type) {

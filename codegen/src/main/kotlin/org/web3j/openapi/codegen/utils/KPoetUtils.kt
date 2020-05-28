@@ -20,7 +20,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
-object KPoetUtils {
+internal object KPoetUtils {
 
     fun inputsToDataClass(packageName: String, name: String, inputs: List<AbiDefinition.NamedType>, type: String): FileSpec {
         val outputFile = FileSpec.builder(

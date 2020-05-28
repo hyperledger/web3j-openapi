@@ -15,5 +15,5 @@ package org.web3j.openapi.console
 import picocli.CommandLine
 
 fun main(args: Array<String>) {
-    CommandLine(BaseCmd()).execute(*args)
+    CommandLine(BaseCommand()).execute(*args)
 }

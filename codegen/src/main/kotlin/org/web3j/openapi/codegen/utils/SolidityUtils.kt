@@ -27,7 +27,7 @@ import java.math.BigInteger
 object SolidityUtils {
 
     fun getNativeType(typeName: String, isParameter: Boolean = true): TypeName {
-        // TODO: support for Fixed point numbers, enums, mappings, struct, library
+        // TODO: support for enums, struct
         val primitivesModel = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
         return if (typeName == "address") {
             if (isParameter) String::class.asTypeName()
