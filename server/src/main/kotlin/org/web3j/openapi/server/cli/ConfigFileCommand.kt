@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.server.cli
 
+import picocli.CommandLine.Unmatched
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
@@ -26,4 +27,7 @@ class ConfigFileCommand {
         arity = "1"
     )
     var configFile: File? = null
+
+    @Unmatched
+    var otherOptions: List<String>? = null
 }
