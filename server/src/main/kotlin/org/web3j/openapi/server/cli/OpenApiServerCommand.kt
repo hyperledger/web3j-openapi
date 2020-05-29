@@ -28,7 +28,7 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 @Command(
-    mixinStandardHelpOptions = true, // FIXME: Why help not showing
+    mixinStandardHelpOptions = true,
     version = ["1.0"] // TODO: Make version not hardcoded
 )
 class OpenApiServerCommand : Callable<Int> {
@@ -36,6 +36,7 @@ class OpenApiServerCommand : Callable<Int> {
     private val environment = System.getenv()
     private val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
     private val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
+    private val outputStream = System.out
 
     @Mixin
     private val credentials = CredentialsOptions()
@@ -105,11 +106,13 @@ class OpenApiServerCommand : Callable<Int> {
 
     private fun executeCommandVersion(): Int {
         val configCommandLine = CommandLine(this)
+        configCommandLine.printVersionHelp(outputStream)
         return configCommandLine.commandSpec.exitCodeOnVersionHelp()
     }
 
     private fun executeCommandUsageHelp(): Int {
         val configCommandLine = CommandLine(this)
+        configCommandLine.usage(outputStream)
         return configCommandLine.commandSpec.exitCodeOnUsageHelp()
     }
 
