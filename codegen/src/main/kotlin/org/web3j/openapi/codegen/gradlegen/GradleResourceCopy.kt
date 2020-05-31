@@ -13,35 +13,36 @@
 package org.web3j.openapi.codegen.gradlegen
 
 import mu.KLogging
-import org.web3j.openapi.codegen.utils.CopyUtils
+import org.web3j.openapi.codegen.utils.CopyUtils.copyResource
 import java.io.File
 
 object GradleResourceCopy : KLogging() {
 
     fun copyProjectResources(outputDir: File) {
-        CopyUtils.copyResource("settings.gradle", outputDir)
-        CopyUtils.copyResource("gradlew.bat", outputDir)
-        CopyUtils.copyResource("gradlew", outputDir)
-        CopyUtils.copyResource("build.gradle", outputDir)
-        CopyUtils.copyResource("versions.properties", outputDir)
+        copyResource("settings.gradle", outputDir)
+        copyResource("gradlew.bat", outputDir)
+        copyResource("gradlew", outputDir)
+        copyResource("build.gradle", outputDir)
+        copyResource("versions.properties", outputDir)
 
         File("${outputDir.toURI().path}${File.separator}gradlew").setExecutable(true)
 
         val gradleFolder = File("$outputDir${File.separator}gradle${File.separator}wrapper").apply { mkdirs() }
-        CopyUtils.copyResource("gradle-wrapper.jar", gradleFolder)
-        CopyUtils.copyResource(
+        copyResource("gradle-wrapper.jar", gradleFolder)
+        copyResource(
             "gradle-wrapper.properties",
             gradleFolder
         )
 
-        CopyUtils.copyResource("versions.gradle", File("$outputDir${File.separator}gradle"))
-        CopyUtils.copyResource("README.md", outputDir)
+        copyResource("versions.gradle", File("$outputDir${File.separator}gradle"))
+        copyResource("README.md", outputDir)
     }
 
     fun copyModuleGradleFile(folderPath: String, module: String) {
         logger.debug("Copying $module/build.gradle")
-        CopyUtils.copyResource(
+        copyResource(
             "$module/build.gradle",
-            File(folderPath.substringBefore(module)))
+            File(folderPath.substringBefore(module))
+        )
     }
 }
