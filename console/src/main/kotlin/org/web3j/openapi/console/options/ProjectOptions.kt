@@ -13,7 +13,6 @@
 package org.web3j.openapi.console.options
 
 import picocli.CommandLine.Option
-import java.io.File
 
 class ProjectOptions {
 
