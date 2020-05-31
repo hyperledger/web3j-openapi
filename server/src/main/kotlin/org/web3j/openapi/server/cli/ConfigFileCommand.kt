@@ -12,22 +12,20 @@
  */
 package org.web3j.openapi.server.cli
 
-import picocli.CommandLine.Unmatched
+import org.web3j.openapi.server.cli.options.ConfigFileOptions
 import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import java.io.File
+import picocli.CommandLine.Mixin
+import picocli.CommandLine.Unmatched
 
 // allows two pass approach to obtain optional config file
 @Command(
     mixinStandardHelpOptions = true
 )
 class ConfigFileCommand {
-    @Option(
-        names = ["-c", "--config-file"],
-        arity = "1"
-    )
-    var configFile: File? = null
+
+    @Mixin
+    internal val configFileOptions = ConfigFileOptions()
 
     @Unmatched
-    var otherOptions: List<String>? = null
+    private var otherOptions: List<String>? = null
 }

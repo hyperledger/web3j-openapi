@@ -13,31 +13,23 @@
 package org.web3j.openapi.server.cli
 
 import picocli.CommandLine.IDefaultValueProvider
-import picocli.CommandLine.Model.OptionSpec
 import picocli.CommandLine.Model.ArgSpec
+import picocli.CommandLine.Model.OptionSpec
 import java.io.File
 import java.io.FileReader
-import java.util.Optional
 import java.util.Properties
 
-class ConfigDefaultProvider() : IDefaultValueProvider {
-
-    constructor(configFile: Optional<File>, environment: Map<String, String>, defaultFile: File) : this() {
-        this.configFile = configFile
-        this.environment = environment
-        this.defaultFile = defaultFile
-    }
-
-    lateinit var configFile: Optional<File>
-    lateinit var environment: Map<String, String>
-    lateinit var properties: Properties
-    lateinit var defaultFile: File
+class ConfigDefaultProvider(
+    private val configFile: File?,
+    private val environment: Map<String, String>,
+    private val defaultFile: File
+) : IDefaultValueProvider {
 
     override fun defaultValue(argSpec: ArgSpec): String? {
-        if (configFile.isPresent) getPropertyFromFile(configFile.get(), argSpec)?.let { value -> return value }
-        getPropertyFromFile(defaultFile, argSpec)?.let { value -> return value }
-
-        return environment[getEnvironmentName(argSpec)]
+        return configFile?.run {
+            getPropertyFromFile(configFile, argSpec)
+        } ?: getPropertyFromFile(defaultFile, argSpec)
+        ?: environment[getEnvironmentName(argSpec)]
     }
 
     private fun getPropertyName(argSpec: ArgSpec): String {
@@ -58,9 +50,15 @@ class ConfigDefaultProvider() : IDefaultValueProvider {
     }
 
     private fun getPropertyFromFile(configFile: File, argSpec: ArgSpec): String? {
-        properties = Properties()
-        if (!configFile.exists()) return null
-        FileReader(configFile).use { reader -> properties.load(reader) }
-        return properties.getProperty(getPropertyName(argSpec))
+        return if (configFile.exists()) {
+            FileReader(configFile).use {
+                Properties().run {
+                    load(it)
+                    getProperty(getPropertyName(argSpec))
+                }
+            }
+        } else {
+            null
+        }
     }
 }
