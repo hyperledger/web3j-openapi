@@ -1,27 +1,27 @@
 plugins {
-id 'org.web3j' version '4.5.11'
-id 'application'
-id 'com.github.johnrengelman.shadow'
-id 'org.hidetake.swagger.generator' version '2.18.2'
-id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
+    id 'application'
+    id 'org.web3j' version '4.5.11'
+    id 'com.github.johnrengelman.shadow'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+    id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
 }
 
 mainClassName = 'org.web3j.openapi.server.OpenApiServerKt'
 
 shadowJar {
-destinationDir = file("{{outputDir}}")
+    destinationDir = file("{{outputDir}}")
 }
 
 dependencies {
-// FIXME This dependency version should be dynamic
-implementation "org.web3j.openapi:web3j-openapi-server:1.0"
-implementation project(':openapi-generated-core')
-
-implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
-
-swaggerUI 'org.webjars:swagger-ui:3.10.0'
-
-testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
+    // FIXME This dependency version should be dynamic
+    implementation "org.web3j.openapi:web3j-openapi-server:1.0"
+    implementation project(':openapi-generated-core')
+    
+    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
+    
+    swaggerUI 'org.webjars:swagger-ui:3.10.0'
+    
+    testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
 }
 
 web3j {
