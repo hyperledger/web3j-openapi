@@ -27,7 +27,9 @@ class OpenApiCommand {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            CommandLine(OpenApiCommand()).execute(*args)
+            CommandLine(OpenApiCommand())
+//                .setExecutionStrategy()
+                .execute(*args)
         }
     }
 }
