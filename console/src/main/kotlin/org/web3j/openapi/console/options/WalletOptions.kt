@@ -21,15 +21,11 @@ class WalletOptions {
         names = ["--wallet-file"],
         description = ["specify the wallet file path"]
     )
-    lateinit var walletFile: File
+    var walletFile: File? = null
 
     @Option(
         names = ["--wallet-password"],
         description = ["specify the wallet file password"]
     )
-    var walletPassword: String = ""
-
-    fun isWalletFileInitialized(): Boolean {
-        return this::walletFile.isInitialized
-    }
+    var walletPassword: String? = null
 }

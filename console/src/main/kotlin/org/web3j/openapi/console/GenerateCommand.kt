@@ -15,8 +15,11 @@ package org.web3j.openapi.console
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
+import org.web3j.openapi.console.options.ProjectOptions
 import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 import picocli.CommandLine.Command
+import picocli.CommandLine.ExitCode
+import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 import java.io.File
 import java.nio.file.Path
@@ -25,7 +28,7 @@ import java.util.concurrent.Callable
 @Command(
     name = "generate",
     showDefaultValues = true,
-    description = ["Generates a web3j-openapi project"]
+    description = ["Generates a Web3j OpenAPI project."]
 )
 class GenerateCommand : Callable<Int> {
 
@@ -41,14 +44,14 @@ class GenerateCommand : Callable<Int> {
 
     @Option(
         names = ["-o", "--output"],
-        description = ["specify the output directory."],
+        description = ["project output directory."],
         defaultValue = "."
     )
     private lateinit var outputDirectory: File
 
     @Option(
         names = ["-a", "--abi"],
-        description = ["specify the abi files and folders."],
+        description = ["input ABI files and folders."],
         arity = "1..*",
         required = true
     )
@@ -56,22 +59,18 @@ class GenerateCommand : Callable<Int> {
 
     @Option(
         names = ["-b", "--bin"],
-        description = ["specify the bin."],
+        description = ["input BIN files nd folders."],
         arity = "1..*",
         required = true
     )
     private lateinit var bins: List<File>
 
-    @Option(
-        names = ["-n", "--project-name"],
-        description = ["specify the project name."],
-        required = true
-    )
-    private lateinit var projectName: String
+    @Mixin
+    private val projectOptions = ProjectOptions()
 
     @Option(
         names = ["-p", "--package-name"],
-        description = ["specify the package name."],
+        description = ["generated package name."],
         required = true
     )
     private lateinit var packageName: String
@@ -114,7 +113,7 @@ class GenerateCommand : Callable<Int> {
     override fun call(): Int {
         val projectFolder = Path.of(
             outputDirectory.canonicalPath,
-            projectName
+            projectOptions.projectName
         ).toFile().apply {
             deleteRecursively()
             mkdirs()
@@ -122,18 +121,18 @@ class GenerateCommand : Callable<Int> {
 
         return try {
             generate(projectFolder)
-            0
+            ExitCode.OK
         } catch (e: Exception) {
             if (!dev) projectFolder.deleteRecursively()
             println(e.message)
-            1
+            ExitCode.SOFTWARE
         }
     }
 
     private fun generate(projectFolder: File) {
 
         val generatorConfiguration = GeneratorConfiguration(
-            projectName = projectName,
+            projectName = projectOptions.projectName,
             packageName = packageName,
             outputDir = projectFolder.path,
             jarDir = outputDirectory,

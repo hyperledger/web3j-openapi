@@ -19,7 +19,7 @@ import java.io.File
 import java.io.FileReader
 import java.util.Properties
 
-class ConfigDefaultProvider(
+internal class ConfigDefaultProvider(
     private val configFile: File?,
     private val environment: Map<String, String>,
     private val defaultFile: File

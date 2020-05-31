@@ -60,7 +60,7 @@ class OpenApiResourceConfig(
         property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName)
         property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint)
         property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey)
-        property(Properties.WALLET_FILE, openApiServerConfig.walletFilePath)
+        property(Properties.WALLET_FILE, openApiServerConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword)
     }
 
