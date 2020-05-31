@@ -6,7 +6,7 @@ plugins {
     id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
 }
 
-mainClassName = 'org.web3j.openapi.server.OpenApiServerKt'
+mainClassName = 'org.web3j.openapi.console.OpenApiCommand'
 
 shadowJar {
     destinationDir = file("{{outputDir}}")
@@ -14,7 +14,7 @@ shadowJar {
 
 dependencies {
     // FIXME This dependency version should be dynamic
-    implementation "org.web3j.openapi:web3j-openapi-server:1.0"
+    implementation "org.web3j.openapi:web3j-openapi-console:1.0"
     implementation project(':openapi-generated-core')
     
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
