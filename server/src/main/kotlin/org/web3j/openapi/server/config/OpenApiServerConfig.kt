@@ -20,4 +20,12 @@ data class OpenApiServerConfig(
     val walletPassword: String,
     val host: String,
     val port: Int
-)
+) {
+    init {
+        if (privateKey.isBlank() && walletFilePath.isBlank()) {
+            throw IllegalArgumentException("Credentials not found!")
+        } else if (!walletFilePath.isBlank() && walletPassword.isBlank()) {
+            throw IllegalArgumentException("Wallet file $walletFilePath password not found!")
+        }
+    }
+}
