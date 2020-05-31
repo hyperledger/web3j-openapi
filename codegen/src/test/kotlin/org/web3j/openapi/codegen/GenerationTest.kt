@@ -19,7 +19,7 @@ import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import org.junit.jupiter.api.Test
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.GeneratorUtils.getContractsConfiguration
+import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
 import java.io.IOException
 import java.nio.file.Path
@@ -41,7 +41,7 @@ class GenerationTest {
             "com.test",
             tempFolder.canonicalPath,
             tempFolder,
-            getContractsConfiguration(
+            loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
             160
