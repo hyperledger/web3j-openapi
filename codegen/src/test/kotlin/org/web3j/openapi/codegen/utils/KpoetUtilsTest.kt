@@ -16,7 +16,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import org.web3j.openapi.codegen.Folders
-import org.web3j.openapi.codegen.utils.KPoetUtils.inputsToDataClass
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 import java.io.File
 import java.nio.file.Path
@@ -52,10 +51,9 @@ class KpoetUtilsTest {
             NamedType("number", "uint256"),
             NamedType("string", "string")
         )
-        inputsToDataClass(
+        namedTypes.toDataClass(
             "test",
             "testFunction",
-            namedTypes,
             "Parameters"
         ).writeTo(tempFolder)
 
