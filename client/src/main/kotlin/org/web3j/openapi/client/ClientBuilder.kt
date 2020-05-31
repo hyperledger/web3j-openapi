@@ -12,12 +12,11 @@
  */
 package org.web3j.openapi.client
 
-import mu.KLogging
 import org.glassfish.jersey.client.proxy.WebResourceFactory
 import org.web3j.openapi.core.Web3jOpenApi
 import java.lang.reflect.Proxy
 
-object ClientBuilder : KLogging() {
+object ClientBuilder {
 
     /**
      * Builds a JAX-RS client with the given type [T] and service.
