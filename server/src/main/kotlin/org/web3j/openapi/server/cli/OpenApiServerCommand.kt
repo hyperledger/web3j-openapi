@@ -13,122 +13,124 @@
 package org.web3j.openapi.server.cli
 
 import org.web3j.openapi.server.OpenApiServer
+import org.web3j.openapi.server.cli.options.ConfigFileOptions
 import org.web3j.openapi.server.cli.options.CredentialsOptions
 import org.web3j.openapi.server.cli.options.NetworkOptions
 import org.web3j.openapi.server.cli.options.ServerOptions
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.openapi.server.config.OpenApiServerConfigBuilder
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 import java.io.File
-import java.util.Optional
+import java.io.PrintWriter
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
+import kotlin.text.Charsets.UTF_8
 
 @Command(
     mixinStandardHelpOptions = true,
     version = ["1.0"] // TODO: Make version not hardcoded
 )
-class OpenApiServerCommand : Callable<Int> {
-
-    private val environment = System.getenv()
-    private val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
-    private val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
-    private val outputStream = System.out
+class OpenApiServerCommand(
+    private val outputWriter: PrintWriter,
+    private val errorWriter: PrintWriter,
+    private val environment: Map<String, String>
+) : Callable<Int> {
 
     @Mixin
     private val credentials = CredentialsOptions()
+
     @Mixin
     private val serverOptions = ServerOptions()
+
     @Mixin
     private val networkOptions = NetworkOptions()
+
+    @Mixin
+    private val configFileOptions = ConfigFileOptions()
 
     @Option(
         names = ["-n", "--name"],
         description = ["specify the project name"],
         defaultValue = "Web3j-OpenAPI"
     )
-    lateinit var projectName: String
-
-    @Option(
-        names = ["-c", "--config-file"],
-        paramLabel = "<FILENAME>",
-        description = ["Path/filename of the yaml config file (default: none)"],
-        arity = "1"
-    )
-    private var configFile: File? = null
+    private lateinit var projectName: String
 
     override fun call(): Int {
         val serverConfig = serverConfig()
 
         OpenApiServer(serverConfig).apply {
-            try {
+            return try {
                 start()
                 join()
-            } catch (ex: Exception) {
-                exitProcess(1)
+                0
+            } catch (t: Throwable) {
+                1
             } finally {
                 destroy()
             }
         }
-
-        return 0
     }
 
     fun parse(vararg args: String): Int {
+        val serverCommand = CommandLine(this)
+
         // First pass to get the configuration file
         val configFileCommand = ConfigFileCommand()
-        val configFileCommandLine = CommandLine(configFileCommand)
-        configFileCommandLine.parseArgs(*args)
-        if (configFileCommandLine.isUsageHelpRequested) {
-            return executeCommandUsageHelp()
-        } else if (configFileCommandLine.isVersionHelpRequested) {
-            return executeCommandVersion()
+        val configFileCommandLine = CommandLine(configFileCommand).apply {
+            parseArgs(*args)
         }
 
-        val configFile = getConfigFileFromCliOrEnv(configFileCommand)
+        if (configFileCommandLine.isUsageHelpRequested) {
+            return serverCommand.run {
+                printVersionHelp(outputWriter)
+                commandSpec.exitCodeOnVersionHelp()
+            }
+        } else if (configFileCommandLine.isVersionHelpRequested) {
+            return serverCommand.run {
+                usage(outputWriter)
+                commandSpec.exitCodeOnUsageHelp()
+            }
+        }
 
         // final pass
-        val configCommandLine = CommandLine(this)
-        configCommandLine.defaultValueProvider = ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
-        return configCommandLine.execute(*args)
-    }
+        return serverCommand.run {
+            val configFile = configFileCommand.configFileOptions.configFile
+                ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
 
-    private fun getConfigFileFromCliOrEnv(configFileCommand: ConfigFileCommand): Optional<File> {
-        return Optional.ofNullable<File>(configFileCommand.configFile)
-            .or {
-                Optional.ofNullable<String>(environment[CONFIG_FILE_ENV_NAME])
-                    .map { pathname -> File(pathname) }
-            }
-    }
-
-    private fun executeCommandVersion(): Int {
-        val configCommandLine = CommandLine(this)
-        configCommandLine.printVersionHelp(outputStream)
-        return configCommandLine.commandSpec.exitCodeOnVersionHelp()
-    }
-
-    private fun executeCommandUsageHelp(): Int {
-        val configCommandLine = CommandLine(this)
-        configCommandLine.usage(outputStream)
-        return configCommandLine.commandSpec.exitCodeOnUsageHelp()
+            defaultValueProvider = ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
+            execute(*args)
+        }
     }
 
     private fun serverConfig(): OpenApiServerConfig {
-        return OpenApiServerConfigBuilder()
-            .setHost(serverOptions.host.hostName)
-            .setPort(serverOptions.port)
-            .setNodeEndpoint(networkOptions.endpoint)
-            .setPrivateKey(credentials.privateKey)
-            .setWalletFilePath(
-                if (credentials.walletOptions.isWalletFileInitialized())
-                    credentials.walletOptions.walletFile.canonicalPath
-                else ""
-            )
-            .setWalletPassword(credentials.walletOptions.walletPassword)
-            .setProjectName(projectName)
-            .build()
+        return OpenApiServerConfig(
+            host = serverOptions.host.hostName,
+            port = serverOptions.port,
+            nodeEndpoint = networkOptions.endpoint,
+            privateKey = credentials.privateKey,
+            walletFilePath = if (credentials.walletOptions.isWalletFileInitialized())
+                credentials.walletOptions.walletFile.canonicalPath else "",
+            walletPassword = credentials.walletOptions.walletPassword,
+            projectName = projectName
+        )
+    }
+
+    companion object {
+        private const val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
+        private const val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+
+            val result = OpenApiServerCommand(
+                PrintWriter(System.out, true, UTF_8),
+                PrintWriter(System.err, true, UTF_8),
+                System.getenv()
+            ).parse(*args)
+
+            if (result != 0) exitProcess(result)
+        }
     }
 }

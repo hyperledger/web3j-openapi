@@ -10,10 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.server.cli.options
 
-import picocli.CommandLine
+import picocli.CommandLine.Option
+import java.io.File
 
-fun main(args: Array<String>) {
-    CommandLine(BaseCommand()).execute(*args)
+class ConfigFileOptions {
+
+    @Option(
+        names = ["-c", "--config-file"],
+        paramLabel = "<FILENAME>",
+        description = ["Path/filename of the yaml config file (default: none)"],
+        arity = "1"
+    )
+    var configFile: File? = null
 }
