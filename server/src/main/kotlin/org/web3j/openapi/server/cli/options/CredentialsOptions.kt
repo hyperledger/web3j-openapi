@@ -16,6 +16,7 @@ import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 
 class CredentialsOptions {
+
     @Option(
         names = ["--privateKey"],
         description = ["specify the private key"]
