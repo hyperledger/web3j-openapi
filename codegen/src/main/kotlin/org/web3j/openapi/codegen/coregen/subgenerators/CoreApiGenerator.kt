@@ -13,24 +13,25 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
-import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.common.ContractResource
 import org.web3j.openapi.codegen.common.Import
-import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.constant
+import org.web3j.openapi.codegen.utils.returnType
 import java.io.File
 import java.nio.file.Path
 
-class CoreApiGenerator(
+internal class CoreApiGenerator(
     val packageName: String,
     val folderPath: String,
     val contractDetails: ContractDetails
 ) {
-    val context = mutableMapOf<String, Any>()
+    private val context = mutableMapOf<String, Any>()
 
     init {
         context["packageName"] = packageName
-        context["contractName"] = contractDetails.lowerCaseContractName()
+        context["contractName"] = contractDetails.lowerCaseContractName
         context["contractDetails"] = contractDetails
         context["imports"] = imports()
         context["contractResources"] = contractResources()
@@ -45,23 +46,23 @@ class CoreApiGenerator(
     }
 
     private fun imports(): List<Import> {
-        return contractDetails.functionsDefinition
+        return contractDetails.abiDefinitions
             .filter { it.type == "function" || it.type == "event" }
             .map {
                 if (it.type == "function" && it.inputs.isNotEmpty())
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}Parameters")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}Parameters")
                 else
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName()}.model.${it.name.capitalize()}EventResponse")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}EventResponse")
             }
     }
 
     private fun contractResources(): List<ContractResource> {
         val resources = mutableListOf<ContractResource>()
-        contractDetails.functionsDefinition
+        contractDetails.abiDefinitions
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
                 if (it.type == "function") {
-                    if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
+                    if (it.constant && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
@@ -71,8 +72,8 @@ class CoreApiGenerator(
                             it.name,
                             "fun ${it.name}($parameters)",
                             if (it.inputs.isEmpty()) "GET" else "POST",
-                            SolidityUtils.getFunctionReturnType(it).toString(),
-                            contractDetails.capitalizedContractName(),
+                            it.returnType.toString(),
+                            contractDetails.capitalizedContractName,
                             "Executes the ${it.name.capitalize()} method"
                         )
                     )
@@ -84,7 +85,7 @@ class CoreApiGenerator(
                             "fun get${it.name.capitalize()}Event($parameters)",
                             "POST",
                             "List<${it.name.capitalize()}EventResponse>",
-                            contractDetails.capitalizedContractName(),
+                            contractDetails.capitalizedContractName,
                             "Get the ${it.name.capitalize()} event"
                         )
                     )
@@ -94,7 +95,7 @@ class CoreApiGenerator(
     }
 
     private fun generateModels() {
-        contractDetails.functionsDefinition.forEach {
+        contractDetails.abiDefinitions.forEach {
             logger.debug("Generating ${it.name} model")
 
             when (it.type) {
@@ -102,7 +103,7 @@ class CoreApiGenerator(
                     if (it.inputs.isNotEmpty())
                         CoreDeployModelGenerator(
                             packageName = packageName,
-                            contractName = contractDetails.capitalizedContractName(),
+                            contractName = contractDetails.capitalizedContractName,
                             folderPath = Path.of(
                                 folderPath.substringBefore("kotlin"),
                                 "kotlin"
@@ -114,7 +115,7 @@ class CoreApiGenerator(
                     if (it.inputs.isNotEmpty())
                         CoreFunctionsModelGenerator(
                             packageName = packageName,
-                            contractName = contractDetails.capitalizedContractName(),
+                            contractName = contractDetails.capitalizedContractName,
                             functionName = it.name,
                             folderPath = Path.of(
                                 folderPath.substringBefore("kotlin"),
@@ -126,7 +127,7 @@ class CoreApiGenerator(
                 "event" -> {
                     CoreEventsModelGenerator(
                         packageName = packageName,
-                        contractName = contractDetails.capitalizedContractName(),
+                        contractName = contractDetails.capitalizedContractName,
                         eventName = it.name,
                         folderPath = Path.of(
                             folderPath.substringBefore("kotlin"),
@@ -144,13 +145,13 @@ class CoreApiGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("core/src/api/ContractLifecycle.mustache"),
-            name = "${contractDetails.capitalizedContractName()}Lifecycle.kt"
+            name = "${contractDetails.capitalizedContractName}Lifecycle.kt"
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("core/src/api/ContractResource.mustache"),
-            name = "${contractDetails.capitalizedContractName()}Resource.kt"
+            name = "${contractDetails.capitalizedContractName}Resource.kt"
         )
     }
 

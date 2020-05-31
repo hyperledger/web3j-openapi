@@ -13,48 +13,48 @@
 package org.web3j.openapi.codegen.utils
 
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.LICENSE
-import org.web3j.protocol.core.methods.response.AbiDefinition
+import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 
-internal object KPoetUtils {
+internal fun List<NamedType>.toDataClass(
+    packageName: String,
+    name: String,
+    type: String
+): FileSpec {
+    val outputFile = FileSpec.builder(
+        packageName,
+        "${name.capitalize()}$type"
+    )
 
-    fun inputsToDataClass(packageName: String, name: String, inputs: List<AbiDefinition.NamedType>, type: String): FileSpec {
-        val outputFile = FileSpec.builder(
-            packageName,
-            "${name.capitalize()}$type"
+    val constructor = TypeSpec
+        .classBuilder("${name.capitalize()}$type")
+
+    // FIXME: Events with no parameters require no field class
+    if (isNotEmpty()) constructor.addModifiers(KModifier.DATA)
+
+    val constructorBuilder = FunSpec.constructorBuilder()
+
+    forEachIndexed { index, input ->
+        val inputName = input.name ?: "input$index"
+        constructorBuilder.addParameter(
+            inputName,
+            input.type.toNativeType()
         )
-
-        val constructor = TypeSpec
-            .classBuilder("${name.capitalize()}$type")
-
-        if (inputs.isNotEmpty()) constructor.addModifiers(KModifier.DATA) // FIXME: Events with no parameters require no field class
-
-        val constructorBuilder = FunSpec.constructorBuilder()
-
-        inputs.forEachIndexed { index, input ->
-            val inputName = input.name ?: "input$index"
-            constructorBuilder.addParameter(
+        constructor.addProperty(
+            PropertySpec.builder(
                 inputName,
-                SolidityUtils.getNativeType(input.type)
-            )
-            constructor.addProperty(
-                PropertySpec.builder(
-                    inputName,
-                    SolidityUtils.getNativeType(input.type)
-                )
-                    .initializer(inputName)
-                    .build()
-            )
-        }
-        constructor.primaryConstructor(constructorBuilder.build())
-
-        return outputFile
-            .addType(constructor.build())
-            .addComment(LICENSE)
-            .build()
+                input.type.toNativeType()
+            ).initializer(inputName).build()
+        )
     }
+    constructor.primaryConstructor(constructorBuilder.build())
+
+    return outputFile
+        .addType(constructor.build())
+        .addComment(LICENSE)
+        .build()
 }

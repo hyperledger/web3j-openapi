@@ -13,22 +13,21 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
-import org.web3j.openapi.codegen.utils.KPoetUtils
-import org.web3j.protocol.core.methods.response.AbiDefinition
+import org.web3j.openapi.codegen.utils.toDataClass
+import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 import java.io.File
 
-class CoreFunctionsModelGenerator(
+internal class CoreFunctionsModelGenerator(
     val packageName: String,
     private val contractName: String,
     private val functionName: String,
     val folderPath: String,
-    val inputs: MutableList<AbiDefinition.NamedType>
+    val inputs: List<NamedType>
 ) {
     fun generate() {
-        val functionFile = KPoetUtils.inputsToDataClass(
+        val functionFile = inputs.toDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
             functionName,
-            inputs,
             "Parameters"
         )
         logger.debug("Generating $contractName $functionName parameters")

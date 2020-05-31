@@ -14,20 +14,20 @@ package org.web3j.openapi.codegen.coregen
 
 import mu.KLogging
 import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
-import org.web3j.openapi.codegen.DefaultGenerator
+import org.web3j.openapi.codegen.AbstractGenerator
+import org.web3j.openapi.codegen.common.Import
+import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.common.Import
-import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.FileNotFoundException
 import java.nio.file.Path
 
 class CoreGenerator(
     configuration: GeneratorConfiguration
-) : DefaultGenerator(
+) : AbstractGenerator(
     configuration
 ) {
     override fun generate() {
@@ -38,12 +38,12 @@ class CoreGenerator(
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} api folders and files")
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName} api folders and files")
             CoreApiGenerator(
                 configuration.packageName,
                 folderPath = Path.of(
                     folderPath,
-                    it.contractDetails.lowerCaseContractName()
+                    it.contractDetails.lowerCaseContractName
                 ).toString(),
                 contractDetails = it.contractDetails
             ).generate()
@@ -59,8 +59,8 @@ class CoreGenerator(
     private fun getTags(): List<Tag> {
         val tags = configuration.contracts.map {
             Tag(
-                it.contractDetails.capitalizedContractName(),
-                "List ${it.contractDetails.capitalizedContractName()} method's calls"
+                it.contractDetails.capitalizedContractName,
+                "List ${it.contractDetails.capitalizedContractName} method's calls"
             )
         }
         tags.ifNotEmpty { last().lastCharacter = "" }
@@ -69,7 +69,7 @@ class CoreGenerator(
 
     private fun getApiImports(): List<Import> {
         return configuration.contracts.map {
-            Import("import ${configuration.packageName}.core.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
+            Import("import ${configuration.packageName}.core.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
         }
     }
 

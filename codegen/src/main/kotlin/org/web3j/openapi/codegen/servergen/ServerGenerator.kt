@@ -13,20 +13,20 @@
 package org.web3j.openapi.codegen.servergen
 
 import mu.KLogging
-import org.web3j.openapi.codegen.DefaultGenerator
-import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.CopyUtils
+import org.web3j.openapi.codegen.AbstractGenerator
 import org.web3j.openapi.codegen.common.Import
+import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
-import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplsGenerator
+import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
+import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
 
-class ServerGenerator(
+internal class ServerGenerator(
     configuration: GeneratorConfiguration
-) : DefaultGenerator(
+) : AbstractGenerator(
     configuration
 ) {
     init {
@@ -44,31 +44,31 @@ class ServerGenerator(
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            logger.debug("Generating ${it.contractDetails.capitalizedContractName()} server folders and files")
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName} server folders and files")
             LifecycleImplGenerator(
                 packageName = configuration.packageName,
                 folderPath = Path.of(
                     folderPath,
-                    it.contractDetails.lowerCaseContractName()
+                    it.contractDetails.lowerCaseContractName
                 ).toString(),
                 contractDetails = it.contractDetails
             ).generate()
 
-            ResourcesImplsGenerator(
+            ResourcesImplGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
                 folderPath = Path.of(
                     folderPath.substringBefore("kotlin"),
                     "kotlin"
                 ).toString(),
-                resourcesDefinition = it.contractDetails.functionsDefinition
+                resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
         }
     }
 
     private fun getServerImports(): List<Import> {
         return configuration.contracts.map {
-            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName()}.${it.contractDetails.capitalizedContractName()}")
+            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
         }
     }
 
