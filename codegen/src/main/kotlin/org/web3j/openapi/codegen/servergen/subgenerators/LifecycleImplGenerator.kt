@@ -27,25 +27,22 @@ class LifecycleImplGenerator(
 
     init {
         context["packageName"] = packageName
-        context["decapitalizedContractName"] = contractDetails.decapitalizedContractName()
-        context["lowerCaseContractName"] = contractDetails.lowerCaseContractName()
-        context["capitalizedContractName"] = contractDetails.capitalizedContractName()
+        context["decapitalizedContractName"] = contractDetails.decapitalizedContractName
+        context["lowerCaseContractName"] = contractDetails.lowerCaseContractName
+        context["capitalizedContractName"] = contractDetails.capitalizedContractName
         context["parameters"] = getParameters()
-        context["deployParameters"] = contractDetails.deployParameters()
+        context["deployParameters"] = contractDetails.deployParameters
     }
 
     fun generate() {
-        File(folderPath)
-            .apply {
-                mkdirs()
-            }
+        File(folderPath).apply { mkdirs() }
         copySources()
     }
 
     private fun getParameters(): String {
-        if (contractDetails.deployParameters() == "()") return ""
+        if (contractDetails.deployParameters == "()") return ""
         var parameters = ""
-        contractDetails.functionsDefinition
+        contractDetails.abiDefinitions
             .filter { it.type == "constructor" }
             .map { it.inputs }
             .first()
@@ -68,7 +65,7 @@ class LifecycleImplGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/contractImpl/ContractLifecycleImpl.mustache"),
-            name = "${contractDetails.capitalizedContractName()}LifecycleImpl.kt"
+            name = "${contractDetails.capitalizedContractName}LifecycleImpl.kt"
         )
     }
 
