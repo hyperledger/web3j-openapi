@@ -1,13 +1,11 @@
-plugins {
-    id 'org.web3j' version '4.5.11'
-}
-
 dependencies {
     api project(':web3j-openapi-core')
 
+    implementation "org.web3j:core:${versions.web3jCore}"
+    
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jerseyContainerServlet}"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jerseyHk2}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jerseyMediaJsonJackson}"
+    implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jerseyHk2}"
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jacksonModuleKotlin}"
 
