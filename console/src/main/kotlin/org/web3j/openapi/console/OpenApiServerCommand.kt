@@ -10,13 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli
+package org.web3j.openapi.console
 
+import org.web3j.openapi.console.options.ConfigFileOptions
+import org.web3j.openapi.console.options.CredentialsOptions
+import org.web3j.openapi.console.options.NetworkOptions
+import org.web3j.openapi.console.options.ServerOptions
 import org.web3j.openapi.server.OpenApiServer
-import org.web3j.openapi.server.cli.options.ConfigFileOptions
-import org.web3j.openapi.server.cli.options.CredentialsOptions
-import org.web3j.openapi.server.cli.options.NetworkOptions
-import org.web3j.openapi.server.cli.options.ServerOptions
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import picocli.CommandLine
 import picocli.CommandLine.Command
