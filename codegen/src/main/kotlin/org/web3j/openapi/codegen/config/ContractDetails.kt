@@ -14,28 +14,24 @@ package org.web3j.openapi.codegen.config
 
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
-class ContractDetails(
+data class ContractDetails(
     val contractName: String,
-    val functionsDefinition: List<AbiDefinition>
+    val abiDefinitions: List<AbiDefinition>
 ) {
-    fun lowerCaseContractName(): String {
-        return contractName.toLowerCase()
-    }
+    val lowerCaseContractName: String
+        get() = contractName.toLowerCase()
 
-    fun capitalizedContractName(): String {
-        return contractName.capitalize()
-    }
+    val capitalizedContractName: String
+        get() = contractName.capitalize()
 
-    fun decapitalizedContractName(): String {
-        return contractName.decapitalize()
-    }
+    val decapitalizedContractName: String
+        get() = contractName.decapitalize()
 
-    fun deployParameters(): String {
-        functionsDefinition
+    val deployParameters: String
+        get() = abiDefinitions
             .filter { it.type == "constructor" }
-            .forEach {
-                if (it.inputs.isNotEmpty()) return "(parameters: ${capitalizedContractName()}DeployParameters)"
-            }
-        return "()"
-    }
+            .firstOrNull { it.inputs.isNotEmpty() }
+            ?.run {
+                "(parameters: ${capitalizedContractName}DeployParameters)"
+            } ?: "()"
 }
