@@ -13,17 +13,21 @@
 package org.web3j.openapi.console
 
 import picocli.CommandLine
-import java.util.concurrent.Callable
+import picocli.CommandLine.Command
 
-@CommandLine.Command(name = "openapi",
+@Command(
+    name = "openapi",
 //    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
     description = ["web3j-openapi cli"],
     subcommands = [GenerateCommand::class, RunCommand::class],
     version = ["1.0"],
     mixinStandardHelpOptions = true
 )
-class BaseCommand : Callable<Int> {
-    override fun call(): Int {
-        return 0
+class OpenApiCommand {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            CommandLine(OpenApiCommand()).execute(*args)
+        }
     }
 }

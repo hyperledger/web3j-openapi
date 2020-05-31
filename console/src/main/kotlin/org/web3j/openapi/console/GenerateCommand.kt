@@ -12,10 +12,9 @@
  */
 package org.web3j.openapi.console
 
-import mu.KLogging
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.GeneratorUtils.getContractsConfiguration
+import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -40,111 +39,133 @@ class GenerateCommand : Callable<Int> {
 //    )
 //    private var logLevel: Level? = null
 
-    @Option(names = ["-o", "--output"],
+    @Option(
+        names = ["-o", "--output"],
         description = ["specify the output directory."],
-        defaultValue = ".")
-    lateinit var outputDirectory: File
+        defaultValue = "."
+    )
+    private lateinit var outputDirectory: File
 
-    @Option(names = ["-a", "--abi"],
+    @Option(
+        names = ["-a", "--abi"],
         description = ["specify the abi files and folders."],
         arity = "1..*",
-        required = true)
-    lateinit var abis: List<File>
+        required = true
+    )
+    private lateinit var abis: List<File>
 
-    @Option(names = ["-b", "--bin"],
+    @Option(
+        names = ["-b", "--bin"],
         description = ["specify the bin."],
         arity = "1..*",
-        required = true)
-    lateinit var bins: List<File>
+        required = true
+    )
+    private lateinit var bins: List<File>
 
-    @Option(names = ["-n", "--project-name"],
+    @Option(
+        names = ["-n", "--project-name"],
         description = ["specify the project name."],
-        required = true)
-    lateinit var projectName: String
+        required = true
+    )
+    private lateinit var projectName: String
 
-    @Option(names = ["-p", "--package-name"],
+    @Option(
+        names = ["-p", "--package-name"],
         description = ["specify the package name."],
-        required = true)
-    lateinit var packageName: String
+        required = true
+    )
+    private lateinit var packageName: String
 
-    @Option(names = ["--server"],
+    @Option(
+        names = ["--server"],
         description = ["set to false to only generate the core interfaces of the OpenAPI."],
-        defaultValue = "true")
-    var isServerGenerated: Boolean = true
+        defaultValue = "true"
+    )
+    private var isServerGenerated: Boolean = true
 
-    @Option(names = ["--dev"],
+    @Option(
+        names = ["--dev"],
         description = ["not delete the failed build files."],
-        defaultValue = "false")
-    var dev: Boolean = false
+        defaultValue = "false"
+    )
+    private var dev: Boolean = false
 
-    @Option(names = ["--jar"],
-        description = ["set to true to generate the jar only."],
-        defaultValue = "false")
-    var isJarOnly: Boolean = false
+    @Option(
+        names = ["--jar"],
+        description = ["set to true to generate the JAR only."],
+        defaultValue = "false"
+    )
+    private var isJarOnly: Boolean = false
 
-    @Option(names = ["--swagger-ui"],
-        description = ["set to false to ignore the generation of the swagger-ui."],
-        defaultValue = "true")
-    var swagger: Boolean = true
+    @Option(
+        names = ["--swagger-ui"],
+        description = ["set to false to ignore the generation of the Swagger UI."],
+        defaultValue = "true"
+    )
+    private var swagger: Boolean = true
 
-    @Option(names = ["--address-length"],
+    @Option(
+        names = ["--address-length"],
         description = ["specify the address length."],
-        defaultValue = "160")
-    var addressLength: Int = 160
+        defaultValue = "20"
+    )
+    private var addressLength: Int = 20
 
     override fun call(): Int {
-        val projectFolder = File(
-            Path.of(
-                outputDirectory.canonicalPath,
-                projectName
-            ).toString()
-        ).apply {
+        val projectFolder = Path.of(
+            outputDirectory.canonicalPath,
+            projectName
+        ).toFile().apply {
             deleteRecursively()
             mkdirs()
         }
 
-        try {
+        return try {
             generate(projectFolder)
+            0
         } catch (e: Exception) {
             if (!dev) projectFolder.deleteRecursively()
-            throw e
+            println(e.message)
+            1
         }
-        return 0
     }
 
-    private fun generate(projectFolder: File): Int {
+    private fun generate(projectFolder: File) {
 
         val generatorConfiguration = GeneratorConfiguration(
             projectName = projectName,
             packageName = packageName,
             outputDir = projectFolder.path,
             jarDir = outputDirectory,
-            contracts = getContractsConfiguration(abis, bins),
+            contracts = loadContractConfigurations(abis, bins),
             addressLength = addressLength
         )
 
         if (isServerGenerated) {
             GenerateOpenApi(generatorConfiguration).generateAll()
             if (swagger) {
-                runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs")
-                runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
-                runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
+                runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs...", null)
+                runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI...", null)
+                runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI...", null)
             }
 
-            runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
+            runGradleTask(
+                projectFolder,
+                "shadowJar",
+                "Generating the fat JAR to ${projectFolder.parentFile.canonicalPath}...",
+                null
+            )
             runGradleTask(projectFolder, "clean", "Cleaning up")
 
             if (isJarOnly) {
                 projectFolder.deleteRecursively()
             }
         } else {
-            println("Generating Core interfaces")
+            print("Generating Core interfaces...")
             GenerateOpenApi(generatorConfiguration).generateCore()
+            print(" Done.")
         }
 
         println("Done.")
-        return 0
     }
-
-    companion object : KLogging()
 }

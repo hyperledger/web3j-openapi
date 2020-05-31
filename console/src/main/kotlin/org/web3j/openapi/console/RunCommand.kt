@@ -12,28 +12,38 @@
  */
 package org.web3j.openapi.console
 
-import picocli.CommandLine
+import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
+import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 import java.io.File
 import java.util.concurrent.Callable
-import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 
-@CommandLine.Command(name = "run",
-    description = ["Runs a web3j-openapi project"])
+@Command(
+    name = "run",
+    description = ["Runs a web3j-openapi project"]
+)
 class RunCommand : Callable<Int> {
-    @CommandLine.Option(names = ["-p", "--project"],
+
+    @Option(
+        names = ["-p", "--project"],
         description = ["specify the project directory to be run."],
         defaultValue = ".",
-        required = true)
-    lateinit var projectFolder: File
+        required = true
+    )
+    private lateinit var projectFolder: File
 
     override fun call(): Int {
-
-        runGradleTask(
-            projectFolder,
-            "run",
-            "Running the project in ${projectFolder.canonicalPath}",
-            System.out)
-
-        return 0
+        return try {
+            runGradleTask(
+                projectFolder,
+                "run",
+                "Running the project in ${projectFolder.canonicalPath}",
+                System.out
+            )
+            0
+        } catch (e: Exception) {
+            println(e.message)
+            1
+        }
     }
 }
