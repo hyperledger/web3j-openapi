@@ -10,9 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli
+package org.web3j.openapi.console
 
-import org.web3j.openapi.server.cli.options.ConfigFileOptions
+import org.web3j.openapi.console.options.ConfigFileOptions
 import picocli.CommandLine.Command
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Unmatched

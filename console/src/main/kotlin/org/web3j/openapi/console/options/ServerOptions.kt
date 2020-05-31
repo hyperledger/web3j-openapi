@@ -10,26 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli.options
+package org.web3j.openapi.console.options
 
 import picocli.CommandLine.Option
-import java.io.File
+import java.net.InetAddress
 
-class WalletOptions {
-
-    @Option(
-        names = ["--wallet-file"],
-        description = ["specify the wallet file path"]
-    )
-    lateinit var walletFile: File
+class ServerOptions {
 
     @Option(
-        names = ["--wallet-password"],
-        description = ["specify the wallet file password"]
+        names = ["--host"],
+        description = ["specify the host name"],
+        defaultValue = "localhost"
     )
-    var walletPassword: String = ""
+    lateinit var host: InetAddress
 
-    fun isWalletFileInitialized(): Boolean {
-        return this::walletFile.isInitialized
-    }
+    @Option(
+        names = ["--port"],
+        description = ["specify the port number"],
+        defaultValue = "8080"
+    )
+    var port: Int = 8080
 }

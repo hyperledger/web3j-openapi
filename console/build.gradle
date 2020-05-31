@@ -3,13 +3,18 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-mainClassName = 'org.web3j.openapi.console.MainKt'
+mainClassName = 'org.web3j.openapi.console.OpenApiCommand'
 
 repositories{
     maven { url 'https://repo.gradle.org/gradle/libs-releases' }
 }
 
+shadowJar {
+    minimize()
+}
+
 dependencies {
+    implementation project(":web3j-openapi-server")
     implementation project(":web3j-openapi-codegen")
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
