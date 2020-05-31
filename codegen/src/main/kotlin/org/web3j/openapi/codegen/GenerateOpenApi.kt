@@ -31,13 +31,11 @@ class GenerateOpenApi(
     }
 
     fun generateServer() {
-        val serverGenerator = ServerGenerator(configuration)
-        serverGenerator.generate()
+        ServerGenerator(configuration).generate()
     }
 
     fun generateCore() {
-        val coreGenerator = CoreGenerator(configuration)
-        coreGenerator.generate()
+        CoreGenerator(configuration).generate()
     }
 
     fun generateGradleResources() {
