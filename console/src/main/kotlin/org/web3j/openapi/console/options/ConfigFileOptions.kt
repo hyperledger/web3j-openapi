@@ -20,7 +20,7 @@ class ConfigFileOptions {
     @Option(
         names = ["-c", "--config-file"],
         paramLabel = "<FILENAME>",
-        description = ["Path/filename of the yaml config file (default: none)"],
+        description = ["name of the YAML configuration file"],
         arity = "1"
     )
     var configFile: File? = null

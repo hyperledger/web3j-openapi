@@ -12,17 +12,16 @@
  */
 package org.web3j.openapi.console.options
 
-import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
+import java.io.File
 
-class CredentialsOptions {
+class ProjectOptions {
 
     @Option(
-        names = ["--privateKey"],
-        description = ["specify the private key"]
+        names = ["-n", "--name"],
+        description = ["specify the project name."],
+        defaultValue = "Web3j-OpenAPI",
+        required = true
     )
-    var privateKey: String? = null
-
-    @Mixin
-    val walletOptions = WalletOptions()
+    lateinit var projectName: String
 }
