@@ -47,7 +47,7 @@ class OpenApiCommand {
         }
 
         private fun configureDefaultProvider(args: Array<String>, commandLine: CommandLine) {
-            
+
             // First pass to get the configuration file
             val configFileCommand = ConfigFileCommand()
             val configFileCommandLine = CommandLine(configFileCommand).apply {
