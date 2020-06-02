@@ -21,7 +21,8 @@ import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
+import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import java.io.FileNotFoundException
 import java.nio.file.Path
 
@@ -57,14 +58,14 @@ class CoreGenerator(
     }
 
     private fun getTags(): List<Tag> {
-        val tags = configuration.contracts.map {
+        return configuration.contracts.map {
             Tag(
                 it.contractDetails.capitalizedContractName,
                 "List ${it.contractDetails.capitalizedContractName} method's calls"
             )
+        }.also {
+            it.ifNotEmpty { last().lastCharacter = "" }
         }
-        tags.ifNotEmpty { last().lastCharacter = "" }
-        return tags
     }
 
     private fun getApiImports(): List<Import> {
@@ -74,16 +75,16 @@ class CoreGenerator(
     }
 
     private fun copySources(folderPath: String) {
-        TemplateUtils.generateFromTemplate(
+        generateFromTemplate(
             context = context,
             outputDir = folderPath,
-            template = TemplateUtils.mustacheTemplate("core/src/ContractsApi.mustache"),
+            template = mustacheTemplate("core/src/ContractsApi.mustache"),
             name = "ContractsApi.kt"
         )
-        TemplateUtils.generateFromTemplate(
+        generateFromTemplate(
             context = context,
             outputDir = folderPath,
-            template = TemplateUtils.mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
+            template = mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
             name = "GeneratedContractsResource.kt"
         )
     }
