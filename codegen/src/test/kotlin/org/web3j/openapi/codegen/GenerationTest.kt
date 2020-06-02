@@ -24,7 +24,6 @@ import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
 import java.io.IOException
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class GenerationTest {
 
@@ -38,7 +37,7 @@ class GenerationTest {
             "test",
             "resources",
             "contracts").toFile()
-        
+
         val generatorConfiguration = GeneratorConfiguration(
             "testProject",
             "com.test",
@@ -49,9 +48,9 @@ class GenerationTest {
             ),
             160
         )
-        
+
         GenerateOpenApi(generatorConfiguration).generateAll()
-        
+
         assertThat {
             runGradleTask(
                 tempFolder,

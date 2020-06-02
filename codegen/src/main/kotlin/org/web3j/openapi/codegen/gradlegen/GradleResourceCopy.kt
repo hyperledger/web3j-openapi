@@ -29,10 +29,7 @@ object GradleResourceCopy : KLogging() {
 
         val gradleFolder = File("$outputDir${File.separator}gradle${File.separator}wrapper").apply { mkdirs() }
         copyResource("gradle-wrapper.jar", gradleFolder)
-        copyResource(
-            "gradle-wrapper.properties",
-            gradleFolder
-        )
+        copyResource("gradle-wrapper.properties", gradleFolder)
 
         copyResource("versions.gradle", File("$outputDir${File.separator}gradle"))
         copyResource("README.md", outputDir)
