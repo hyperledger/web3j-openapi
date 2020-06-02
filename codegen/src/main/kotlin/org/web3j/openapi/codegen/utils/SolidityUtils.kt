@@ -74,15 +74,11 @@ internal fun String.toNativeType(isParameter: Boolean = true): TypeName {
 
 private fun String.toNativeArrayType(isParameter: Boolean): TypeName {
     return if (isParameter) {
-        ClassName("kotlin.collections", "MutableList")
-            .plusParameter(
-                substringBeforeLast("[").toNativeType(isParameter)
-            )
+        ClassName("kotlin.collections", "List")
+            .plusParameter(substringBeforeLast("[").toNativeType(isParameter))
     } else {
-        ClassName("kotlin.collections", "MutableList")
-            .plusParameter(
-                ANY.copy(true)
-            ).copy(true)
+        ClassName("kotlin.collections", "List")
+            .plusParameter(ANY.copy(true)).copy(true)
     }
 }
 
