@@ -18,17 +18,9 @@ dependencies {
         exclude group: 'javax.xml.bind'
     }
 
-    implementation "org.web3j:codegen:${versions.web3jCodegen}"
+    implementation "org.web3j:codegen:${versions.web3j}"
 
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
 
     testImplementation "org.gradle:gradle-tooling-api:${versions.gradle}"
-}
-
-sourceSets {
-    main {
-        kotlin {
-            exclude "codegen/src/main/resources"
-        }
-    }
 }
