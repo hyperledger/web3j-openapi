@@ -17,7 +17,7 @@ import org.web3j.openapi.codegen.common.ContractResource
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
-import org.web3j.openapi.codegen.utils.constant
+import org.web3j.openapi.codegen.utils.isTransactional
 import org.web3j.openapi.codegen.utils.returnType
 import java.io.File
 import java.nio.file.Path
@@ -62,7 +62,7 @@ internal class CoreApiGenerator(
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
                 if (it.type == "function") {
-                    if (it.constant && it.outputs.isEmpty()) return@forEach
+                    if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
