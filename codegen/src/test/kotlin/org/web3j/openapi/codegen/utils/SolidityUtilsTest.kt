@@ -27,12 +27,10 @@ class SolidityUtilsTest {
 
     @Test
     fun `toNativeArrayType for parameters`() {
-        val expectedResult = ClassName("kotlin.collections", "MutableList")
+        val expectedResult = ClassName("kotlin.collections", "List")
             .plusParameter(
-                ClassName("kotlin.collections", "MutableList")
-                    .plusParameter(
-                        Integer::class.asClassName()
-                    )
+                ClassName("kotlin.collections", "List")
+                    .plusParameter(Integer::class.asClassName())
             )
         val actualResult = "int[10][20]".toNativeType()
 
@@ -41,10 +39,10 @@ class SolidityUtilsTest {
 
     @Test
     fun `toNativeArrayType for returns`() {
-        val expectedResult = ClassName("kotlin.collections", "MutableList")
-            .plusParameter(
-                ANY.copy(true)
-            ).copy(true)
+        val expectedResult = ClassName("kotlin.collections", "List")
+            .plusParameter(ANY.copy(true))
+            .copy(true)
+        
         val actualResult = "int[10][20]".toNativeType(false)
 
         assertThat(actualResult).isEqualTo(expectedResult)
