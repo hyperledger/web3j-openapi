@@ -20,7 +20,7 @@ import java.lang.reflect.Proxy
 import java.util.Arrays
 import javax.ws.rs.ClientErrorException
 
-/**F
+/**
  * Invocation handler for proxied resources. Implements an exception mapping mechanism to avoid reporting
  * [ClientErrorException]s to the client.
  */
