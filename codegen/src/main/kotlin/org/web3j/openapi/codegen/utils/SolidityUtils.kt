@@ -83,7 +83,7 @@ private fun String.toNativeArrayType(isParameter: Boolean): TypeName {
 }
 
 internal val AbiDefinition.returnType: TypeName
-    get() = if (constant) {
+    get() = if (!isTransactional()) {
         if (outputs.size == 1) {
             outputs.first().type.toNativeType(false)
         } else {
@@ -94,14 +94,12 @@ internal val AbiDefinition.returnType: TypeName
         ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
     }
 
-internal val AbiDefinition.constant: Boolean
-    get() {
-        val pureOrView = "pure" == stateMutability || "view" == stateMutability
-        return isConstant || pureOrView
-    }
+internal fun AbiDefinition.isTransactional(): Boolean {
+    return !(isConstant || "pure" == stateMutability || "view" == stateMutability)
+}
 
 // FIXME: use web3j-codegen one
-fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
+internal fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
     val objectMapper: ObjectMapper =
         org.web3j.protocol.ObjectMapperFactory.getObjectMapper()
     val abiDefinition: Array<AbiDefinition> =
