@@ -21,7 +21,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.constant
+import org.web3j.openapi.codegen.utils.isTransactional
 import org.web3j.openapi.codegen.utils.returnType
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
@@ -136,7 +136,7 @@ internal class ResourcesImplGenerator(
         resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
-                if (it.constant && it.outputs.isEmpty()) return@forEach
+                if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                 val funSpec = FunSpec.builder(it.name)
                     .returns(it.returnType)
                     .addModifiers(KModifier.OVERRIDE)
