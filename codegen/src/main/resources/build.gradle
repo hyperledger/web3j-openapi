@@ -29,32 +29,6 @@ subprojects {
         jcenter()
     }
 
-    apply {
-        [
-                'bintray',
-                'publish',
-                'jacoco',
-                'java',
-                'javadoc',
-                'repositories',
-                'spotless'
-        ].each { buildScript ->
-            download {
-                src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
-                dest "$rootDir/gradle/$buildScript/build.gradle"
-                overwrite true
-                quiet true
-                onlyIfModified true
-            }
-            from("$rootDir/gradle/$buildScript/build.gradle")
-        }
-    }
-
-    tasks.withType(Test) {
-        reports.html.destination = file("${reporting.baseDir}/${name}")
-        useJUnitPlatform()
-    }
-
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -64,7 +38,6 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter:${versions.junitVersion}"
         testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunitVersion}"
     }
-
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
