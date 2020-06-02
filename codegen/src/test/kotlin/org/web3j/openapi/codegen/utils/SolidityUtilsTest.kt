@@ -42,7 +42,7 @@ class SolidityUtilsTest {
         val expectedResult = ClassName("kotlin.collections", "List")
             .plusParameter(ANY.copy(true))
             .copy(true)
-        
+
         val actualResult = "int[10][20]".toNativeType(false)
 
         assertThat(actualResult).isEqualTo(expectedResult)
