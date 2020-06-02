@@ -15,14 +15,15 @@ package org.web3j.openapi.codegen.utils
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
-import org.web3j.openapi.codegen.Folders
+import org.junit.jupiter.api.io.TempDir
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 import java.io.File
 import java.nio.file.Path
 
-class KpoetUtilsTest {
+class KPoetUtilsTest {
 
-    val tempFolder = Folders.tempBuildFolder()
+    @TempDir
+    lateinit var tempFolder: File
 
     @Test
     fun inputsToDataClassTest() {
