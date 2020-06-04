@@ -180,13 +180,13 @@ class ResourcesImplsGenerator(
             val components = returnType.substringAfter("<")
                 .removeSuffix(">")
                 .split(",")
-            val variableNames = components.joinToString(",") {component ->
-                component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()
-            }
-            val tupleConstructor = components.joinToString(",") {component ->
-                if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}.toModel()"
-                else component.substringAfterLast(".").decapitalize()
-            }
+            val variableNames = components.mapIndexed {index, component ->
+                "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index"
+            }.joinToString(",")
+            val tupleConstructor = components.mapIndexed {index, component ->
+                if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index.toModel()"
+                else "${component.substringAfterLast(".").decapitalize()}$index"
+            }.joinToString(",")
             """val ($variableNames) = $code
                 return Tuple${components.size}($tupleConstructor)
             """.trimMargin()
