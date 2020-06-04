@@ -19,19 +19,21 @@ import org.web3j.openapi.console.options.ProjectOptions
 import org.web3j.openapi.console.options.ServerOptions
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Mixin
+import java.io.File
 import java.util.concurrent.Callable
+import kotlin.system.exitProcess
 
 @Command(
-    name = "run",
     showDefaultValues = true,
     mixinStandardHelpOptions = true,
     description = ["Runs a Web3j OpenAPI server."],
     version = ["1.0"] // TODO: Make version not hardcoded
 )
-class RunCommand : Callable<Int> {
+class RunServerCommand : Callable<Int> {
 
     @Mixin
     private val credentials = CredentialsOptions()
@@ -74,5 +76,47 @@ class RunCommand : Callable<Int> {
             walletPassword = credentials.walletOptions.walletPassword,
             projectName = projectOptions.projectName
         )
+    }
+
+    companion object {
+        private const val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
+        private const val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
+
+        private val environment = System.getenv()
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val runServerCommand = CommandLine(RunServerCommand())
+            
+            configureDefaultProvider(args, runServerCommand)
+            runServerCommand.execute(*args).apply { exitProcess(this) }
+        }
+
+        private fun configureDefaultProvider(args: Array<String>, commandLine: CommandLine) {
+
+            // First pass to get the configuration file
+            val configFileCommand = ConfigFileCommand()
+            val configFileCommandLine = CommandLine(configFileCommand).apply {
+                parseArgs(*args.drop(1).toTypedArray())
+            }
+
+            if (configFileCommandLine.isUsageHelpRequested) {
+                commandLine.run {
+                    usage(System.out)
+                    exitProcess(ExitCode.OK)
+                }
+            } else if (configFileCommandLine.isVersionHelpRequested) {
+                commandLine.run {
+                    printVersionHelp(System.out)
+                    exitProcess(ExitCode.OK)
+                }
+            }
+
+            val configFile = configFileCommand.configFileOptions.configFile
+                ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
+
+            commandLine.defaultValueProvider =
+                ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
+        }
     }
 }
