@@ -29,7 +29,9 @@ class CoreFunctionsModelGenerator(
             "$packageName.core.${contractName.toLowerCase()}.model",
             functionName,
             inputs,
-            "Parameters"
+            "Parameters",
+            packageName,
+            contractName
         )
         logger.debug("Generating $contractName $functionName parameters")
         functionFile.writeTo(File(folderPath))

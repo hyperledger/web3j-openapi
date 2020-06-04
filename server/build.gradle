@@ -1,9 +1,7 @@
-plugins {
-    id 'org.web3j' version '4.5.11'
-}
-
 dependencies {
     api project(':web3j-openapi-core')
+
+    implementation "org.web3j:core:${versions.web3jCore}"
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jerseyContainerServlet}"
     implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jerseyHk2}"

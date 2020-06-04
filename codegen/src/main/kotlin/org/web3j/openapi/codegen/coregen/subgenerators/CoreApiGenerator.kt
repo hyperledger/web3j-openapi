@@ -42,6 +42,22 @@ class CoreApiGenerator(
         }
         copySources()
         generateModels()
+        generateStructsModels()
+    }
+
+    private fun generateStructsModels() {
+        SolidityUtils.extractStructs(contractDetails.functionsDefinition)?.forEach {structDefinition ->
+            CoreStructsModelGenerator(
+                packageName = packageName,
+                contractName = contractDetails.capitalizedContractName(),
+                functionName = structDefinition!!.internalType.split(".").last(),
+                folderPath = Path.of(
+                    folderPath.substringBefore("kotlin"),
+                    "kotlin"
+                ).toString(),
+                components = structDefinition.components
+            ).generate()
+        }
     }
 
     private fun imports(): List<Import> {
@@ -71,7 +87,7 @@ class CoreApiGenerator(
                             it.name,
                             "fun ${it.name}($parameters)",
                             if (it.inputs.isEmpty()) "GET" else "POST",
-                            SolidityUtils.getFunctionReturnType(it).toString(),
+                            SolidityUtils.getFunctionReturnType(it, packageName, contractDetails.lowerCaseContractName()).toString(),
                             contractDetails.capitalizedContractName(),
                             "Executes the ${it.name.capitalize()} method"
                         )
