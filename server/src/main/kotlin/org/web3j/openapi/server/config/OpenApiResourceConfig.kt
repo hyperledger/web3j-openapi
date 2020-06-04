@@ -20,17 +20,18 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.ContractCallExceptionMapper
+import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
 import org.web3j.openapi.server.IllegalArgumentExceptionMapper
-import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.Properties
-import org.web3j.openapi.server.ContractGasProviderFactory
+import org.web3j.openapi.server.Web3jFactory
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.logging.Level
@@ -53,12 +54,12 @@ class OpenApiResourceConfig(
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
-        register(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()) // FIXME Why warning: WARN  o.g.jersey.internal.inject.Providers - A provider java.util.logging.Logger registered in SERVER runtime does not implement any provider interfaces applicable in the SERVER runtime. Due to constraint configuration problems the provider java.util.logging.Logger will be ignored.
+        register(LoggingFeature::class.java)
 
         register(InjectionBinder())
 
         property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName)
-        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint)
+        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint.toExternalForm())
         property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey)
         property(Properties.WALLET_FILE, openApiServerConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword)
