@@ -94,7 +94,7 @@ internal class ServerGenerator(
         }
         logger.debug("Copying server/resources")
         CopyUtils.copyResource(
-            "server/src/main/resources/logback-test.xml",
+            "server/src/main/resources/logback.xml",
             File(folderPath.substringBefore("server"))
         )
         CopyUtils.copyResource(
