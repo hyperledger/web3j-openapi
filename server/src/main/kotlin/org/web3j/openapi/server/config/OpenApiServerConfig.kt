@@ -13,10 +13,11 @@
 package org.web3j.openapi.server.config
 
 import java.io.File
+import java.net.URL
 
 data class OpenApiServerConfig(
     val projectName: String,
-    val nodeEndpoint: String,
+    val nodeEndpoint: URL,
     val privateKey: String?,
     val walletFile: File?,
     val walletPassword: String?,
