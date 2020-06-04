@@ -22,6 +22,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.openapi.codegen.utils.SolidityUtils.getStructCallParameters
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -127,7 +128,9 @@ class ResourcesImplsGenerator(
     private fun getEventResponseParameters(abiDef: AbiDefinition): String {
         var params = ""
         abiDef.inputs.forEach {
-            params += ", it.${it.name}"
+            if (it.components.isEmpty() ) params += ", it.${it.name}"
+            else
+                params += ", ${getStructEventParameters(it, abiDef.name, "it.${it.name}")}"
         }
         return params.removePrefix(",")
     }
@@ -138,7 +141,7 @@ class ResourcesImplsGenerator(
             .filter { it.type == "function" }
             .forEach {
                 if (SolidityUtils.isFunctionDefinitionConstant(it) && it.outputs.isEmpty()) return@forEach
-                val returnType = SolidityUtils.getFunctionReturnType(it)
+                val returnType = SolidityUtils.getFunctionReturnType(it, packageName, contractName.toLowerCase())
                 val funSpec = FunSpec.builder(it.name)
                     .returns(
                         returnType
@@ -161,16 +164,36 @@ class ResourcesImplsGenerator(
                             ).send()
                     """.trimIndent()
                 }
-                when (returnType.toString().substringBefore("<")) {
-                    ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel").toString() ->
-                        funSpec.addCode("return TransactionReceiptModel($code)")
-                    ClassName("org.web3j.openapi.core.models", "PrimitivesModel").toString() ->
-                        funSpec.addCode("return $returnType($code)")
-                    else -> funSpec.addCode("return $code")
-                }
+
+                funSpec.addCode(wrapCode(code, returnType.toString()))
                 functions.add(funSpec.build())
             }
         return functions
+    }
+
+    private fun wrapCode(code: String, returnType: String): String {
+        return if(returnType.startsWith("org.web3j.openapi.core.models.TransactionReceiptModel"))
+            "return TransactionReceiptModel($code)"
+        else if (returnType.startsWith("org.web3j.openapi.core.models.PrimitivesModel"))
+            "return $returnType($code)"
+        else if (returnType.startsWith("org.web3j.tuples")) {
+            val components = returnType.substringAfter("<")
+                .removeSuffix(">")
+                .split(",")
+            val variableNames = components.joinToString(",") {component ->
+                component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()
+            }
+            val tupleConstructor = components.joinToString(",") {component ->
+                if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}.toModel()"
+                else component.substringAfterLast(".").decapitalize()
+            }
+            """val ($variableNames) = $code
+                return Tuple${components.size}($tupleConstructor)
+            """.trimMargin()
+        }
+        else if (returnType.contains("StructModel"))
+            "return $code.toModel()"
+        else "return $code"
     }
 
     private fun getFunctionName(name: String): String {
@@ -181,8 +204,22 @@ class ResourcesImplsGenerator(
     private fun getCallParameters(inputs: MutableList<AbiDefinition.NamedType>, functionName: String): String {
         var callParameters = ""
         inputs.forEachIndexed { index, input ->
-            callParameters += "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"},"
+            callParameters +=
+                if (input.type == "tuple")
+                    "${getStructCallParameters(contractName, input, functionName, "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"}")},"
+                else
+                    "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"},"
         }
         return callParameters.removeSuffix(",")
+    }
+
+    private fun getStructEventParameters(input: AbiDefinition.NamedType, functionName: String, callTree: String = ""): String {
+        val structName = SolidityUtils.getStructName(input.internalType)
+        val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
+        val parameters = input.components.joinToString(",") { component ->
+            if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
+            else getStructEventParameters(component, decapitalizedFunctionName, "${callTree}.${component.name}".removeSuffix("."))
+        }
+        return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)" // FIXME: Are you sure about the lower case ?
     }
 }

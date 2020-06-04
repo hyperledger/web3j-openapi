@@ -22,6 +22,8 @@ dependencies {
 
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
+
     testImplementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 }
 

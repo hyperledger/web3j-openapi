@@ -29,7 +29,9 @@ class CoreEventsModelGenerator(
             "$packageName.core.${contractName.toLowerCase()}.model",
             eventName,
             outputs,
-            "EventResponse"
+            "EventResponse",
+            packageName,
+            contractName
         )
         logger.debug("Generating $contractName $eventName model")
         functionFile.writeTo(File(folderPath))

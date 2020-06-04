@@ -22,14 +22,14 @@ import org.web3j.protocol.core.methods.response.AbiDefinition
 
 internal object KPoetUtils {
 
-    fun inputsToDataClass(packageName: String, name: String, inputs: List<AbiDefinition.NamedType>, type: String): FileSpec {
+    fun inputsToDataClass(modelPackageName: String, functionName: String, inputs: List<AbiDefinition.NamedType>, type: String, basePackageName: String = "", contractName: String = ""): FileSpec {
         val outputFile = FileSpec.builder(
-            packageName,
-            "${name.capitalize()}$type"
+            modelPackageName,
+            "${functionName.capitalize()}$type"
         )
 
         val constructor = TypeSpec
-            .classBuilder("${name.capitalize()}$type")
+            .classBuilder("${functionName.capitalize()}$type")
 
         if (inputs.isNotEmpty()) constructor.addModifiers(KModifier.DATA) // FIXME: Events with no parameters require no field class
 
@@ -37,14 +37,18 @@ internal object KPoetUtils {
 
         inputs.forEachIndexed { index, input ->
             val inputName = input.name ?: "input$index"
+            val inputType =
+                if (input.type == "tuple") SolidityUtils.getNativeType(input.type, true, SolidityUtils.getStructName(input.internalType), basePackageName, contractName.toLowerCase())
+                else SolidityUtils.getNativeType(input.type)
+
             constructorBuilder.addParameter(
                 inputName,
-                SolidityUtils.getNativeType(input.type)
+                inputType
             )
             constructor.addProperty(
                 PropertySpec.builder(
                     inputName,
-                    SolidityUtils.getNativeType(input.type)
+                    inputType
                 )
                     .initializer(inputName)
                     .build()
