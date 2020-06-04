@@ -13,6 +13,7 @@
 package org.web3j.openapi.console.options
 
 import picocli.CommandLine.Option
+import java.net.URL
 
 class NetworkOptions {
     @Option(
@@ -20,5 +21,5 @@ class NetworkOptions {
         description = ["specify the endpoint"],
         required = true
     )
-    lateinit var endpoint: String
+    lateinit var endpoint: URL
 }
