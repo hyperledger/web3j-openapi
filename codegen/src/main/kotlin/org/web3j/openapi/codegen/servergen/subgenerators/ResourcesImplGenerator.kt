@@ -19,7 +19,6 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.isTransactional
 import org.web3j.openapi.codegen.utils.returnType
@@ -82,7 +81,6 @@ internal class ResourcesImplGenerator(
 
         return resourcesFile
             .addType(resourcesClass.build())
-            .addComment(LICENSE)
             .build()
     }
 

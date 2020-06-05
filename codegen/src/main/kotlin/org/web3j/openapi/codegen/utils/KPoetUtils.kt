@@ -17,7 +17,6 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.web3j.openapi.codegen.LICENSE
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 
 internal fun List<NamedType>.toDataClass(
@@ -55,6 +54,5 @@ internal fun List<NamedType>.toDataClass(
 
     return outputFile
         .addType(constructor.build())
-        .addComment(LICENSE)
         .build()
 }
