@@ -97,13 +97,6 @@ class GenerateCommand : Callable<Int> {
     private var isJarOnly: Boolean = false
 
     @Option(
-        names = ["--swagger-ui"],
-        description = ["set to false to ignore the generation of the Swagger UI."],
-        defaultValue = "true"
-    )
-    private var swagger: Boolean = true
-
-    @Option(
         names = ["--address-length"],
         description = ["specify the address length."],
         defaultValue = "20"
@@ -142,11 +135,6 @@ class GenerateCommand : Callable<Int> {
 
         if (isServerGenerated) {
             GenerateOpenApi(generatorConfiguration).generateAll()
-            if (swagger) {
-                runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs...", null)
-                runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI...", null)
-                runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI...", null)
-            }
 
             runGradleTask(
                 projectFolder,
