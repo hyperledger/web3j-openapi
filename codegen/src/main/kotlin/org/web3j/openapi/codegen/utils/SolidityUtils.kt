@@ -23,52 +23,46 @@ import com.squareup.kotlinpoet.asTypeName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.math.BigInteger
+import kotlin.reflect.KClass
 
 internal fun String.toNativeType(isParameter: Boolean = true): TypeName {
     // TODO: support for Fixed point numbers, enums, mappings, struct, library
-    val primitivesModel = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
-    return if (this == "address") {
-        if (isParameter) String::class.asTypeName()
-        else primitivesModel.parameterizedBy(String::class.asClassName())
-    } else if (this == "string") {
-        if (isParameter) String::class.asTypeName()
-        else primitivesModel.parameterizedBy(String::class.asClassName())
+    return if (this == "address" || this == "string") {
+        getParameterMapping(isParameter, String::class)
     } else if (this == "int") {
-        if (isParameter) Integer::class.asTypeName()
-        else primitivesModel.parameterizedBy(Integer::class.asClassName())
+        getParameterMapping(isParameter, Integer::class)
     } else if (endsWith("]")) {
         toNativeArrayType(isParameter)
     } else if (startsWith("uint") || startsWith("int")) {
-        if (isParameter) BigInteger::class.asTypeName()
-        else primitivesModel.parameterizedBy(BigInteger::class.asClassName())
+        getParameterMapping(isParameter, BigInteger::class)
     } else if (this == "byte") {
-        if (isParameter) Byte::class.asTypeName()
-        else primitivesModel.parameterizedBy(Byte::class.asClassName())
+        getParameterMapping(isParameter, Byte::class)
     } else if (startsWith("bytes") || this == "dynamicbytes") {
-        if (isParameter) ByteArray::class.asTypeName()
-        else primitivesModel.parameterizedBy(ByteArray::class.asClassName())
+        getParameterMapping(isParameter, ByteArray::class)
     } else if (this == "bool" || this == "boolean") {
-        if (isParameter) Boolean::class.asTypeName()
-        else primitivesModel.parameterizedBy(Boolean::class.asClassName())
+        getParameterMapping(isParameter, Boolean::class)
     } else if (toLowerCase() == "float") {
-        if (isParameter) Float::class.asTypeName()
-        else primitivesModel.parameterizedBy(Float::class.asClassName())
+        getParameterMapping(isParameter, Float::class)
     } else if (toLowerCase() == "double") {
-        if (isParameter) Double::class.asTypeName()
-        else primitivesModel.parameterizedBy(Double::class.asClassName())
+        getParameterMapping(isParameter, Double::class)
     } else if (toLowerCase() == "short") {
-        if (isParameter) Short::class.asTypeName()
-        else primitivesModel.parameterizedBy(Short::class.asClassName())
+        getParameterMapping(isParameter, Short::class)
     } else if (toLowerCase() == "long") {
-        if (isParameter) Long::class.asTypeName()
-        else primitivesModel.parameterizedBy(Long::class.asClassName())
+        getParameterMapping(isParameter, Long::class)
     } else if (toLowerCase() == "char") {
-        if (isParameter) Character::class.asTypeName()
-        else primitivesModel.parameterizedBy(Character::class.asClassName())
+        getParameterMapping(isParameter, Character::class)
     } else {
-        throw IllegalArgumentException(
-            "Unsupported type: $this, no native type mapping exists."
+        throw UnsupportedOperationException(
+            "Unsupported type: ${this}, no native type mapping exists."
         )
+    }
+}
+
+private fun getParameterMapping(isParameter: Boolean, kClass: KClass<*>): TypeName {
+    return if (isParameter) kClass.asTypeName()
+    else {
+        ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
+            .parameterizedBy(kClass.asClassName())
     }
 }
 
