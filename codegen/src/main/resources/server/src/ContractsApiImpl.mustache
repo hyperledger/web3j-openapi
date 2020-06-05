@@ -11,14 +11,14 @@ import javax.inject.Inject
 import javax.ws.rs.core.Context
 
 @Generated
-class ContractsApiImpl @Inject constructor(
+class {{projectName}}ApiImpl @Inject constructor(
 web3j: Web3j,
 credentials: Credentials,
 defaultGasProvider: ContractGasProvider,
 @Context uriInfo: ExtendedUriInfo
 ) : Web3jOpenApi {
 
-override val contracts = GeneratedContractsResourceImpl(
+override val contracts = {{projectName}}ResourceImpl(
 web3j, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
 )
 }
