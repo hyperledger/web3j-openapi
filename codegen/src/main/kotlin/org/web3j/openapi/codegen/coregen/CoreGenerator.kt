@@ -55,6 +55,7 @@ class CoreGenerator(
         context["contractsConfiguration"] = configuration.contracts
         context["apiImports"] = getApiImports()
         context["tags"] = getTags()
+        context["projectName"] = configuration.projectName.capitalize()
     }
 
     private fun getTags(): List<Tag> {
@@ -79,13 +80,13 @@ class CoreGenerator(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/ContractsApi.mustache"),
-            name = "ContractsApi.kt"
+            name = "${configuration.projectName.capitalize()}Api.kt"
         )
         generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
-            name = "GeneratedContractsResource.kt"
+            name = "${configuration.projectName.capitalize()}Resource.kt"
         )
     }
 

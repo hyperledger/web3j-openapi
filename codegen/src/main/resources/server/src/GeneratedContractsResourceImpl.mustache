@@ -8,16 +8,16 @@ import org.web3j.protocol.Web3j
 import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.ContractGasProvider
 import javax.annotation.processing.Generated
-import {{packageName}}.core.GeneratedContractsResource
+import {{packageName}}.core.{{projectName}}Resource
 import org.web3j.openapi.server.ContractResourceImpl
 
 @Generated
-class GeneratedContractsResourceImpl(
+class {{projectName}}ResourceImpl(
 web3j: Web3j,
 transactionManager: TransactionManager,
 defaultGasProvider: ContractGasProvider,
 uriInfo: ExtendedUriInfo
-) : GeneratedContractsResource, ContractResourceImpl(uriInfo) {
+) : {{projectName}}Resource, ContractResourceImpl(uriInfo) {
 
 {{#contracts}}
     {{#contractDetails}}
