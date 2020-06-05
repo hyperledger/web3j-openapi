@@ -34,6 +34,7 @@ internal class ServerGenerator(
         context["serverImports"] = getServerImports()
         context["projectName"] = configuration.projectName
         context["outputDir"] = configuration.jarDir.absolutePath
+        context["projectName"] = configuration.projectName.capitalize()
     }
 
     override fun generate() {
@@ -94,10 +95,6 @@ internal class ServerGenerator(
         }
         logger.debug("Copying server/resources")
         CopyUtils.copyResource(
-            "server/src/main/resources/logback.xml",
-            File(folderPath.substringBefore("server"))
-        )
-        CopyUtils.copyResource(
             "server/src/main/resources/logging.properties",
             File(folderPath.substringBefore("server"))
         )
@@ -136,19 +133,19 @@ internal class ServerGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsApiImpl.mustache"),
-            name = "ContractsApiImpl.kt"
+            name = "${configuration.projectName.capitalize()}ApiImpl.kt"
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsResourceProvider.mustache"),
-            name = "ContractsResourceProvider.kt"
+            name = "${configuration.projectName.capitalize()}ResourceProvider.kt"
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/GeneratedContractsResourceImpl.mustache"),
-            name = "GeneratedContractsResourceImpl.kt"
+            name = "${configuration.projectName.capitalize()}ResourceImpl.kt"
         )
     }
 

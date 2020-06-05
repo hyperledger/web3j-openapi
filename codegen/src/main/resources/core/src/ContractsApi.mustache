@@ -32,8 +32,8 @@ Tag(name = "{{name}}", description = "{{description}}"){{lastCharacter}}
 ]
 )
 @Generated
-interface ContractsApi : Web3jOpenApi {
+interface {{projectName}}Api : Web3jOpenApi {
 
 @get:Path("contracts")
-override val contracts: GeneratedContractsResource
+override val contracts: {{projectName}}Resource
 }
