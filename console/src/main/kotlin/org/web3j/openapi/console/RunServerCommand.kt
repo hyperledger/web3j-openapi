@@ -87,7 +87,7 @@ class RunServerCommand : Callable<Int> {
         @JvmStatic
         fun main(args: Array<String>) {
             val runServerCommand = CommandLine(RunServerCommand())
-            
+
             configureDefaultProvider(args, runServerCommand)
             runServerCommand.execute(*args).apply { exitProcess(this) }
         }

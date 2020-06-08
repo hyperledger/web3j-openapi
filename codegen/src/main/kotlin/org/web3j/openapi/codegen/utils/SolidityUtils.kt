@@ -53,7 +53,7 @@ internal fun String.toNativeType(isParameter: Boolean = true): TypeName {
         getParameterMapping(isParameter, Character::class)
     } else {
         throw UnsupportedOperationException(
-            "Unsupported type: ${this}, no native type mapping exists."
+            "Unsupported type: $this, no native type mapping exists."
         )
     }
 }
