@@ -8,10 +8,6 @@ plugins {
 
 mainClassName = 'org.web3j.openapi.console.RunServerCommand'
 
-shadowJar {
-    destinationDir = file("{{outputDir}}")
-}
-
 dependencies {
     // FIXME This dependency version should be dynamic
     implementation "org.web3j.openapi:web3j-openapi-server:0.1.0-SNAPSHOT"
@@ -63,6 +59,10 @@ resolve {
     outputDir = file('src/main/resources/static')
 }
 
-build {
-    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources, installDist
+shadowJar {
+    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
+}
+
+installDist {
+    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
 }

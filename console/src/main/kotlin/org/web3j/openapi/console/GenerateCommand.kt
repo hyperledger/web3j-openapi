@@ -76,25 +76,11 @@ class GenerateCommand : Callable<Int> {
     private lateinit var packageName: String
 
     @Option(
-        names = ["--server"],
-        description = ["set to false to only generate the core interfaces of the OpenAPI."],
-        defaultValue = "true"
-    )
-    private var isServerGenerated: Boolean = true
-
-    @Option(
         names = ["--dev"],
         description = ["not delete the failed build files."],
         defaultValue = "false"
     )
     private var dev: Boolean = false
-
-    @Option(
-        names = ["--jar"],
-        description = ["set to true to generate the JAR only."],
-        defaultValue = "false"
-    )
-    private var isJarOnly: Boolean = false
 
     @Option(
         names = ["--address-length"],
@@ -116,8 +102,8 @@ class GenerateCommand : Callable<Int> {
             generate(projectFolder)
             ExitCode.OK
         } catch (e: Exception) {
-            if (!dev) projectFolder.deleteRecursively()
-            println(e.message)
+            if (!dev) projectFolder.deleteOnExit()
+            e.printStackTrace()
             ExitCode.SOFTWARE
         }
     }
@@ -133,25 +119,7 @@ class GenerateCommand : Callable<Int> {
             addressLength = addressLength
         )
 
-        if (isServerGenerated) {
-            GenerateOpenApi(generatorConfiguration).generateAll()
-
-            runGradleTask(
-                projectFolder,
-                "shadowJar",
-                "Generating the fat JAR to ${projectFolder.parentFile.canonicalPath}...",
-                null
-            )
-            runGradleTask(projectFolder, "clean", "Cleaning up")
-
-            if (isJarOnly) {
-                projectFolder.deleteRecursively()
-            }
-        } else {
-            print("Generating Core interfaces...")
-            GenerateOpenApi(generatorConfiguration).generateCore()
-            print(" Done.")
-        }
+        GenerateOpenApi(generatorConfiguration).generateAll()
 
         println("Done.")
     }
