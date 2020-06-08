@@ -20,6 +20,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
@@ -53,8 +54,7 @@ class OpenApiResourceConfig(
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
-        register(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()) // FIXME Why warning: WARN  o.g.jersey.internal.inject.Providers - A provider java.util.logging.Logger registered in SERVER runtime does not implement any provider interfaces applicable in the SERVER runtime. Due to constraint configuration problems the provider java.util.logging.Logger will be ignored.
-
+        register(LoggingFeature(logger))
         register(InjectionBinder())
 
         property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName)
