@@ -34,7 +34,6 @@ import org.web3j.openapi.server.Properties
 import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
-import java.util.logging.Level
 import java.util.logging.Logger
 import javax.inject.Singleton
 
