@@ -16,16 +16,16 @@ import org.web3j.protocol.core.methods.response.Log
 import java.math.BigInteger
 
 data class LogsModel(
-    var removed: Boolean = false,
-    var logIndex: BigInteger = BigInteger.ZERO,
-    var transactionIndex: BigInteger = BigInteger.ZERO,
-    var transactionHash: String? = null,
-    var blockHash: String? = null,
-    var blockNumber: BigInteger = BigInteger.ZERO,
-    var address: String? = null,
-    var data: String? = null,
-    var type: String? = null,
-    var topics: List<String>? = null
+    val removed: Boolean = false,
+    val logIndex: BigInteger = BigInteger.ZERO,
+    val transactionIndex: BigInteger = BigInteger.ZERO,
+    val transactionHash: String? = null,
+    val blockHash: String? = null,
+    val blockNumber: BigInteger = BigInteger.ZERO,
+    val address: String? = null,
+    val data: String? = null,
+    val type: String? = null,
+    val topics: List<String>? = null
 ) {
     constructor(log: Log) : this (
         log.isRemoved,
