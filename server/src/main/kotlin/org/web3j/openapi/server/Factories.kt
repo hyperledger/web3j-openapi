@@ -59,7 +59,7 @@ class CredentialsFactory(
             Credentials.create(privateKey)
         } else {
             logger.warn("Missing credentials! Aborting.")
-            throw NoSuchFieldException("Credentials missing!")
+            throw IllegalStateException("Credentials missing!")
         }
     }
 
