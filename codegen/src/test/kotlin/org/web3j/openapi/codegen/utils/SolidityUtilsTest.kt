@@ -58,7 +58,7 @@ class SolidityUtilsTest {
             isConstant = true
         }
 
-        assertThat(actualResult.returnType).isEqualTo(expectedResult)
+        assertThat(actualResult.getReturnType()).isEqualTo(expectedResult)
     }
 
     @Test
@@ -70,7 +70,7 @@ class SolidityUtilsTest {
             isConstant = false
         }
 
-        assertThat(actualResult.returnType).isEqualTo(expectedResult)
+        assertThat(actualResult.getReturnType()).isEqualTo(expectedResult)
     }
 
     @Test
@@ -91,6 +91,6 @@ class SolidityUtilsTest {
             isConstant = true
         }
 
-        assertThat(actualResult.returnType).isEqualTo(expectedResult)
+        assertThat(actualResult.getReturnType()).isEqualTo(expectedResult)
     }
 }
