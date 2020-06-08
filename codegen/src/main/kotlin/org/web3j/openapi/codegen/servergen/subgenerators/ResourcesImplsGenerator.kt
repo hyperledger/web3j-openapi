@@ -177,23 +177,31 @@ class ResourcesImplsGenerator(
         else if (returnType.startsWith("org.web3j.openapi.core.models.PrimitivesModel"))
             "return $returnType($code)"
         else if (returnType.startsWith("org.web3j.tuples")) {
-            val components = returnType.substringAfter("<")
-                .removeSuffix(">")
-                .split(",")
-            val variableNames = components.mapIndexed {index, component ->
-                "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index"
-            }.joinToString(",")
-            val tupleConstructor = components.mapIndexed {index, component ->
-                if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index.toModel()"
-                else "${component.substringAfterLast(".").decapitalize()}$index"
-            }.joinToString(",")
-            """val ($variableNames) = $code
-                return Tuple${components.size}($tupleConstructor)
-            """.trimMargin()
+            wrapTuplesCode(code, returnType)
         }
         else if (returnType.contains("StructModel"))
             "return $code.toModel()"
         else "return $code"
+    }
+
+    private fun wrapTuplesCode(code: String, returnType: String): String {
+        val components = returnType.substringAfter("<")
+            .removeSuffix(">")
+            .split(",")
+
+        val variableNames = components.mapIndexed {index, component ->
+            if (component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index"
+            else "${component.substringBefore("<").substringAfterLast(".").decapitalize()}$index"
+        }.joinToString(",")
+
+        val tupleConstructor = components.mapIndexed {index, component ->
+            if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index.toModel()"
+            else "${component.substringBefore("<").substringAfterLast(".").decapitalize()}$index"
+        }.joinToString(",")
+
+        return """val ($variableNames) = $code
+                return Tuple${components.size}($tupleConstructor)
+            """.trimMargin()
     }
 
     private fun getFunctionName(name: String): String {
