@@ -18,6 +18,7 @@ import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
+import org.web3j.openapi.codegen.servergen.subgenerators.StructExtensionsGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
@@ -56,6 +57,16 @@ internal class ServerGenerator(
             ).generate()
 
             ResourcesImplGenerator(
+                packageName = configuration.packageName,
+                contractName = it.contractDetails.contractName,
+                folderPath = Path.of(
+                    folderPath.substringBefore("kotlin"),
+                    "kotlin"
+                ).toString(),
+                resourcesDefinition = it.contractDetails.abiDefinitions
+            ).generate()
+
+            StructExtensionsGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
                 folderPath = Path.of(

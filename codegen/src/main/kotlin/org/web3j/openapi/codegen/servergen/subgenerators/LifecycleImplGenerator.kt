@@ -14,8 +14,8 @@ package org.web3j.openapi.codegen.servergen.subgenerators
 
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
-import org.web3j.openapi.codegen.utils.SolidityUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.getStructCallParameters
 import java.io.File
 
 class LifecycleImplGenerator(
@@ -48,7 +48,7 @@ class LifecycleImplGenerator(
             .first()
             .forEach {input ->
                 parameters += if (input.type == "tuple")
-                    ", ${SolidityUtils.getStructCallParameters(
+                    ", ${getStructCallParameters(
                         contractDetails.contractName,
                         input,
                         "",

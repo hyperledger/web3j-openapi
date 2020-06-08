@@ -1,9 +1,9 @@
 package org.web3j.openapi.codegen.servergen.subgenerators
 
 import com.squareup.kotlinpoet.*
-import org.web3j.openapi.codegen.LICENSE
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.SolidityUtils
+import org.web3j.openapi.codegen.utils.extractStructs
+import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -29,8 +29,8 @@ class StructExtensionsGenerator(
             "${contractName.capitalize()}Extensions"
         )
 
-        SolidityUtils.extractStructs(resourcesDefinition)?.forEach {structDefinition ->
-            val structName = SolidityUtils.getStructName(structDefinition!!.internalType)
+        extractStructs(resourcesDefinition)?.forEach {structDefinition ->
+            val structName = structDefinition!!.internalType.structName
 
             val contractClass = ClassName(
                 "$packageName.wrappers.${contractName.capitalize()}",
