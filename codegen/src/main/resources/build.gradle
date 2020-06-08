@@ -16,7 +16,7 @@ plugins {
     id "de.marcphilipp.nexus-publish" version '0.4.0'
 }
 
-description = 'Web3j-openapi project.'
+description = 'Web3j OpenApi generated project.'
 
 subprojects {
     apply plugin: "kotlin"
