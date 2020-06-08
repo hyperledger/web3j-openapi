@@ -15,6 +15,7 @@ package org.web3j.openapi.codegen.servergen.subgenerators
 import mu.KLogging
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.getStructCallParameters
 import java.io.File
 
 class LifecycleImplGenerator(
@@ -45,10 +46,18 @@ class LifecycleImplGenerator(
             .filter { it.type == "constructor" }
             .map { it.inputs }
             .first()
-            .forEach {
-                parameters += ", parameters.${it.name}"
+            .forEach {input ->
+                parameters += if (input.type == "tuple")
+                    ", ${getStructCallParameters(
+                        contractDetails.contractName,
+                        input,
+                        "",
+                        "parameters.${input.name}"
+                    )}"
+                else
+                     ", parameters.${input.name}"
             }
-        return parameters
+        return parameters.removeSuffix(",")
     }
 
     private fun copySources() {

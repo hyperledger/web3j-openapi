@@ -20,12 +20,14 @@ import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 
 internal fun List<NamedType>.toDataClass(
-    packageName: String,
+    modelPackageName: String,
     name: String,
-    type: String
+    type: String,
+    basePackageName: String = "",
+    contractName: String = ""
 ): FileSpec {
     val outputFile = FileSpec.builder(
-        packageName,
+        modelPackageName,
         "${name.capitalize()}$type"
     )
 
@@ -39,14 +41,18 @@ internal fun List<NamedType>.toDataClass(
 
     forEachIndexed { index, input ->
         val inputName = input.name ?: "input$index"
+        val inputType =
+            if (input.type == "tuple") input.type.toNativeType(true, input.internalType.structName, basePackageName, contractName.toLowerCase())
+            else input.type.toNativeType()
+
         constructorBuilder.addParameter(
             inputName,
-            input.type.toNativeType()
+            inputType
         )
         constructor.addProperty(
             PropertySpec.builder(
                 inputName,
-                input.type.toNativeType()
+                inputType
             ).initializer(inputName).build()
         )
     }

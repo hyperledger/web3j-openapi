@@ -17,8 +17,9 @@ import org.web3j.openapi.codegen.common.ContractResource
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.extractStructs
+import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.isTransactional
-import org.web3j.openapi.codegen.utils.returnType
 import java.io.File
 import java.nio.file.Path
 
@@ -43,6 +44,22 @@ internal class CoreApiGenerator(
         }
         copySources()
         generateModels()
+        generateStructsModels()
+    }
+
+    private fun generateStructsModels() {
+        extractStructs(contractDetails.abiDefinitions)?.forEach {structDefinition ->
+            CoreStructsModelGenerator(
+                packageName = packageName,
+                contractName = contractDetails.capitalizedContractName,
+                functionName = structDefinition!!.internalType.split(".").last(),
+                folderPath = Path.of(
+                    folderPath.substringBefore("kotlin"),
+                    "kotlin"
+                ).toString(),
+                components = structDefinition.components
+            ).generate()
+        }
     }
 
     private fun imports(): List<Import> {
@@ -72,7 +89,7 @@ internal class CoreApiGenerator(
                             it.name,
                             "fun ${it.name}($parameters)",
                             if (it.inputs.isEmpty()) "GET" else "POST",
-                            it.returnType.toString(),
+                            it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
                             contractDetails.capitalizedContractName,
                             "Executes the ${it.name.capitalize()} method"
                         )
