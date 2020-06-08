@@ -21,3 +21,22 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-to-slf4j:${versions.log4j}"
     implementation "ch.qos.logback:logback-classic:${versions.logback}"
 }
+
+def generatedResources = "$buildDir/generated-resources/main"
+
+sourceSets {
+    main {
+        // Register an output folder on the main source set:
+        output.dir(generatedResources, builtBy: 'generateVersionProperties')
+    }
+}
+
+task generateVersionProperties {
+    description 'Creates a version.properties file with build info that is added to the root of the JAR'
+    doLast {
+        new File(generatedResources).mkdirs()
+        def generated = new File(generatedResources, "version.properties")
+        generated.write("version=$rootProject.version\n")
+        generated.append("timestamp=${System.currentTimeMillis()}\n")
+    }
+}

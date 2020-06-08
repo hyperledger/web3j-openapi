@@ -46,7 +46,8 @@ class GenerationTest {
             loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
-            160
+            160,
+            "0.1.0-SNAPSHOT"
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()

@@ -16,6 +16,7 @@ import mu.KLogging
 import org.web3j.openapi.codegen.AbstractGenerator
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
 import org.web3j.openapi.codegen.utils.CopyUtils
@@ -35,12 +36,13 @@ internal class ServerGenerator(
         context["projectName"] = configuration.projectName
         context["outputDir"] = configuration.jarDir.absolutePath
         context["projectName"] = configuration.projectName.capitalize()
+        context["version"] = configuration.version
     }
 
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
-        copyGradleFile(folderPath)
+        generateGradleBuildFile(folderPath, "server", context)
         copyResources(folderPath)
         copySources(folderPath)
 
@@ -71,16 +73,6 @@ internal class ServerGenerator(
         return configuration.contracts.map {
             Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
         }
-    }
-
-    private fun copyGradleFile(folderPath: String) {
-        logger.debug("Generating server/build.gradle")
-        TemplateUtils.generateFromTemplate(
-            context = context,
-            outputDir = folderPath.substringBefore("src"),
-            template = TemplateUtils.mustacheTemplate("server/build.gradle.mustache"),
-            name = "build.gradle"
-        )
     }
 
     private fun copyResources(folderPath: String) {
