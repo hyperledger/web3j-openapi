@@ -9,9 +9,8 @@ plugins {
 mainClassName = 'org.web3j.openapi.console.RunServerCommand'
 
 dependencies {
-    // FIXME This dependency version should be dynamic
-    implementation "org.web3j.openapi:web3j-openapi-server:0.1.0-SNAPSHOT"
-    implementation "org.web3j.openapi:web3j-openapi-console:0.1.0-SNAPSHOT"
+    implementation "org.web3j.openapi:web3j-openapi-server:{{version}}"
+    implementation "org.web3j.openapi:web3j-openapi-console:{{version}}"
     implementation project(':openapi-generated-core')
     
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"

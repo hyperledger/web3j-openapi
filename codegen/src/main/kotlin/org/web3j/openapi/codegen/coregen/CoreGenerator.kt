@@ -19,7 +19,7 @@ import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
-import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
@@ -31,15 +31,22 @@ class CoreGenerator(
 ) : AbstractGenerator(
     configuration
 ) {
+    init {
+        context["contractsConfiguration"] = configuration.contracts
+        context["apiImports"] = getApiImports()
+        context["tags"] = getTags()
+        context["projectName"] = configuration.projectName.capitalize()
+        context["version"] = configuration.version
+    }
+
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        GradleResourceCopy.copyModuleGradleFile(folderPath, "core")
-        setContext()
+        generateGradleBuildFile(folderPath, "core", context)
         copySources(folderPath)
 
         configuration.contracts.forEach {
-            logger.debug("Generating ${it.contractDetails.capitalizedContractName} api folders and files")
+            logger.debug("Generating ${it.contractDetails.capitalizedContractName} Open API folders and files")
             CoreApiGenerator(
                 configuration.packageName,
                 folderPath = Path.of(
@@ -49,13 +56,6 @@ class CoreGenerator(
                 contractDetails = it.contractDetails
             ).generate()
         }
-    }
-
-    private fun setContext() {
-        context["contractsConfiguration"] = configuration.contracts
-        context["apiImports"] = getApiImports()
-        context["tags"] = getTags()
-        context["projectName"] = configuration.projectName.capitalize()
     }
 
     private fun getTags(): List<Tag> {
