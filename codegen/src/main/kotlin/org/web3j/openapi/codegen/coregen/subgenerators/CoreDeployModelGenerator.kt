@@ -27,7 +27,10 @@ internal class CoreDeployModelGenerator(
         val constructorFile = inputs.toDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
             contractName,
-            "DeployParameters"
+            "DeployParameters",
+            packageName,
+            contractName
+
         )
         logger.debug("Generating $contractName deploy parameters")
         constructorFile.writeTo(File(folderPath))

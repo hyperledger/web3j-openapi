@@ -1,6 +1,6 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
-import org.web3j.openapi.codegen.utils.KPoetUtils
+import org.web3j.openapi.codegen.utils.toDataClass
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -11,10 +11,9 @@ class CoreStructsModelGenerator(
     val folderPath: String,
     val components: List<AbiDefinition.NamedType>) {
     fun generate() {
-        val functionFile = KPoetUtils.inputsToDataClass(
+        val functionFile = components.toDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
             functionName,
-            components,
             "StructModel",
             packageName,
             contractName
