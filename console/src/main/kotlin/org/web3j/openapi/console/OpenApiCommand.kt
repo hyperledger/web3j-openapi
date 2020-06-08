@@ -10,26 +10,25 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli.options
+package org.web3j.openapi.console
 
-import picocli.CommandLine.Option
-import java.io.File
+import picocli.CommandLine
+import picocli.CommandLine.Command
 
-class WalletOptions {
+@Command(
+    name = "openapi",
+//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
+    description = ["web3j-openapi cli"],
+    subcommands = [GenerateCommand::class],
+    version = ["1.0"],
+    mixinStandardHelpOptions = true
+)
+class OpenApiCommand {
 
-    @Option(
-        names = ["--wallet-file"],
-        description = ["specify the wallet file path"]
-    )
-    lateinit var walletFile: File
-
-    @Option(
-        names = ["--wallet-password"],
-        description = ["specify the wallet file password"]
-    )
-    var walletPassword: String = ""
-
-    fun isWalletFileInitialized(): Boolean {
-        return this::walletFile.isInitialized
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            CommandLine(OpenApiCommand()).execute(*args)
+        }
     }
 }

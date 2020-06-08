@@ -12,12 +12,26 @@
  */
 package org.web3j.openapi.server.config
 
+import java.io.File
+import java.net.URL
+
 data class OpenApiServerConfig(
     val projectName: String,
-    val nodeEndpoint: String,
-    val privateKey: String,
-    val walletFilePath: String,
-    val walletPassword: String,
+    val nodeEndpoint: URL,
+    val privateKey: String?,
+    val walletFile: File?,
+    val walletPassword: String?,
     val host: String,
     val port: Int
-)
+) {
+    init {
+        if (privateKey == null && walletFile == null) {
+            throw IllegalArgumentException("Invalid credentials, use a private key or wallet file")
+        } else if (walletFile != null) {
+            if (!walletFile.exists())
+                throw IllegalArgumentException("Wallet file $walletFile not found!")
+            else if (walletPassword == null)
+                throw IllegalArgumentException("Wallet file $walletFile password not found!")
+        }
+    }
+}

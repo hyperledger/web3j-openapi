@@ -1,27 +1,24 @@
 plugins {
-    id 'org.web3j' version '4.5.11'
     id 'application'
+    id 'org.web3j' version '4.5.11'
     id 'com.github.johnrengelman.shadow'
     id 'org.hidetake.swagger.generator' version '2.18.2'
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.1.2"
+    id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
 }
 
-mainClassName = 'org.web3j.openapi.server.OpenApiServerKt'
-
-shadowJar {
-    destinationDir = file("{{outputDir}}")
-}
+mainClassName = 'org.web3j.openapi.console.RunServerCommand'
 
 dependencies {
-    implementation "org.web3j.openapi:web3j-openapi-server:1.0"
+    // FIXME This dependency version should be dynamic
+    implementation "org.web3j.openapi:web3j-openapi-server:0.1.0-SNAPSHOT"
+    implementation "org.web3j.openapi:web3j-openapi-console:0.1.0-SNAPSHOT"
     implementation project(':openapi-generated-core')
-
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.29"
-
+    
+    implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
+    
     swaggerUI 'org.webjars:swagger-ui:3.10.0'
-
-    testImplementation "org.web3j.openapi:web3j-openapi-server:1.0"
-    testImplementation "com.willowtreeapps.assertk:assertk-jvm:0.22"
+    
+    testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
 }
 
 web3j {
@@ -60,4 +57,12 @@ resolve {
     classpath = sourceSets.main.runtimeClasspath
     resourcePackages = ['org.web3j.openapi', '{{packageName}}']
     outputDir = file('src/main/resources/static')
+}
+
+shadowJar {
+    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
+}
+
+installDist {
+    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
 }

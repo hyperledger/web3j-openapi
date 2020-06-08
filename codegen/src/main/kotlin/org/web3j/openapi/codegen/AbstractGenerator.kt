@@ -12,13 +12,14 @@
  */
 package org.web3j.openapi.codegen
 
-const val LICENSE = """Copyright 2020 Web3 Labs Ltd.
+import org.web3j.openapi.codegen.config.GeneratorConfiguration
 
- Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
+abstract class AbstractGenerator(
+    val configuration: GeneratorConfiguration
+) {
+    protected val packageDir = configuration.packageName.split(".").joinToString("/")
 
- http://www.apache.org/licenses/LICENSE-2.0
+    protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
 
- Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- specific language governing permissions and limitations under the License."""
+    abstract fun generate()
+}

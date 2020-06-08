@@ -10,18 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli.options
+package org.web3j.openapi.console.options
 
-import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
+import java.net.InetAddress
 
-class CredentialsOptions {
+class ServerOptions {
+
     @Option(
-        names = ["--privateKey"],
-        description = ["specify the private key"]
+        names = ["--host"],
+        description = ["specify the host name"],
+        defaultValue = "localhost"
     )
-    var privateKey: String = ""
+    lateinit var host: InetAddress
 
-    @Mixin
-    val walletOptions = WalletOptions()
+    @Option(
+        names = ["--port"],
+        description = ["specify the port number"],
+        defaultValue = "8080"
+    )
+    var port: Int = 8080
 }

@@ -10,20 +10,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen
+package org.web3j.openapi.console.options
 
-import java.io.File
+import picocli.CommandLine.Option
+import java.net.URL
 
-object Folders {
-    fun tempBuildFolder(): File {
-        val tmpTestLocation = File(
-            arrayOf(
-                "build",
-                "tmp",
-                "testing",
-                System.currentTimeMillis().toString()).joinToString(File.separator))
-        if (!tmpTestLocation.mkdirs()) throw Exception(
-            "Unable to create folder at " + tmpTestLocation.absolutePath)
-        return tmpTestLocation
-    }
+class NetworkOptions {
+    @Option(
+        names = ["-e", "--endpoint"],
+        description = ["specify the endpoint"],
+        required = true
+    )
+    lateinit var endpoint: URL
 }

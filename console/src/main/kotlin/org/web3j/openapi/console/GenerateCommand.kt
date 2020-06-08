@@ -12,12 +12,13 @@
  */
 package org.web3j.openapi.console
 
-import mu.KLogging
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.GeneratorUtils.getContractsConfiguration
-import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
+import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
+import org.web3j.openapi.console.options.ProjectOptions
 import picocli.CommandLine.Command
+import picocli.CommandLine.ExitCode
+import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 import java.io.File
 import java.nio.file.Path
@@ -26,7 +27,7 @@ import java.util.concurrent.Callable
 @Command(
     name = "generate",
     showDefaultValues = true,
-    description = ["Generates a web3j-openapi project"]
+    description = ["Generates a Web3j OpenAPI project."]
 )
 class GenerateCommand : Callable<Int> {
 
@@ -40,111 +41,85 @@ class GenerateCommand : Callable<Int> {
 //    )
 //    private var logLevel: Level? = null
 
-    @Option(names = ["-o", "--output"],
-        description = ["specify the output directory."],
-        defaultValue = ".")
-    lateinit var outputDirectory: File
+    @Option(
+        names = ["-o", "--output"],
+        description = ["project output directory."],
+        defaultValue = "."
+    )
+    private lateinit var outputDirectory: File
 
-    @Option(names = ["-a", "--abi"],
-        description = ["specify the abi files and folders."],
+    @Option(
+        names = ["-a", "--abi"],
+        description = ["input ABI files and folders."],
         arity = "1..*",
-        required = true)
-    lateinit var abis: List<File>
+        required = true
+    )
+    private lateinit var abis: List<File>
 
-    @Option(names = ["-b", "--bin"],
-        description = ["specify the bin."],
+    @Option(
+        names = ["-b", "--bin"],
+        description = ["input BIN files nd folders."],
         arity = "1..*",
-        required = true)
-    lateinit var bins: List<File>
+        required = true
+    )
+    private lateinit var bins: List<File>
 
-    @Option(names = ["-n", "--project-name"],
-        description = ["specify the project name."],
-        required = true)
-    lateinit var projectName: String
+    @Mixin
+    private val projectOptions = ProjectOptions()
 
-    @Option(names = ["-p", "--package-name"],
-        description = ["specify the package name."],
-        required = true)
-    lateinit var packageName: String
+    @Option(
+        names = ["-p", "--package-name"],
+        description = ["generated package name."],
+        required = true
+    )
+    private lateinit var packageName: String
 
-    @Option(names = ["--server"],
-        description = ["set to false to only generate the core interfaces of the OpenAPI."],
-        defaultValue = "true")
-    var isServerGenerated: Boolean = true
-
-    @Option(names = ["--dev"],
+    @Option(
+        names = ["--dev"],
         description = ["not delete the failed build files."],
-        defaultValue = "false")
-    var dev: Boolean = false
+        defaultValue = "false"
+    )
+    private var dev: Boolean = false
 
-    @Option(names = ["--jar"],
-        description = ["set to true to generate the jar only."],
-        defaultValue = "false")
-    var isJarOnly: Boolean = false
-
-    @Option(names = ["--swagger-ui"],
-        description = ["set to false to ignore the generation of the swagger-ui."],
-        defaultValue = "true")
-    var swagger: Boolean = true
-
-    @Option(names = ["--address-length"],
+    @Option(
+        names = ["--address-length"],
         description = ["specify the address length."],
-        defaultValue = "160")
-    var addressLength: Int = 160
+        defaultValue = "20"
+    )
+    private var addressLength: Int = 20
 
     override fun call(): Int {
-        val projectFolder = File(
-            Path.of(
-                outputDirectory.canonicalPath,
-                projectName
-            ).toString()
-        ).apply {
+        val projectFolder = Path.of(
+            outputDirectory.canonicalPath,
+            projectOptions.projectName
+        ).toFile().apply {
             deleteRecursively()
             mkdirs()
         }
 
-        try {
+        return try {
             generate(projectFolder)
+            ExitCode.OK
         } catch (e: Exception) {
-            if (!dev) projectFolder.deleteRecursively()
-            throw e
+            if (!dev) projectFolder.deleteOnExit()
+            e.printStackTrace()
+            ExitCode.SOFTWARE
         }
-        return 0
     }
 
-    private fun generate(projectFolder: File): Int {
+    private fun generate(projectFolder: File) {
 
         val generatorConfiguration = GeneratorConfiguration(
-            projectName = projectName,
+            projectName = projectOptions.projectName,
             packageName = packageName,
             outputDir = projectFolder.path,
             jarDir = outputDirectory,
-            contracts = getContractsConfiguration(abis, bins),
+            contracts = loadContractConfigurations(abis, bins),
             addressLength = addressLength
         )
 
-        if (isServerGenerated) {
-            GenerateOpenApi(generatorConfiguration).generateAll()
-            if (swagger) {
-                runGradleTask(projectFolder, "resolve", "Generating OpenAPI specs")
-                runGradleTask(projectFolder, "generateSwaggerUI", "Generating SwaggerUI")
-                runGradleTask(projectFolder, "moveSwaggerUiToResources", "Setting up the SwaggerUI")
-            }
-
-            runGradleTask(projectFolder, "shadowJar", "Generating the FatJar to ${projectFolder.parentFile.canonicalPath}")
-            runGradleTask(projectFolder, "clean", "Cleaning up")
-
-            if (isJarOnly) {
-                projectFolder.deleteRecursively()
-            }
-        } else {
-            println("Generating Core interfaces")
-            GenerateOpenApi(generatorConfiguration).generateCore()
-        }
+        GenerateOpenApi(generatorConfiguration).generateAll()
 
         println("Done.")
-        return 0
     }
-
-    companion object : KLogging()
 }

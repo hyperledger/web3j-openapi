@@ -14,16 +14,17 @@ package org.web3j.openapi.codegen.utils
 
 import assertk.assertThat
 import org.junit.jupiter.api.Test
-import org.web3j.openapi.codegen.Folders
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
 class CopyUtilsTest {
 
-    private val tempFolder = Folders.tempBuildFolder().canonicalPath
+    @TempDir
+    lateinit var tempFolder: File
 
     @Test
     fun copyResourcesTest() {
-        CopyUtils.copyResource("build.gradle", File(tempFolder))
-        assertThat(File(tempFolder).listFiles().size == 1)
+        CopyUtils.copyResource("build.gradle", tempFolder)
+        assertThat(tempFolder.listFiles()?.size == 1)
     }
 }

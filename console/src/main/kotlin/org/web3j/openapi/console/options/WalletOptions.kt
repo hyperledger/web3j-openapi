@@ -10,24 +10,22 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.cli
+package org.web3j.openapi.console.options
 
-import picocli.CommandLine.Unmatched
-import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
 
-// allows two pass approach to obtain optional config file
-@Command(
-    mixinStandardHelpOptions = true
-)
-class ConfigFileCommand {
-    @Option(
-        names = ["-c", "--config-file"],
-        arity = "1"
-    )
-    var configFile: File? = null
+class WalletOptions {
 
-    @Unmatched
-    var otherOptions: List<String>? = null
+    @Option(
+        names = ["--wallet-file"],
+        description = ["specify the wallet file path"]
+    )
+    var walletFile: File? = null
+
+    @Option(
+        names = ["--wallet-password"],
+        description = ["specify the wallet file password"]
+    )
+    var walletPassword: String? = null
 }

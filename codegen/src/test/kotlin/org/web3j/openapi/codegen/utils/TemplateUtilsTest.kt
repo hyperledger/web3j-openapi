@@ -16,11 +16,15 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import org.junit.jupiter.api.Test
-import org.web3j.openapi.codegen.Folders
+import org.junit.jupiter.api.io.TempDir
 import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
+import java.io.File
 
 class TemplateUtilsTest {
-    val tempFolder = Folders.tempBuildFolder()
+
+    @TempDir
+    lateinit var tempFolder: File
+
     @Test
     fun mustacheTemplateTest() {
         assertThat(

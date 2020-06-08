@@ -18,39 +18,39 @@ import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.utils.GeneratorUtils.getContractsConfiguration
+import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
 import java.io.IOException
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class GenerationTest {
 
-    private val tempFolder = Folders.tempBuildFolder()
+    @TempDir
+    lateinit var tempFolder: File
 
-    init {
+    @Test
+    fun `Generated project gradle tasks test`() {
         val contractsFolder = Path.of(
-            Paths.get("").toAbsolutePath().toString(),
             "src",
             "test",
             "resources",
             "contracts").toFile()
+
         val generatorConfiguration = GeneratorConfiguration(
             "testProject",
             "com.test",
             tempFolder.canonicalPath,
             tempFolder,
-            getContractsConfiguration(
+            loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
             160
         )
-        GenerateOpenApi(generatorConfiguration).generateAll()
-    }
 
-    @Test
-    fun `Generated project gradle tasks test`() {
+        GenerateOpenApi(generatorConfiguration).generateAll()
+
         assertThat {
             runGradleTask(
                 tempFolder,
@@ -88,7 +88,7 @@ class GenerationTest {
                     .setStandardOutput(System.out)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
-                            throw GradleConnectionException(failure.message)
+                            throw failure
                         }
 
                         override fun onComplete(result: Void?) {

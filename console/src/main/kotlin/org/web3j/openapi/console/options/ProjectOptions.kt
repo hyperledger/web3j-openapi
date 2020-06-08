@@ -10,20 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.console.options
 
-import picocli.CommandLine
-import java.util.concurrent.Callable
+import picocli.CommandLine.Option
 
-@CommandLine.Command(name = "openapi",
-//    versionProvider =  TODO: get the version from the properties (check web3j-corda project)
-    description = ["web3j-openapi cli"],
-    subcommands = [GenerateCommand::class, RunCommand::class],
-    version = ["1.0"],
-    mixinStandardHelpOptions = true
-)
-class BaseCommand : Callable<Int> {
-    override fun call(): Int {
-        return 0
-    }
+class ProjectOptions {
+
+    @Option(
+        names = ["-n", "--name"],
+        description = ["specify the project name."],
+        defaultValue = "Web3j-OpenAPI",
+        required = true
+    )
+    lateinit var projectName: String
 }
