@@ -66,3 +66,12 @@ shadowJar {
 installDist {
     dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
 }
+
+task completeSwaggerUiGeneration {
+    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
+    generateSwaggerUI.mustRunAfter resolve
+    moveSwaggerUiToResources.mustRunAfter generateSwaggerUI
+}
+
+shadowJar.dependsOn completeSwaggerUiGeneration
+installDist.dependsOn completeSwaggerUiGeneration
