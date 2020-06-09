@@ -91,4 +91,21 @@ class ModelsTests {
             }.isSuccess()
         }
     }
+
+    @Test
+    fun `Core structs models test`() {
+        contractsConfiguration.forEach { contractConfiguration ->
+            assertThat {
+                extractStructs(contractConfiguration.contractDetails.abiDefinitions)?.forEach { structDefinition ->
+                    CoreStructsModelGenerator(
+                        packageName = "com.test",
+                        contractName = contractConfiguration.contractDetails.capitalizedContractName,
+                        functionName = structDefinition!!.internalType.split(".").last(),
+                        folderPath = tempFolder.canonicalPath,
+                        components = structDefinition.components
+                    ).generate()
+                }
+            }.isSuccess()
+        }
+    }
 }
