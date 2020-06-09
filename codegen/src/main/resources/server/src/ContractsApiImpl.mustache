@@ -1,8 +1,8 @@
 package {{packageName}}.server
 
+import {{packageName}}.core.{{projectName}}Api
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.core.Web3jOpenApi
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager
 import org.web3j.tx.gas.ContractGasProvider
@@ -16,7 +16,7 @@ web3j: Web3j,
 credentials: Credentials,
 defaultGasProvider: ContractGasProvider,
 @Context uriInfo: ExtendedUriInfo
-) : Web3jOpenApi {
+) : {{projectName}}Api {
 
 override val contracts = {{projectName}}ResourceImpl(
 web3j, RawTransactionManager(web3j, credentials), defaultGasProvider, uriInfo
