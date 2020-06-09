@@ -10,7 +10,7 @@ mainClassName = 'org.web3j.openapi.console.RunServerCommand'
 dependencies {
     implementation "org.web3j.openapi:web3j-openapi-server:{{version}}"
     implementation "org.web3j.openapi:web3j-openapi-console:{{version}}"
-    implementation project(':openapi-generated-core')
+    implementation project(':{{rootProjectName}}-core')
     
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
     

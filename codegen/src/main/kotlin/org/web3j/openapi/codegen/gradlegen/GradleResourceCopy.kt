@@ -20,7 +20,6 @@ import java.io.File
 object GradleResourceCopy : KLogging() {
 
     fun copyProjectResources(outputDir: File) {
-        copyResource("settings.gradle", outputDir)
         copyResource("gradlew.bat", outputDir)
         copyResource("gradlew", outputDir)
         copyResource("build.gradle", outputDir)
