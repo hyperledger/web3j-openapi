@@ -1,7 +1,5 @@
 dependencies {
     api "org.web3j:core:${versions.web3j}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
-    implementation "ch.qos.logback:logback-classic:${versions.logback}"
-    implementation "org.slf4j:jul-to-slf4j:${versions.slf4j}"
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swagger}"
 }
