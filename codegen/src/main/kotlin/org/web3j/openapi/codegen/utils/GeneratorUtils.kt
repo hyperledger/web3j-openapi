@@ -22,7 +22,6 @@ object GeneratorUtils {
     fun loadContractConfigurations(abiList: List<File>, binList: List<File>): List<ContractConfiguration> {
         val abis = recurseIntoFolders(abiList, "abi")
         val bins = recurseIntoFolders(binList, "bin")
-
         return abis.map { abiFile ->
             val binFile = bins.find { bin ->
                 bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
