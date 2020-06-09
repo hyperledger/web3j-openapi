@@ -13,6 +13,7 @@
 package org.web3j.openapi.console
 
 import org.web3j.openapi.console.OpenApiCommand.VersionProvider
+import picocli.CommandLine
 import picocli.CommandLine.IVersionProvider
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.ParameterException
@@ -65,6 +66,13 @@ class OpenApiCommand : Callable<Int> {
                 "Version: $versionName",
                 "Build timestamp: ${buildTimestamp.let { timeFormatter.format(it) }}"
             )
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            CommandLine(OpenApiCommand()).execute(*args)
         }
     }
 }
