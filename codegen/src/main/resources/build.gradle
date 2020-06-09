@@ -29,6 +29,7 @@ subprojects {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
+        implementation "ch.qos.logback:logback-classic:${versions.logback}"
 
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "org.junit.jupiter:junit-jupiter:${versions.junitVersion}"
