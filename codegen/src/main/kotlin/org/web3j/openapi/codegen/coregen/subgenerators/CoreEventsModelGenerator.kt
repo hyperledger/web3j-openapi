@@ -28,7 +28,9 @@ internal class CoreEventsModelGenerator(
         val functionFile = outputs.toDataClass(
             "$packageName.core.${contractName.toLowerCase()}.model",
             eventName,
-            "EventResponse"
+            "EventResponse",
+            packageName,
+            contractName
         )
         logger.debug("Generating $contractName $eventName model")
         functionFile.writeTo(File(folderPath))
