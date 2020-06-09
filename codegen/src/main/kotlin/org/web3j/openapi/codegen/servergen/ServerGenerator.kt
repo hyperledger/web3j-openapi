@@ -30,11 +30,15 @@ internal class ServerGenerator(
 ) : AbstractGenerator(
     configuration
 ) {
+    private val serverImports: List<Import> by lazy {
+        configuration.contracts.map {
+            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
+        }
+    }
+
     init {
         context["contracts"] = configuration.contracts
-        context["serverImports"] = getServerImports()
-        context["projectName"] = configuration.projectName
-        context["outputDir"] = configuration.jarDir.absolutePath
+        context["serverImports"] = serverImports
         context["projectName"] = configuration.projectName.capitalize()
         context["version"] = configuration.version
     }
@@ -66,12 +70,6 @@ internal class ServerGenerator(
                 ).toString(),
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
-        }
-    }
-
-    private fun getServerImports(): List<Import> {
-        return configuration.contracts.map {
-            Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
         }
     }
 

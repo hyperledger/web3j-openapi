@@ -42,7 +42,6 @@ class GenerationTest {
             "testProject",
             "com.test",
             tempFolder.canonicalPath,
-            tempFolder,
             loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),

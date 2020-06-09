@@ -118,7 +118,6 @@ class GenerateCommand : Callable<Int> {
             projectName = projectOptions.projectName,
             packageName = packageName,
             outputDir = projectFolder.path,
-            jarDir = outputDirectory,
             contracts = loadContractConfigurations(abis, bins),
             addressLength = addressLength,
             version = (spec.parent().versionProvider() as OpenApiCommand.VersionProvider).versionName
