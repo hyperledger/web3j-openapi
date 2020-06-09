@@ -57,9 +57,9 @@ class CoregenTests {
                     "testApp",
                     "com.test",
                     tempFolder.canonicalPath,
-                    tempFolder,
                     contractsConfiguration,
-                    20
+                    20,
+                    "0.1.0-SNAPSHOT"
                 )
             ).generate()
         }.isSuccess()
