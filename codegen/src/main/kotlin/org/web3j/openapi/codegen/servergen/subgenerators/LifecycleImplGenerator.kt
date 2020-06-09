@@ -25,39 +25,41 @@ class LifecycleImplGenerator(
 ) {
     private val context = mutableMapOf<String, Any>()
 
+    private val parameters: String by lazy {
+        if (contractDetails.deployParameters == "()") ""
+        else {
+            var parameters = ""
+            contractDetails.abiDefinitions
+                .filter { it.type == "constructor" }
+                .map { it.inputs }
+                .first()
+                .forEach { input ->
+                    parameters += if (input.type == "tuple")
+                        ", ${getStructCallParameters(
+                            contractDetails.contractName,
+                            input,
+                            "",
+                            "parameters.${input.name}"
+                        )}"
+                    else
+                        ", parameters.${input.name}"
+                }
+            parameters.removeSuffix(",")
+        }
+    }
+
     init {
         context["packageName"] = packageName
         context["decapitalizedContractName"] = contractDetails.decapitalizedContractName
         context["lowerCaseContractName"] = contractDetails.lowerCaseContractName
         context["capitalizedContractName"] = contractDetails.capitalizedContractName
-        context["parameters"] = getParameters()
+        context["parameters"] = parameters
         context["deployParameters"] = contractDetails.deployParameters
     }
 
     fun generate() {
         File(folderPath).apply { mkdirs() }
         copySources()
-    }
-
-    private fun getParameters(): String {
-        if (contractDetails.deployParameters == "()") return ""
-        var parameters = ""
-        contractDetails.abiDefinitions
-            .filter { it.type == "constructor" }
-            .map { it.inputs }
-            .first()
-            .forEach {input ->
-                parameters += if (input.type == "tuple")
-                    ", ${getStructCallParameters(
-                        contractDetails.contractName,
-                        input,
-                        "",
-                        "parameters.${input.name}"
-                    )}"
-                else
-                     ", parameters.${input.name}"
-            }
-        return parameters.removeSuffix(",")
     }
 
     private fun copySources() {
