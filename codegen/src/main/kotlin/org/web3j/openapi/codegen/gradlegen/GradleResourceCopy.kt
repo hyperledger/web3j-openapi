@@ -14,6 +14,7 @@ package org.web3j.openapi.codegen.gradlegen
 
 import mu.KLogging
 import org.web3j.openapi.codegen.utils.CopyUtils.copyResource
+import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 
 object GradleResourceCopy : KLogging() {
@@ -35,11 +36,13 @@ object GradleResourceCopy : KLogging() {
         copyResource("README.md", outputDir)
     }
 
-    fun copyModuleGradleFile(folderPath: String, module: String) {
-        logger.debug("Copying $module/build.gradle")
-        copyResource(
-            "$module/build.gradle",
-            File(folderPath.substringBefore(module))
+    fun generateGradleBuildFile(folderPath: String, module: String, context: Map<String, Any>) {
+        logger.debug("Generating $folderPath/build.gradle")
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath.substringBefore("src"),
+            template = TemplateUtils.mustacheTemplate("$module/build.gradle.mustache"),
+            name = "build.gradle"
         )
     }
 }

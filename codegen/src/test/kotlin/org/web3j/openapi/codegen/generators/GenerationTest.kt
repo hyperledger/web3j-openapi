@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.codegen
+package org.web3j.openapi.codegen.generators
 
 import assertk.assertThat
 import assertk.assertions.isSuccess
@@ -19,6 +19,7 @@ import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
@@ -42,11 +43,11 @@ class GenerationTest {
             "testProject",
             "com.test",
             tempFolder.canonicalPath,
-            tempFolder,
             loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
-            160
+            160,
+            "0.1.0-SNAPSHOT"
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
@@ -54,25 +55,13 @@ class GenerationTest {
         assertThat {
             runGradleTask(
                 tempFolder,
-                "resolve")
-        }.isSuccess()
-
-        assertThat {
-            runGradleTask(
-                tempFolder,
-                "generateSwaggerUI")
-        }.isSuccess()
-
-        assertThat {
-            runGradleTask(
-                tempFolder,
-                "moveSwaggerUiToResources")
-        }.isSuccess()
-
-        assertThat {
-            runGradleTask(
-                tempFolder,
                 "shadowJar")
+        }.isSuccess()
+
+        assertThat {
+            runGradleTask(
+                tempFolder,
+                "installDist")
         }.isSuccess()
     }
 
