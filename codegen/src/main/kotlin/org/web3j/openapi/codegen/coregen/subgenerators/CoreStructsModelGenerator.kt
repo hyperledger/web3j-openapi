@@ -1,5 +1,6 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
+import mu.KLogging
 import org.web3j.openapi.codegen.utils.toDataClass
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
@@ -18,8 +19,9 @@ class CoreStructsModelGenerator(
             packageName,
             contractName
         )
-        CoreFunctionsModelGenerator.logger.debug("Generating $contractName $functionName parameters")
+        logger.debug("Generating $contractName $functionName parameters")
         functionFile.writeTo(File(folderPath))
     }
 
+    companion object : KLogging()
 }
