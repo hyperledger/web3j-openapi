@@ -33,6 +33,22 @@ subprojects {
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "org.junit.jupiter:junit-jupiter:${versions.junitVersion}"
         testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunitVersion}"
+        
+        configurations.all {
+            resolutionStrategy {
+                force(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
+                force(group: 'io.github.microutils', name: 'kotlin-logging', version: versions.kotlinLogging)
+                force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger)
+                force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger)
+                force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger)
+            }
+        }
     }
 
     compileKotlin {
