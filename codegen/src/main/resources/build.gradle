@@ -47,6 +47,7 @@ subprojects {
                 force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger)
                 force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger)
                 force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger)
+                force(group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: versions.annotation)
             }
         }
     }
