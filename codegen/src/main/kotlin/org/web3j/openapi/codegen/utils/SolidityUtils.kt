@@ -57,7 +57,7 @@ internal fun String.toNativeType(isParameter: Boolean = true, structName: String
     } else if (toLowerCase() == "char") {
         getParameterMapping(isParameter, Character::class)
     } else if (toLowerCase() == "tuple") {
-        ClassName("${packageName}.core.${contractName}.model", "${structName}StructModel")
+        ClassName("$packageName.core.$contractName.model", "${structName}StructModel")
     } else {
         throw UnsupportedOperationException(
             "Unsupported type: $this, no native type mapping exists."
@@ -83,13 +83,13 @@ private fun String.toNativeArrayType(isParameter: Boolean, structName: String = 
     }
 }
 
-internal fun AbiDefinition.getReturnType(packageName: String = "", contractName: String = ""): TypeName{
+internal fun AbiDefinition.getReturnType(packageName: String = "", contractName: String = ""): TypeName {
     return if (!isTransactional()) {
         if (outputs.size == 1) {
             outputs.first().type.toNativeType(false, outputs.first().internalType.structName, packageName, contractName)
         } else {
             ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
-                .parameterizedBy(outputs.map { it.type.toNativeType(true, it.internalType.structName, packageName, contractName).copy()})
+                .parameterizedBy(outputs.map { it.type.toNativeType(true, it.internalType.structName, packageName, contractName).copy() })
         }
     } else {
         ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
@@ -167,7 +167,7 @@ fun getStructCallParameters(contractName: String, input: AbiDefinition.NamedType
     val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
     val parameters = input.components.joinToString(",") { component ->
         if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
-        else getStructCallParameters(contractName, component, decapitalizedFunctionName, "${callTree}.${component.name}".removeSuffix("."))
+        else getStructCallParameters(contractName, component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
     }
     return "$contractName.$structName($parameters)"
 }

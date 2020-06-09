@@ -19,10 +19,11 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.web3j.openapi.codegen.utils.*
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.getReturnType
+import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
+import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -125,7 +126,7 @@ internal class ResourcesImplGenerator(
     private fun getEventResponseParameters(abiDef: AbiDefinition): String {
         var params = ""
         abiDef.inputs.forEach {
-            params += if (it.components.isEmpty() ) ", it.${it.name}"
+            params += if (it.components.isEmpty()) ", it.${it.name}"
             else
                 ", ${getStructEventParameters(it, abiDef.name, "it.${it.name}")}"
         }
@@ -167,14 +168,13 @@ internal class ResourcesImplGenerator(
     }
 
     private fun wrapCode(code: String, returnType: String): String {
-        return if(returnType.startsWith("org.web3j.openapi.core.models.TransactionReceiptModel"))
+        return if (returnType.startsWith("org.web3j.openapi.core.models.TransactionReceiptModel"))
             "return TransactionReceiptModel($code)"
         else if (returnType.startsWith("org.web3j.openapi.core.models.PrimitivesModel"))
             "return $returnType($code)"
         else if (returnType.startsWith("org.web3j.tuples")) {
             wrapTuplesCode(code, returnType)
-        }
-        else if (returnType.contains("StructModel"))
+        } else if (returnType.contains("StructModel"))
             "return $code.toModel()"
         else "return $code"
     }
@@ -184,13 +184,13 @@ internal class ResourcesImplGenerator(
             .removeSuffix(">")
             .split(",")
 
-        val variableNames = components.mapIndexed {index, component ->
+        val variableNames = components.mapIndexed { index, component ->
             if (component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index"
             else "${component.substringBefore("<").substringAfterLast(".").decapitalize()}$index"
         }.joinToString(",")
 
-        val tupleConstructor = components.mapIndexed {index, component ->
-            if(component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index.toModel()"
+        val tupleConstructor = components.mapIndexed { index, component ->
+            if (component.endsWith("StructModel")) "${component.removeSuffix("StructModel").substringAfterLast(".").decapitalize()}$index.toModel()"
             else "${component.substringBefore("<").substringAfterLast(".").decapitalize()}$index"
         }.joinToString(",")
 
@@ -221,7 +221,7 @@ internal class ResourcesImplGenerator(
         val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
         val parameters = input.components.joinToString(",") { component ->
             if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
-            else getStructEventParameters(component, decapitalizedFunctionName, "${callTree}.${component.name}".removeSuffix("."))
+            else getStructEventParameters(component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
         }
         return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)" // FIXME: Are you sure about the lower case ?
     }

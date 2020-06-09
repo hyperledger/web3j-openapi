@@ -48,7 +48,7 @@ internal class CoreApiGenerator(
     }
 
     private fun generateStructsModels() {
-        extractStructs(contractDetails.abiDefinitions)?.forEach {structDefinition ->
+        extractStructs(contractDetails.abiDefinitions)?.forEach { structDefinition ->
             CoreStructsModelGenerator(
                 packageName = packageName,
                 contractName = contractDetails.capitalizedContractName,
