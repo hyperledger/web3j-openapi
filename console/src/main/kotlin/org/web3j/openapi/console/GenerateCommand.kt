@@ -127,7 +127,7 @@ class GenerateCommand : Callable<Int> {
             outputDir = projectFolder.path,
             contracts = loadContractConfigurations(abis, bins),
             addressLength = addressLength,
-            contextPath = contextPath.removeSuffix("/"),
+            contextPath = contextPath.removePrefix("/"),
             version = (spec.parent().versionProvider() as OpenApiCommand.VersionProvider).versionName
         )
 
