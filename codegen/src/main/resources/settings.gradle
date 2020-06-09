@@ -1,5 +1,0 @@
-include 'core'
-findProject(':core')?.name = 'openapi-generated-core'
-
-include 'server'
-findProject(':server')?.name = 'openapi-generated-server'
