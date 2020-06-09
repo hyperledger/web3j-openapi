@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id 'org.web3j' version '4.5.11'
     id 'com.github.johnrengelman.shadow'
     id 'org.hidetake.swagger.generator' version '2.18.2'
     id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
@@ -18,15 +17,6 @@ dependencies {
     swaggerUI 'org.webjars:swagger-ui:3.10.0'
     
     testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
-}
-
-web3j {
-    generatedPackageName = "org.web3j.{0}"
-}
-
-sourceSets {
-    main.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/main/java"
-    test.kotlin.srcDirs += "${web3j.generatedFilesBaseDir}/test/java"
 }
 
 repositories{
