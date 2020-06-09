@@ -13,7 +13,7 @@ plugins {
     id 'de.undercouch.download' version '4.0.0'
 }
 
-description = 'Web3j-openapi project.'
+description = 'Web3j OpenApi generated project.'
 
 subprojects {
     apply plugin: "kotlin"

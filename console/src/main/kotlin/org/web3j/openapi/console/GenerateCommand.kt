@@ -19,7 +19,9 @@ import org.web3j.openapi.console.options.ProjectOptions
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Mixin
+import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Option
+import picocli.CommandLine.Spec
 import java.io.File
 import java.nio.file.Path
 import java.util.concurrent.Callable
@@ -30,6 +32,9 @@ import java.util.concurrent.Callable
     description = ["Generates a Web3j OpenAPI project."]
 )
 class GenerateCommand : Callable<Int> {
+
+    @Spec
+    private lateinit var spec: CommandSpec
 
     // TODO: Add logs level specification
 //    @Option(
@@ -113,9 +118,9 @@ class GenerateCommand : Callable<Int> {
             projectName = projectOptions.projectName,
             packageName = packageName,
             outputDir = projectFolder.path,
-            jarDir = outputDirectory,
             contracts = loadContractConfigurations(abis, bins),
-            addressLength = addressLength
+            addressLength = addressLength,
+            version = (spec.parent().versionProvider() as OpenApiCommand.VersionProvider).versionName
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
