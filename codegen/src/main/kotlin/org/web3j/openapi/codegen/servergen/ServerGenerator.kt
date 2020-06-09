@@ -41,6 +41,7 @@ internal class ServerGenerator(
         context["contracts"] = configuration.contracts
         context["serverImports"] = serverImports
         context["projectName"] = configuration.projectName.capitalize()
+        context["rootProjectName"] = configuration.rootProjectName
         context["version"] = configuration.version
     }
 

@@ -14,8 +14,10 @@ package org.web3j.openapi.codegen
 
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.CoreGenerator
-import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy
+import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.copyProjectResources
 import org.web3j.openapi.codegen.servergen.ServerGenerator
+import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
+import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import java.io.File
 import java.nio.file.Path
@@ -39,7 +41,13 @@ class GenerateOpenApi(
     }
 
     fun generateGradleResources() {
-        GradleResourceCopy.copyProjectResources(File(configuration.outputDir))
+        copyProjectResources(File(configuration.outputDir))
+        generateFromTemplate(
+            outputDir = configuration.outputDir,
+            context = mapOf("rootProjectName" to configuration.rootProjectName),
+            template = mustacheTemplate("settings.gradle.mustache"),
+            name = "settings.gradle"
+        )
     }
 
     fun generateWrappers() {
