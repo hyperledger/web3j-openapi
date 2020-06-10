@@ -31,7 +31,6 @@ import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.math.BigInteger
 import java.net.URL
-import javax.ws.rs.core.Application
 
 @EVMTest(type = NodeType.BESU)
 class ServerTest : JerseyTest() {
@@ -43,8 +42,8 @@ class ServerTest : JerseyTest() {
         )
     }
 
-    override fun configure(): Application {
-        return OpenApiResourceConfig(
+    override fun configure() =
+        OpenApiResourceConfig(
             OpenApiServerConfig(
                 projectName = "Test",
                 host = "localhost",
@@ -53,7 +52,6 @@ class ServerTest : JerseyTest() {
                 privateKey = PRIVATE_KEY
             )
         )
-    }
 
     @BeforeEach
     override fun setUp() = super.setUp()
