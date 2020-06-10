@@ -37,9 +37,7 @@ class Web3jFactory(
         return Web3j.build(HttpService(nodeAddress))
     }
 
-    override fun dispose(web3j: Web3j) {
-        web3j.shutdown()
-    }
+    override fun dispose(web3j: Web3j) = web3j.shutdown()
 }
 
 class CredentialsFactory(
