@@ -62,7 +62,7 @@ class ServerTest : JerseyTest() {
     override fun tearDown() = super.tearDown()
 
     @Test
-    fun `find all deployed contracts`() {
+    fun `find all available contract paths`() {
         assertThat(client.contracts.findAll()).containsExactly("humanstandardtoken")
     }
 
