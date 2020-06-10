@@ -35,6 +35,7 @@ class CoreGenerator(
         context["contractsConfiguration"] = configuration.contracts
         context["apiImports"] = getApiImports()
         context["tags"] = getTags()
+        context["contextPath"] = configuration.contextPath
         context["projectName"] = configuration.projectName.capitalize()
         context["version"] = configuration.version
     }

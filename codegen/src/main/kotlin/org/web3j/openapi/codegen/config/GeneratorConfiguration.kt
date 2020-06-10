@@ -20,6 +20,7 @@ data class GeneratorConfiguration(
     val outputDir: String,
     val contracts: List<ContractConfiguration>,
     val addressLength: Int = Address.DEFAULT_LENGTH / java.lang.Byte.SIZE,
+    val contextPath: String,
     val version: String
 ) {
     val rootProjectName = projectName.toLowerCase().replace(' ', '-')
