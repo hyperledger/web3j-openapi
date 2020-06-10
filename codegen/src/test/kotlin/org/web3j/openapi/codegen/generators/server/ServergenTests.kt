@@ -53,6 +53,7 @@ class ServergenTests {
                     tempFolder.canonicalPath,
                     contractsConfiguration,
                     20,
+                    "test",
                     "0.1.0-SNAPSHOT"
                 )
             ).generate()
