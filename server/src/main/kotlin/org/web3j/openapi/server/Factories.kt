@@ -50,12 +50,12 @@ class CredentialsFactory(
         val privateKey = configuration.getProperty(PRIVATE_KEY)?.toString()
         val walletFilePath = configuration.getProperty(WALLET_FILE)?.toString()
         return if (!walletFilePath.isNullOrBlank()) {
-            logger.debug("Loading credentials from wallet file $walletFilePath")
+            logger.info("Loading credentials from wallet file $walletFilePath")
             val walletFile = File(walletFilePath)
             val walletPassword = configuration.getProperty(WALLET_PASSWORD).toString()
             WalletUtils.loadCredentials(walletPassword, walletFile)
         } else if (!privateKey.isNullOrBlank()) {
-            logger.debug("Loading credentials from raw private key")
+            logger.info("Loading credentials from raw private key")
             Credentials.create(privateKey)
         } else {
             logger.warn("Missing credentials! Aborting.")
