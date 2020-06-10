@@ -23,4 +23,10 @@ class ProjectOptions {
         required = true
     )
     lateinit var projectName: String
+
+    @Option(
+        names = ["--context-path"],
+        description = ["set the API context path (default: the project name)"]
+    )
+    var contextPath: String? = null
 }

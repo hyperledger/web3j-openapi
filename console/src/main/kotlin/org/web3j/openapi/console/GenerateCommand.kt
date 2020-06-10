@@ -87,12 +87,6 @@ class GenerateCommand : Callable<Int> {
     private var dev: Boolean = false
 
     @Option(
-        names = ["--context-path"],
-        description = ["set the API context path (default: the project name)"]
-    )
-    private var contextPath: String? = null
-
-    @Option(
         names = ["--address-length"],
         description = ["specify the address length."],
         defaultValue = "20"
@@ -126,7 +120,7 @@ class GenerateCommand : Callable<Int> {
             outputDir = projectFolder.path,
             contracts = loadContractConfigurations(abis, bins),
             addressLength = addressLength,
-            contextPath = contextPath?.removeSuffix("/") ?: projectOptions.projectName,
+            contextPath = projectOptions.contextPath?.removeSuffix("/") ?: projectOptions.projectName,
             version = (spec.parent().versionProvider() as OpenApiCommand.VersionProvider).versionName
         )
 
