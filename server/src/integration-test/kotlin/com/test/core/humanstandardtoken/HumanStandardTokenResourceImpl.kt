@@ -1,3 +1,15 @@
+/*
+ * Copyright 2020 Web3 Labs Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.test.core.humanstandardtoken
 
 import com.test.core.humanstandardtoken.model.AllowanceParameters
@@ -19,7 +31,7 @@ import javax.inject.Singleton
 class HumanStandardTokenResourceImpl(
     private val humanStandardToken: HumanStandardToken
 ) : HumanStandardTokenResource {
-    
+
     override fun name(): PrimitivesModel<String> =
         org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.name().send())
     override fun approve(approveParameters: ApproveParameters): TransactionReceiptModel =
@@ -97,18 +109,18 @@ class HumanStandardTokenResourceImpl(
 //                .data(TransferEventResponse::class.java, event)
 //                .reconnectDelay(4000)
 //                .build())
-//        }.doOnCancel { 
+//        }.doOnCancel {
 //            sseEventSink.close()
 //            logger.warn { "${TRANSFER_EVENT.name} cancelled" }
 //        }
 //    }
 
 //    /**
-//     * 
+//     *
 //     */
 //    override fun onTransferEvent(eventConsumer: Consumer<TransferEventResponse>): CompletableFuture<Void> {
 //        return CompletableFuture.completedFuture(null)
 //    }
-    
-    companion object: KLogging()
+
+    companion object : KLogging()
 }

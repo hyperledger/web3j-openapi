@@ -1,3 +1,17 @@
+/*
+ * Copyright 2020 Web3 Labs Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+package org.web3j.openapi.server
+
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
@@ -5,7 +19,6 @@ import assertk.assertions.isNotNull
 import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
-import com.test.wrappers.HumanStandardToken
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -16,9 +29,6 @@ import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.protocol.Web3j
-import org.web3j.tx.TransactionManager
-import org.web3j.tx.gas.ContractGasProvider
 import java.math.BigInteger
 import java.net.URL
 import javax.ws.rs.core.Application
@@ -35,7 +45,7 @@ class ServerTest : JerseyTest() {
     override fun tearDown() {
         super.tearDown()
     }
-    
+
     private val client: TestProjectApi by lazy {
         ClientFactory.create(
             TestProjectApi::class.java,
@@ -74,7 +84,7 @@ class ServerTest : JerseyTest() {
             assertThat(symbol().result).isEqualTo("TEST")
         }
     }
-    
+
     companion object {
         private const val ADDRESS = "fe3b557e8fb62b89f4916b721be55ceb828dbd73"
         private const val PRIVATE_KEY = "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63"
