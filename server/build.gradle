@@ -26,5 +26,7 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2:${versions.swagger}"
 
     testImplementation project(':web3j-openapi-client')
-    integrationTestImplementation "org.web3j:web3j-unit:4.5.17" // FIXME 
+
+    integrationTestImplementation "org.web3j:web3j-unit:4.5.17" // FIXME Version 4.6.0
+    integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
