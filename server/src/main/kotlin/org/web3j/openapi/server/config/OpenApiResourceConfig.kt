@@ -26,7 +26,6 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.core.spi.OpenApiResourceProvider
 import org.web3j.openapi.server.ContractCallExceptionMapper
 import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
@@ -34,6 +33,8 @@ import org.web3j.openapi.server.IllegalArgumentExceptionMapper
 import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.Properties
 import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.config.OpenApiResourceConfig
+import org.web3j.openapi.server.spi.OpenApiResourceProvider
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.ServiceLoader
@@ -42,6 +43,9 @@ import javax.inject.Singleton
 
 /**
  * The JAX-RS application configuration.
+ * 
+ * @see OpenApiResource
+ * @see OpenApiResourceProvider
  */
 class OpenApiResourceConfig(
     serverConfig: OpenApiServerConfig
