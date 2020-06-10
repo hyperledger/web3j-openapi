@@ -19,7 +19,9 @@ import org.junit.jupiter.api.io.TempDir
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreDeployModelGenerator
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreEventsModelGenerator
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreFunctionsModelGenerator
+import org.web3j.openapi.codegen.coregen.subgenerators.CoreStructsModelGenerator
 import org.web3j.openapi.codegen.utils.GeneratorUtils
+import org.web3j.openapi.codegen.utils.extractStructs
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
@@ -100,6 +102,23 @@ class ModelsTests {
                             it.inputs
                         ).generate()
                     }
+            }.isSuccess()
+        }
+    }
+
+    @Test
+    fun `Core structs models test`() {
+        contractsConfiguration.forEach { contractConfiguration ->
+            assertThat {
+                extractStructs(contractConfiguration.contractDetails.abiDefinitions)?.forEach { structDefinition ->
+                    CoreStructsModelGenerator(
+                        packageName = "com.test",
+                        contractName = contractConfiguration.contractDetails.capitalizedContractName,
+                        functionName = structDefinition!!.internalType.split(".").last(),
+                        folderPath = tempFolder.canonicalPath,
+                        components = structDefinition.components
+                    ).generate()
+                }
             }.isSuccess()
         }
     }
