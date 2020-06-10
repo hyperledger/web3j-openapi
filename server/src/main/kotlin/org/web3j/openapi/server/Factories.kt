@@ -76,6 +76,6 @@ class ContractGasProviderFactory(
         return DefaultGasProvider()
     }
 
-    override fun dispose(transactionManager: ContractGasProvider) {
+    override fun dispose(gasProvider: ContractGasProvider) {
     }
 }
