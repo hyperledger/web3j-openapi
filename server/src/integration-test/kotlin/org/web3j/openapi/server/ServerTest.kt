@@ -36,16 +36,6 @@ import javax.ws.rs.core.Application
 @EVMTest(type = NodeType.BESU)
 class ServerTest : JerseyTest() {
 
-    @BeforeEach
-    override fun setUp() {
-        super.setUp()
-    }
-
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     private val client: TestProjectApi by lazy {
         ClientFactory.create(
             TestProjectApi::class.java,
@@ -64,6 +54,12 @@ class ServerTest : JerseyTest() {
             )
         )
     }
+
+    @BeforeEach
+    override fun setUp() = super.setUp()
+
+    @AfterEach
+    override fun tearDown() = super.tearDown()
 
     @Test
     fun `find all deployed contracts`() {
