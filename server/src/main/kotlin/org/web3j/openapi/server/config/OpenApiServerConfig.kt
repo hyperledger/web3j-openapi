@@ -18,9 +18,9 @@ import java.net.URL
 data class OpenApiServerConfig(
     val projectName: String,
     val nodeEndpoint: URL,
-    val privateKey: String?,
-    val walletFile: File?,
-    val walletPassword: String?,
+    val privateKey: String? = null,
+    val walletFile: File? = null,
+    val walletPassword: String? = null,
     val host: String,
     val port: Int
 ) {
