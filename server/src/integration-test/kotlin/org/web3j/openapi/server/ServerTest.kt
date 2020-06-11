@@ -20,7 +20,6 @@ import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
-import com.test.wrappers.HumanStandardToken
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -32,10 +31,6 @@ import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.core.methods.request.EthFilter
-import org.web3j.tx.TransactionManager
-import org.web3j.tx.gas.ContractGasProvider
 import java.math.BigInteger
 import java.net.URL
 import java.util.concurrent.CountDownLatch
@@ -102,7 +97,7 @@ class ServerTest : JerseyTest() {
             client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
                 onTransferEvent { println(it) }.join()
                 approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-                transfer(TransferParameters(ADDRESS, BigInteger.TEN))   
+                transfer(TransferParameters(ADDRESS, BigInteger.TEN))
             }
             CountDownLatch(1).await(5, TimeUnit.MINUTES)
         } catch (e: ClientException) {
