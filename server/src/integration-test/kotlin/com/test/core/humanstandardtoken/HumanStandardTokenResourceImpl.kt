@@ -40,8 +40,6 @@ import javax.ws.rs.sse.SseEventSink
 class HumanStandardTokenResourceImpl(
     private val humanStandardToken: HumanStandardToken
 ) : HumanStandardTokenResource {
-    
-    
 
     override fun name(): PrimitivesModel<String> =
         org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.name().send())

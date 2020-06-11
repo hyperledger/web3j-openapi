@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType
 
 /**
  * A Web3j OpenAPI can contains multiple contracts.
- * 
+ *
  * Subclasses may define additional contracts as JAX-RS sub-resources.
  */
 interface ContractResource {

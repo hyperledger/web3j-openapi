@@ -94,16 +94,15 @@ class ServerTest : JerseyTest() {
 
             val humanStandardToken = client.contracts.humanStandardToken.load(receipt.contractAddress)
             humanStandardToken.approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-            
+
             val onTransferEvent = humanStandardToken.onTransferEvent {
                 println(it)
             }
-            
+
             humanStandardToken.transfer(TransferParameters(ADDRESS, BigInteger.TEN))
             onTransferEvent.join()
-            
-            CountDownLatch(1).await( 5, TimeUnit.MINUTES)
-            
+
+            CountDownLatch(1).await(5, TimeUnit.MINUTES)
         } catch (e: ClientException) {
             println(e.error)
             throw e

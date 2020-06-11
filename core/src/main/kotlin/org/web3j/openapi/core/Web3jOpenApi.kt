@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType
 interface Web3jOpenApi {
 
     /**
-     * Generated applications override this property 
+     * Generated applications override this property
      * to add a custom resource containing all contract types.
      */
     @get:Path("contracts")
