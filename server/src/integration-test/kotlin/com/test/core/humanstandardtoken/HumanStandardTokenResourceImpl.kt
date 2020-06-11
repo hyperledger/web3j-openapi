@@ -25,6 +25,7 @@ import com.test.wrappers.HumanStandardToken.TRANSFER_EVENT
 import mu.KLogging
 import org.web3j.openapi.core.models.PrimitivesModel
 import org.web3j.openapi.core.models.TransactionReceiptModel
+import org.web3j.openapi.server.SseUtils
 import org.web3j.protocol.core.methods.request.EthFilter
 import java.math.BigInteger
 import javax.inject.Singleton
@@ -36,7 +37,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.sse.Sse
 import javax.ws.rs.sse.SseEventSink
 
-@Singleton
+@Singleton // FIXME Why Singleton?
 class HumanStandardTokenResourceImpl(
     private val humanStandardToken: HumanStandardToken
 ) : HumanStandardTokenResource {
@@ -108,29 +109,12 @@ class HumanStandardTokenResourceImpl(
     @Path("TransferEvent")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     fun onTransferEvent(@Context eventSink: SseEventSink, @Context sse: Sse) {
-        humanStandardToken.transferEventFlowable(EthFilter())
-            .doOnError { 
-                logger.warn { "Error listening on ${TRANSFER_EVENT.name}" }
-                it.printStackTrace()
-            }.doOnCancel {
-                logger.warn { "${TRANSFER_EVENT.name} cancelled" }
-                eventSink.close()
-            }.blockingSubscribe { event ->
-                logger.debug { "${TRANSFER_EVENT.name} received: $event" }
-                eventSink.send(
-                    sse.newEventBuilder()
-                        .name(TRANSFER_EVENT.name)
-                        .mediaType(MediaType.APPLICATION_JSON_TYPE)
-                        .data(
-                            TransferEventResponse::class.java,
-                            TransferEventResponse(
-                                _from = event._from,
-                                _to = event._to,
-                                _value = event._value
-                            )
-                        ).build()
-                )
+        humanStandardToken.transferEventFlowable(EthFilter()).also { flowable ->
+            val eventClass = HumanStandardToken.TransferEventResponse::class.java
+            SseUtils.subscribe(TRANSFER_EVENT, eventClass, flowable, eventSink, sse) {
+                TransferEventResponse(_from = it._from, _to = it._to, _value = it._value)
             }
+        }
     }
 
     companion object : KLogging()
