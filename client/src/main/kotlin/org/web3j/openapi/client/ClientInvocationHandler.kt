@@ -25,6 +25,7 @@ import javax.ws.rs.ClientErrorException
 import javax.ws.rs.Path
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.sse.SseEventSource
+import javax.ws.rs.sse.SseEventSource.target
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
@@ -62,7 +63,7 @@ internal class ClientInvocationHandler<T>(
         val result = CompletableFuture<Void>()
         val path = methodPath(method, apiClass, "0x42699a7612a82f1d9c36148af9c77354759b210b")
 
-        SseEventSource.target(target.path(path)).build().apply {
+        target(target.path(path)).build().apply {
             register(
                 { consumer.invoke(it.readData(args[0].typeArguments[0])) },
                 { result.completeExceptionally(it) },
