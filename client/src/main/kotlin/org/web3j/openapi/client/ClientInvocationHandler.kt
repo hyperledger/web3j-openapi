@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.Path
 import javax.ws.rs.client.WebTarget
-import javax.ws.rs.sse.SseEventSource
 import javax.ws.rs.sse.SseEventSource.target
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.findAnnotation
@@ -139,12 +138,12 @@ internal class ClientInvocationHandler<T>(
         val contractPath = contractResource.getter.findAnnotation<Path>()!!
         val eventName = method.name.removePrefix("on")
 
-        return "${apiPath.value}/contracts/${contractPath.value}/$contractAddress/${eventName}"
+        return "${apiPath.value}/contracts/${contractPath.value}/$contractAddress/$eventName"
     }
 
-    private fun Method.isEvent() = parameterTypes.size == 1
-            && parameterTypes[0] == Function1::class.java
-            && returnType == CompletableFuture::class.java
+    private fun Method.isEvent() = parameterTypes.size == 1 &&
+            parameterTypes[0] == Function1::class.java &&
+            returnType == CompletableFuture::class.java
 
     private val Any.typeArguments: List<Class<*>>
         get() {
