@@ -30,7 +30,13 @@ class ClientException internal constructor(
                 if (hasEntity() && mediaType == MediaType.APPLICATION_JSON_TYPE) {
                     ClientException(readEntity(ErrorResponse::class.java))
                 } else {
-                    ClientException(null)
+                    ClientException(
+                        ErrorResponse(
+                            title = exception.response.statusInfo.reasonPhrase,
+                            requestUrl = exception.response.location?.toString(),
+                            responseStatus = exception.response.status
+                        )
+                    )
                 }
             }
         }
