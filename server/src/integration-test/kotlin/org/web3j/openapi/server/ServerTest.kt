@@ -19,18 +19,22 @@ import assertk.assertions.isNotNull
 import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
+import com.test.core.humanstandardtoken.model.TransferParameters
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.web3j.EVMTest
 import org.web3j.NodeType
+import org.web3j.openapi.client.ClientException
 import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.math.BigInteger
 import java.net.URL
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /*
   * Classes used in this test will be generated using a gradle task
@@ -79,6 +83,33 @@ class ServerTest : JerseyTest() {
             assertThat(approve(ApproveParameters(ADDRESS, BigInteger.TEN))).isNotNull()
             assertThat(decimals().result).isEqualTo(BigInteger.ZERO)
             assertThat(symbol().result).isEqualTo("TEST")
+        }
+    }
+
+    @Test
+    fun `on contract event`() {
+        try {
+            val receipt = client.contracts.humanStandardToken.deploy(
+                HumanStandardTokenDeployParameters(
+                    BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
+                )
+            )
+
+            val humanStandardToken = client.contracts.humanStandardToken.load(receipt.contractAddress)
+            humanStandardToken.approve(ApproveParameters(ADDRESS, BigInteger.TEN))
+            
+            val onTransferEvent = humanStandardToken.onTransferEvent {
+                println(it)
+            }
+            
+            humanStandardToken.transfer(TransferParameters(ADDRESS, BigInteger.TEN))
+            onTransferEvent.join()
+            
+            CountDownLatch(1).await( 5, TimeUnit.MINUTES)
+            
+        } catch (e: ClientException) {
+            println(e.error)
+            throw e
         }
     }
 

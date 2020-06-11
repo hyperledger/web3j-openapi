@@ -47,6 +47,7 @@ class StructExtensionsTest {
     fun `Server structs extensions test`() {
         contractsConfiguration.forEach { contractConfiguration ->
             assertThat {
+                // FIXME
                 extractStructs(contractConfiguration.contractDetails.abiDefinitions)?.forEach { structDefinition ->
                     StructExtensionsGenerator(
                         packageName = "com.test",
