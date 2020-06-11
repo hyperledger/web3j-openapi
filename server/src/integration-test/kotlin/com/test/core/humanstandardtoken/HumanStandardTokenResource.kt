@@ -21,6 +21,7 @@ import com.test.core.humanstandardtoken.model.TransferEventResponse
 import com.test.core.humanstandardtoken.model.TransferFromParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
 import io.swagger.v3.oas.annotations.Operation
+import java.util.concurrent.CompletableFuture
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -151,8 +152,8 @@ interface HumanStandardTokenResource {
     )
     fun getApprovalEvent(transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel): List<ApprovalEventResponse>
 
-//    /**
-//     * This method will not add endpoints.
-//     */
-//    fun onTransferEvent(eventConsumer: Consumer<TransferEventResponse>): CompletableFuture<Void>
+    /**
+     * This method will not add endpoints.
+     */
+    fun onTransferEvent(eventConsumer: (TransferEventResponse) -> Unit): CompletableFuture<Void> = CompletableFuture.completedFuture(null)
 }
