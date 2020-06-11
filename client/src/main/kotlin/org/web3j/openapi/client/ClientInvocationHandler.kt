@@ -45,18 +45,16 @@ internal class ClientInvocationHandler<T>(
 ) : InvocationHandler {
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
-        logger.debug { "Invoking method $method with arguments ${Arrays.toString(args)}" }
-
         return if (method.isEvent()) {
+            logger.debug { "Invoking event method $method with arguments ${Arrays.toString(args)}" }
             invokeOnEvent(method, args!!)
         } else {
+            logger.debug { "Invoking client method $method with arguments ${Arrays.toString(args)}" }
             invokeClient(method, args)
         }
     }
 
     private fun invokeOnEvent(method: Method, args: Array<out Any>): CompletableFuture<Void> {
-        logger.debug { "Invoking event method: $method" }
-
         @Suppress("UNCHECKED_CAST")
         val consumer = args[0] as (Any) -> Unit
         val result = CompletableFuture<Void>()
