@@ -60,7 +60,7 @@ internal class ClientInvocationHandler<T>(
         @Suppress("UNCHECKED_CAST")
         val consumer = args[0] as (Any) -> Unit
         val result = CompletableFuture<Void>()
-        val path = buildMethodPath(method, apiClass, "0x42699a7612a82f1d9c36148af9c77354759b210b")
+        val path = methodPath(method, apiClass, "0x42699a7612a82f1d9c36148af9c77354759b210b")
 
         SseEventSource.target(target.path(path)).build().apply {
             register(
@@ -119,7 +119,7 @@ internal class ClientInvocationHandler<T>(
         return ClientException.of(error)
     }
 
-    private fun buildMethodPath(method: Method, api: Class<out Web3jOpenApi>, contractAddress: String): String {
+    private fun methodPath(method: Method, api: Class<out Web3jOpenApi>, contractAddress: String): String {
 
         val contractResource: KProperty<*> = api.kotlin.members
             .filterIsInstance<KProperty<*>>()
