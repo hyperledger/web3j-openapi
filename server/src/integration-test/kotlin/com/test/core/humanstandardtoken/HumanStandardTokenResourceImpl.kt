@@ -107,21 +107,30 @@ class HumanStandardTokenResourceImpl(
     @GET
     @Path("TransferEvent")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    fun onTransferEvent(@Context sseEventSink: SseEventSink, @Context sse: Sse) {
-        humanStandardToken.transferEventFlowable(EthFilter()).doOnNext { event ->
-            logger.debug { "${TRANSFER_EVENT.name} received: $event" }
-            sseEventSink.send(
-                sse.newEventBuilder()
-                    .name(TRANSFER_EVENT.name)
-                    .mediaType(MediaType.APPLICATION_JSON_TYPE)
-                    .data(TransferEventResponse::class.java, event)
-                    .reconnectDelay(4000)
-                    .build()
-            )
-        }.doOnCancel {
-            sseEventSink.close()
-            logger.warn { "${TRANSFER_EVENT.name} cancelled" }
-        }
+    fun onTransferEvent(@Context eventSink: SseEventSink, @Context sse: Sse) {
+        humanStandardToken.transferEventFlowable(EthFilter())
+            .doOnError { 
+                logger.warn { "Error listening on ${TRANSFER_EVENT.name}" }
+                it.printStackTrace()
+            }.doOnCancel {
+                logger.warn { "${TRANSFER_EVENT.name} cancelled" }
+                eventSink.close()
+            }.blockingSubscribe { event ->
+                logger.debug { "${TRANSFER_EVENT.name} received: $event" }
+                eventSink.send(
+                    sse.newEventBuilder()
+                        .name(TRANSFER_EVENT.name)
+                        .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                        .data(
+                            TransferEventResponse::class.java,
+                            TransferEventResponse(
+                                _from = event._from,
+                                _to = event._to,
+                                _value = event._value
+                            )
+                        ).build()
+                )
+            }
     }
 
     companion object : KLogging()

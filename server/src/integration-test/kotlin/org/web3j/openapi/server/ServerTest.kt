@@ -20,6 +20,7 @@ import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
+import com.test.wrappers.HumanStandardToken
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -31,6 +32,10 @@ import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.core.methods.request.EthFilter
+import org.web3j.tx.TransactionManager
+import org.web3j.tx.gas.ContractGasProvider
 import java.math.BigInteger
 import java.net.URL
 import java.util.concurrent.CountDownLatch
@@ -50,10 +55,10 @@ class ServerTest : JerseyTest() {
         OpenApiResourceConfig(
             OpenApiServerConfig(
                 projectName = "Test",
-                host = "localhost",
-                port = 9090,
                 nodeEndpoint = URL("http://localhost:8545"),
-                privateKey = PRIVATE_KEY
+                privateKey = PRIVATE_KEY,
+                host = "localhost",
+                port = 0
             )
         )
 
@@ -91,17 +96,11 @@ class ServerTest : JerseyTest() {
                     BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
                 )
             )
-
-            val humanStandardToken = client.contracts.humanStandardToken.load(receipt.contractAddress)
-            humanStandardToken.approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-
-            val onTransferEvent = humanStandardToken.onTransferEvent {
-                println(it)
+            client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
+                onTransferEvent { println(it) }.join()
+                approve(ApproveParameters(ADDRESS, BigInteger.TEN))
+                transfer(TransferParameters(ADDRESS, BigInteger.TEN))   
             }
-
-            humanStandardToken.transfer(TransferParameters(ADDRESS, BigInteger.TEN))
-            onTransferEvent.join()
-
             CountDownLatch(1).await(5, TimeUnit.MINUTES)
         } catch (e: ClientException) {
             println(e.error)
@@ -110,7 +109,7 @@ class ServerTest : JerseyTest() {
     }
 
     companion object {
-        private const val ADDRESS = "fe3b557e8fb62b89f4916b721be55ceb828dbd73"
+        private const val ADDRESS = "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73"
         private const val PRIVATE_KEY = "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63"
     }
 }
