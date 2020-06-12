@@ -95,7 +95,7 @@ class ServerTest : JerseyTest() {
                 )
             )
             client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-                onTransferEvent { println(it) }.join()
+                transferEvents.onEvent { println(it) }.join()
                 approve(ApproveParameters(ADDRESS, BigInteger.TEN))
                 transfer(TransferParameters(ADDRESS, BigInteger.TEN))
             }

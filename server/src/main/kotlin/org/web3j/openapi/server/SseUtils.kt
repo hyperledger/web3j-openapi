@@ -34,13 +34,13 @@ object SseUtils : KLogging() {
         }.doOnCancel {
             logger.warn { "${eventType.name} cancelled" }
             eventSink.close()
-        }.blockingSubscribe { newEvent ->
-            logger.debug { "${eventType.name} received: $newEvent" }
+        }.blockingSubscribe { event ->
+            logger.debug { "${eventType.name} received: $event" }
             eventSink.send(
                 sse.newEventBuilder()
                     .name(eventType.name)
                     .mediaType(MediaType.APPLICATION_JSON_TYPE)
-                    .data(eventClass, mapping.invoke(newEvent))
+                    .data(eventClass, mapping.invoke(event))
                     .build()
             )
         }

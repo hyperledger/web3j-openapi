@@ -10,37 +10,29 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.test.core.humanstandardtoken
+package com.test.server.humanstandardtoken
 
+import com.test.core.humanstandardtoken.HumanStandardTokenResource
 import com.test.core.humanstandardtoken.model.AllowanceParameters
-import com.test.core.humanstandardtoken.model.ApprovalEventResponse
 import com.test.core.humanstandardtoken.model.ApproveAndCallParameters
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.BalanceOfParameters
-import com.test.core.humanstandardtoken.model.TransferEventResponse
 import com.test.core.humanstandardtoken.model.TransferFromParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
 import com.test.wrappers.HumanStandardToken
-import com.test.wrappers.HumanStandardToken.TRANSFER_EVENT
 import mu.KLogging
 import org.web3j.openapi.core.models.PrimitivesModel
 import org.web3j.openapi.core.models.TransactionReceiptModel
-import org.web3j.openapi.server.SseUtils
-import org.web3j.protocol.core.methods.request.EthFilter
 import java.math.BigInteger
 import javax.inject.Singleton
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.sse.Sse
-import javax.ws.rs.sse.SseEventSink
 
 @Singleton // FIXME Why Singleton?
 class HumanStandardTokenResourceImpl(
     private val humanStandardToken: HumanStandardToken
 ) : HumanStandardTokenResource {
+
+    override val transferEvents = TransferEventResourceImpl(humanStandardToken)
+    override val approvalEvents = ApprovalEventResourceImpl(humanStandardToken)
 
     override fun name(): PrimitivesModel<String> =
         org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.name().send())
@@ -89,33 +81,6 @@ class HumanStandardTokenResourceImpl(
                 allowanceParameters._owner, allowanceParameters._spender
             ).send()
         )
-    override fun getTransferEvent(transactionReceiptModel: TransactionReceiptModel):
-    List<TransferEventResponse> {
-        val eventResponse = humanStandardToken.getTransferEvents(
-            transactionReceiptModel.toTransactionReceipt()
-        )
-        return eventResponse.map { TransferEventResponse(it._from, it._to, it._value) }
-    }
-
-    override fun getApprovalEvent(transactionReceiptModel: TransactionReceiptModel):
-            List<ApprovalEventResponse> {
-        val eventResponse = humanStandardToken.getApprovalEvents(
-            transactionReceiptModel.toTransactionReceipt()
-        )
-        return eventResponse.map { ApprovalEventResponse(it._owner, it._spender, it._value) }
-    }
-
-    @GET
-    @Path("TransferEvent")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    fun onTransferEvent(@Context eventSink: SseEventSink, @Context sse: Sse) {
-        humanStandardToken.transferEventFlowable(EthFilter()).also { flowable ->
-            val eventClass = HumanStandardToken.TransferEventResponse::class.java
-            SseUtils.subscribe(TRANSFER_EVENT, eventClass, flowable, eventSink, sse) {
-                TransferEventResponse(_from = it._from, _to = it._to, _value = it._value)
-            }
-        }
-    }
 
     companion object : KLogging()
 }

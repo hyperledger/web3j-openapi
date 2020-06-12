@@ -43,19 +43,19 @@ internal class ClientInvocationHandler<T>(
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         return if (method.isEvent()) {
             logger.debug { "Invoking event method $method with arguments ${Arrays.toString(args)}" }
-            invokeOnEvent(method, args!!)
+            invokeOnEvent(args!!)
         } else {
             logger.debug { "Invoking client method $method with arguments ${Arrays.toString(args)}" }
             invokeClient(method, args)
         }
     }
 
-    private fun invokeOnEvent(method: Method, args: Array<out Any>): CompletableFuture<Void> {
+    private fun invokeOnEvent(args: Array<out Any>): CompletableFuture<Void> {
         @Suppress("UNCHECKED_CAST")
         val consumer = args[0] as (Any) -> Unit
         val result = CompletableFuture<Void>()
         val eventType = args[0].typeArguments[0]
-        val eventTarget = eventTarget(method)
+        val eventTarget = clientTarget()
 
         SseEventSource.target(eventTarget).build().apply {
             register(
@@ -113,13 +113,12 @@ internal class ClientInvocationHandler<T>(
         return ClientException.of(error)
     }
 
-    private fun eventTarget(method: Method): WebTarget {
+    private fun clientTarget(): WebTarget {
         val resourcePath = client.toString()
             .removePrefix("JerseyWebTarget { ")
             .removeSuffix(" }")
             .run { URL(this).path }
-        val eventName = method.name.removePrefix("on")
-        return target.path("$resourcePath/$eventName")
+        return target.path(resourcePath)
     }
 
     private fun Method.isEvent() = parameterTypes.size == 1 &&
