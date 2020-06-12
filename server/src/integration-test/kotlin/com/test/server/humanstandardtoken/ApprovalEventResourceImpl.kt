@@ -15,6 +15,7 @@ package com.test.server.humanstandardtoken
 import com.test.core.humanstandardtoken.ApprovalEventResource
 import com.test.core.humanstandardtoken.model.ApprovalEventResponse
 import com.test.wrappers.HumanStandardToken
+import com.test.wrappers.HumanStandardToken.APPROVAL_EVENT
 import org.web3j.openapi.core.models.TransactionReceiptModel
 import org.web3j.openapi.server.SseUtils
 import org.web3j.protocol.core.methods.request.EthFilter
@@ -40,11 +41,10 @@ class ApprovalEventResourceImpl(
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     fun subscribe(@Context eventSink: SseEventSink, @Context sse: Sse) {
-        humanStandardToken.approvalEventFlowable(EthFilter()).also { flowable ->
-            val eventClass = HumanStandardToken.ApprovalEventResponse::class.java
-            SseUtils.subscribe(HumanStandardToken.APPROVAL_EVENT, eventClass, flowable, eventSink, sse) {
-                ApprovalEventResponse(it._owner, it._spender, it._value)
-            }
+        val flowable = humanStandardToken.approvalEventFlowable(EthFilter())
+        val eventClass = HumanStandardToken.ApprovalEventResponse::class.java
+        SseUtils.subscribe(APPROVAL_EVENT, eventClass, flowable, eventSink, sse) {
+            ApprovalEventResponse(it._owner, it._spender, it._value)
         }
     }
 }
