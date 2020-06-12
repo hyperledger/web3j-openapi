@@ -35,7 +35,7 @@ object SseUtils : KLogging() {
             logger.warn { "${eventType.name} cancelled" }
             eventSink.close()
         }.blockingSubscribe { newEvent ->
-            logger.debug { "${eventType.name} received: $eventType" }
+            logger.debug { "${eventType.name} received: $newEvent" }
             eventSink.send(
                 sse.newEventBuilder()
                     .name(eventType.name)
