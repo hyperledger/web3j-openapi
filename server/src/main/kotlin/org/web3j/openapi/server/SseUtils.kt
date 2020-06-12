@@ -28,13 +28,7 @@ object SseUtils : KLogging() {
         sse: Sse,
         mapping: (T) -> R
     ) {
-        flowable.doOnError {
-            logger.warn { "Error listening on ${eventType.name}" }
-            it.printStackTrace()
-        }.doOnCancel {
-            logger.warn { "${eventType.name} cancelled" }
-            eventSink.close()
-        }.blockingSubscribe { event ->
+        flowable.blockingSubscribe({ event ->
             logger.debug { "${eventType.name} received: $event" }
             eventSink.send(
                 sse.newEventBuilder()
@@ -43,6 +37,12 @@ object SseUtils : KLogging() {
                     .data(eventClass, mapping.invoke(event))
                     .build()
             )
-        }
+        }, {
+            logger.warn { "Error listening on ${eventType.name}" }
+            it.printStackTrace()
+        }, {
+            logger.warn { "${eventType.name} completed" }
+            eventSink.close()
+        })
     }
 }
