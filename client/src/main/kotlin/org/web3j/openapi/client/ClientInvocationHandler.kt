@@ -19,16 +19,12 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Proxy
+import java.net.URL
 import java.util.Arrays
 import java.util.concurrent.CompletableFuture
 import javax.ws.rs.ClientErrorException
-import javax.ws.rs.Path
 import javax.ws.rs.client.WebTarget
-import javax.ws.rs.sse.SseEventSource.target
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.functions
-import kotlin.reflect.jvm.jvmErasure
+import javax.ws.rs.sse.SseEventSource
 
 /**
  * Invocation handler for proxied resources.
@@ -58,17 +54,17 @@ internal class ClientInvocationHandler<T>(
         @Suppress("UNCHECKED_CAST")
         val consumer = args[0] as (Any) -> Unit
         val result = CompletableFuture<Void>()
-        val path = methodPath(method, apiClass, "0x42699a7612a82f1d9c36148af9c77354759b210b")
+        val eventType = args[0].typeArguments[0]
+        val eventTarget = eventTarget(method)
 
-        target(target.path(path)).build().apply {
+        SseEventSource.target(eventTarget).build().apply {
             register(
-                { consumer.invoke(it.readData(args[0].typeArguments[0])) },
+                { consumer.invoke(it.readData(eventType)) },
                 { result.completeExceptionally(it) },
                 { result.complete(null) }
             )
-            open()
+            open() // Opens the event sink!
         }
-
         return result
     }
 
@@ -117,26 +113,13 @@ internal class ClientInvocationHandler<T>(
         return ClientException.of(error)
     }
 
-    private fun methodPath(method: Method, api: Class<out Web3jOpenApi>, contractAddress: String): String {
-
-        val contractResource: KProperty<*> = api.kotlin.members
-            .filterIsInstance<KProperty<*>>()
-            .first { it.name == "contracts" }
-            .run {
-                returnType.jvmErasure.members
-                    .filterIsInstance<KProperty<*>>()
-                    .first { lifecycle ->
-                        method.declaringClass == lifecycle.returnType.jvmErasure.functions.first { function ->
-                            function.name == "load"
-                        }.returnType.jvmErasure.java
-                    }
-            }
-
-        val apiPath = api.kotlin.findAnnotation<Path>()!!
-        val contractPath = contractResource.getter.findAnnotation<Path>()!!
+    private fun eventTarget(method: Method): WebTarget {
+        val resourcePath = client.toString()
+            .removePrefix("JerseyWebTarget { ")
+            .removeSuffix(" }")
+            .run { URL(this).path }
         val eventName = method.name.removePrefix("on")
-
-        return "${apiPath.value}/contracts/${contractPath.value}/$contractAddress/$eventName"
+        return target.path("$resourcePath/$eventName")
     }
 
     private fun Method.isEvent() = parameterTypes.size == 1 &&
