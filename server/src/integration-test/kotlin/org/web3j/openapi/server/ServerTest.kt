@@ -20,14 +20,12 @@ import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
-import com.test.core.humanstandardtoken.model.TransferParameters
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.web3j.EVMTest
 import org.web3j.NodeType
-import org.web3j.openapi.client.ClientException
 import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
@@ -89,22 +87,17 @@ class ServerTest : JerseyTest() {
 
     @Test
     fun `on contract event`() {
-        try {
-            val receipt = client.contracts.humanStandardToken.deploy(
-                HumanStandardTokenDeployParameters(
-                    BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
-                )
+        val receipt = client.contracts.humanStandardToken.deploy(
+            HumanStandardTokenDeployParameters(
+                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
             )
-            val countDownLatch = CountDownLatch(1)
-            client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-                approvalEvents.onEvent { countDownLatch.countDown() }.join()
-                approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-            }
-            assertThat(countDownLatch.await(2, TimeUnit.MINUTES)).isTrue()
-        } catch (e: ClientException) {
-            println(e.error)
-            throw e
+        )
+        val countDownLatch = CountDownLatch(1)
+        client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
+            approvalEvents.onEvent { countDownLatch.countDown() }.join()
+            approve(ApproveParameters(ADDRESS, BigInteger.TEN))
         }
+        assertThat(countDownLatch.await(2, TimeUnit.MINUTES)).isTrue()
     }
 
     companion object {
