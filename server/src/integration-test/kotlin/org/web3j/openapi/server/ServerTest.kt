@@ -16,6 +16,7 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
@@ -94,12 +95,12 @@ class ServerTest : JerseyTest() {
                     BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
                 )
             )
+            val countDownLatch = CountDownLatch(1)
             client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-                transferEvents.onEvent { println(it) }.join()
+                approvalEvents.onEvent { countDownLatch.countDown() }.join()
                 approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-                transfer(TransferParameters(ADDRESS, BigInteger.TEN))
             }
-            CountDownLatch(1).await(5, TimeUnit.MINUTES)
+            assertThat(countDownLatch.await(2, TimeUnit.MINUTES)).isTrue()
         } catch (e: ClientException) {
             println(e.error)
             throw e
@@ -107,7 +108,7 @@ class ServerTest : JerseyTest() {
     }
 
     companion object {
-        private const val ADDRESS = "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73"
+        private const val ADDRESS = "fe3b557e8fb62b89f4916b721be55ceb828dbd73"
         private const val PRIVATE_KEY = "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63"
     }
 }
