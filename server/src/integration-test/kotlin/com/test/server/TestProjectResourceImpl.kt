@@ -12,7 +12,7 @@
  */
 package com.test.server
 
-import com.test.core.humanstandardtoken.HumanStandardTokenLifecycleImpl
+import com.test.server.humanstandardtoken.HumanStandardTokenLifecycleImpl
 import com.test.core.TestProjectResource
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.web3j.openapi.server.ContractResourceImpl
@@ -29,9 +29,10 @@ class TestProjectResourceImpl(
     uriInfo: ExtendedUriInfo
 ) : TestProjectResource, ContractResourceImpl(uriInfo) {
 
-    override val humanStandardToken = HumanStandardTokenLifecycleImpl(
-        web3j,
-        transactionManager,
-        defaultGasProvider
-    )
+    override val humanStandardToken =
+        HumanStandardTokenLifecycleImpl(
+            web3j,
+            transactionManager,
+            defaultGasProvider
+        )
 }

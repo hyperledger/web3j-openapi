@@ -13,15 +13,12 @@
 package com.test.core.humanstandardtoken
 
 import com.test.core.humanstandardtoken.model.AllowanceParameters
-import com.test.core.humanstandardtoken.model.ApprovalEventResponse
 import com.test.core.humanstandardtoken.model.ApproveAndCallParameters
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.BalanceOfParameters
-import com.test.core.humanstandardtoken.model.TransferEventResponse
 import com.test.core.humanstandardtoken.model.TransferFromParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
 import io.swagger.v3.oas.annotations.Operation
-import java.util.concurrent.CompletableFuture
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -34,6 +31,12 @@ import javax.ws.rs.core.MediaType
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 interface HumanStandardTokenResource {
+
+    @get:Path("TransferEvent")
+    val transferEvents: TransferEventResource
+
+    @get:Path("ApprovalEvent")
+    val approvalEvents: ApprovalEventResource
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,27 +136,4 @@ interface HumanStandardTokenResource {
         summary = "Executes the Allowance method"
     )
     fun allowance(allowanceParameters: AllowanceParameters): org.web3j.openapi.core.models.PrimitivesModel<java.math.BigInteger>
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("TransferEvent")
-    @Operation(
-        tags = ["HumanStandardToken"],
-        summary = "Get the Transfer event"
-    )
-    fun getTransferEvent(transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel): List<TransferEventResponse>
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("ApprovalEvent")
-    @Operation(
-        tags = ["HumanStandardToken"],
-        summary = "Get the Approval event"
-    )
-    fun getApprovalEvent(transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel): List<ApprovalEventResponse>
-
-    /**
-     * This method will not add endpoints.
-     */
-    fun onTransferEvent(eventConsumer: (TransferEventResponse) -> Unit): CompletableFuture<Void> = CompletableFuture.completedFuture(null)
 }

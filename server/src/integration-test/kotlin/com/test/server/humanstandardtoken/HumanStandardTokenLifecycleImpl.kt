@@ -10,8 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.test.core.humanstandardtoken
+package com.test.server.humanstandardtoken
 
+import com.test.core.humanstandardtoken.HumanStandardTokenLifecycle
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import com.test.wrappers.HumanStandardToken
 import org.web3j.protocol.Web3j
