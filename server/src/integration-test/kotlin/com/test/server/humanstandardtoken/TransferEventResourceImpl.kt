@@ -15,6 +15,7 @@ package com.test.server.humanstandardtoken
 import com.test.core.humanstandardtoken.TransferEventResource
 import com.test.core.humanstandardtoken.model.TransferEventResponse
 import com.test.wrappers.HumanStandardToken
+import com.test.wrappers.HumanStandardToken.TRANSFER_EVENT
 import org.web3j.openapi.core.models.TransactionReceiptModel
 import org.web3j.openapi.server.SseUtils
 import org.web3j.protocol.core.methods.request.EthFilter
@@ -40,11 +41,10 @@ class TransferEventResourceImpl(
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     fun subscribe(@Context eventSink: SseEventSink, @Context sse: Sse) {
-        humanStandardToken.transferEventFlowable(EthFilter()).also { flowable ->
-            val eventClass = HumanStandardToken.TransferEventResponse::class.java
-            SseUtils.subscribe(HumanStandardToken.TRANSFER_EVENT, eventClass, flowable, eventSink, sse) {
-                TransferEventResponse(_from = it._from, _to = it._to, _value = it._value)
-            }
+        val flowable = humanStandardToken.transferEventFlowable(EthFilter())
+        val eventClass = HumanStandardToken.TransferEventResponse::class.java
+        SseUtils.subscribe(TRANSFER_EVENT, eventClass, flowable, eventSink, sse) {
+            TransferEventResponse(_from = it._from, _to = it._to, _value = it._value)
         }
     }
 }
