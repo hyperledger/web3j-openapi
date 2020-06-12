@@ -29,7 +29,7 @@ object SseUtils : KLogging() {
         mapping: (T) -> R
     ) {
         flowable.blockingSubscribe({ event ->
-            logger.debug { "${eventType.name} received: $event" }
+            logger.debug { "Received ${eventType.name}" }
             eventSink.send(
                 sse.newEventBuilder()
                     .name(eventType.name)
