@@ -78,7 +78,6 @@ class ServerTest : JerseyTest() {
                 BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
             )
         )
-
         client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
             assertThat(approve(ApproveParameters(ADDRESS, BigInteger.TEN))).isNotNull()
             assertThat(decimals().result).isEqualTo(BigInteger.ZERO)
