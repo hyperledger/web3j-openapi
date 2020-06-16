@@ -20,7 +20,7 @@ import java.util.function.Supplier
  *
  * This class should be used with the Java SPI framework
  * by defining a file named like this class in `META-INF/services`.
- * 
+ *
  * The file should contain the full class name of the implementor.
  */
 interface OpenApiResourceProvider : Supplier<Class<out Web3jOpenApi>>
