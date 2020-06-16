@@ -16,10 +16,12 @@ import com.test.core.humanstandardtoken.model.TransferEventResponse
 import io.swagger.v3.oas.annotations.Operation
 import org.web3j.openapi.core.EventResource
 import java.util.concurrent.CompletableFuture
+import javax.annotation.processing.Generated
 import javax.ws.rs.POST
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
+@Generated
 interface TransferEventResource : EventResource<TransferEventResponse> {
 
     @POST

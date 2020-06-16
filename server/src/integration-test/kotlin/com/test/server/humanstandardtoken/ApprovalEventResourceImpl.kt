@@ -19,6 +19,7 @@ import com.test.wrappers.HumanStandardToken.APPROVAL_EVENT
 import org.web3j.openapi.core.models.TransactionReceiptModel
 import org.web3j.openapi.server.SseUtils
 import org.web3j.protocol.core.methods.request.EthFilter
+import javax.annotation.processing.Generated
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
@@ -26,6 +27,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.sse.Sse
 import javax.ws.rs.sse.SseEventSink
 
+@Generated
 class ApprovalEventResourceImpl(
     private val humanStandardToken: HumanStandardToken
 ) : ApprovalEventResource {

@@ -15,6 +15,7 @@ package com.test.server.humanstandardtoken
 import com.test.core.humanstandardtoken.HumanStandardTokenEventResource
 import com.test.core.humanstandardtoken.HumanStandardTokenResource
 import com.test.wrappers.HumanStandardToken
+import javax.annotation.processing.Generated
 import javax.inject.Singleton
 
 /**
@@ -23,6 +24,7 @@ import javax.inject.Singleton
  * This subclass shouldn't be a new resource,
  * all methods and values should be in [HumanStandardTokenResourceImpl].
  */
+@Generated
 @Singleton // FIXME Why Singleton?
 class HumanStandardTokenEventResourceImpl(
     private val humanStandardToken: HumanStandardToken
