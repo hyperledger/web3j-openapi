@@ -20,7 +20,6 @@ import javax.ws.rs.core.MediaType
 /**
  * Entry point for Web3j OpenAPIs.
  */
-@Path("/api")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 interface Web3jOpenApi {
