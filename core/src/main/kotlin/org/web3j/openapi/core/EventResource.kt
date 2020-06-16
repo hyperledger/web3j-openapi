@@ -12,9 +12,10 @@
  */
 package org.web3j.openapi.core
 
+import org.web3j.openapi.core.models.TransactionReceiptModel
 import java.util.concurrent.CompletableFuture
 
 interface EventResource<T> {
     fun onEvent(onEvent: (T) -> Unit): CompletableFuture<Void>
-    fun findBy(transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel): List<T>
+    fun findBy(transactionReceiptModel: TransactionReceiptModel): List<T>
 }
