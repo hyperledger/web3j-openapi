@@ -32,6 +32,9 @@ import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.math.BigInteger
 import java.net.URL
 
+/*
+  * Classes used in this test will be generated using a gradle task
+*/
 @EVMTest(type = NodeType.BESU)
 class ServerTest : JerseyTest() {
 
