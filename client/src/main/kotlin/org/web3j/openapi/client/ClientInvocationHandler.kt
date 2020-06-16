@@ -122,10 +122,10 @@ internal class ClientInvocationHandler<T>(
             return parameterizedType.actualTypeArguments.map { it as Class<*> }
         }
 
-    private class SseEventSourceResult(
+    private class SseEventSourceResult<T>(
         private val source: SseEventSource,
-        onEvent: (Any) -> Unit,
-        eventType: Class<*>
+        onEvent: (T) -> Unit,
+        eventType: Class<T>
     ) : CompletableFuture<Void>() {
         init {
             source.register(
