@@ -13,84 +13,24 @@
 package com.test.server.humanstandardtoken
 
 import com.test.core.humanstandardtoken.HumanStandardTokenEventResource
-import com.test.core.humanstandardtoken.model.AllowanceParameters
-import com.test.core.humanstandardtoken.model.ApprovalEventResponse
-import com.test.core.humanstandardtoken.model.ApproveAndCallParameters
-import com.test.core.humanstandardtoken.model.ApproveParameters
-import com.test.core.humanstandardtoken.model.BalanceOfParameters
-import com.test.core.humanstandardtoken.model.TransferEventResponse
-import com.test.core.humanstandardtoken.model.TransferFromParameters
-import com.test.core.humanstandardtoken.model.TransferParameters
+import com.test.core.humanstandardtoken.HumanStandardTokenResource
 import com.test.wrappers.HumanStandardToken
-import mu.KLogging
-import org.web3j.openapi.core.models.PrimitivesModel
-import org.web3j.openapi.core.models.TransactionReceiptModel
-import java.math.BigInteger
 import javax.inject.Singleton
 
+/**
+ * Redefined only for compilation purposes until generation is implemented.
+ *
+ * This subclass shouldn't be a new resource,
+ * all methods and values should be in [HumanStandardTokenResourceImpl].
+ */
 @Singleton // FIXME Why Singleton?
 class HumanStandardTokenEventResourceImpl(
     private val humanStandardToken: HumanStandardToken
-) : HumanStandardTokenEventResource {
+) : HumanStandardTokenEventResource,
+    HumanStandardTokenResource by HumanStandardTokenResourceImpl(
+        humanStandardToken
+    ) {
 
     override val transferEvents = TransferEventResourceImpl(humanStandardToken)
     override val approvalEvents = ApprovalEventResourceImpl(humanStandardToken)
-
-    override fun name(): PrimitivesModel<String> =
-        org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.name().send())
-    override fun approve(approveParameters: ApproveParameters): TransactionReceiptModel =
-        TransactionReceiptModel(
-            humanStandardToken.approve(
-                approveParameters._spender, approveParameters._value
-            ).send()
-        )
-    override fun totalSupply(): PrimitivesModel<BigInteger> =
-        org.web3j.openapi.core.models.PrimitivesModel<java.math.BigInteger>(humanStandardToken.totalSupply().send())
-    override fun transferFrom(transferFromParameters: TransferFromParameters): TransactionReceiptModel =
-        TransactionReceiptModel(
-            humanStandardToken.transferFrom(
-                transferFromParameters._from, transferFromParameters._to, transferFromParameters._value
-            ).send()
-        )
-    override fun decimals(): PrimitivesModel<BigInteger> =
-        org.web3j.openapi.core.models.PrimitivesModel<java.math.BigInteger>(humanStandardToken.decimals().send())
-    override fun version(): PrimitivesModel<String> =
-        org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.version().send())
-    override fun balanceOf(balanceOfParameters: BalanceOfParameters): PrimitivesModel<BigInteger> =
-        org.web3j.openapi.core.models.PrimitivesModel<java.math.BigInteger>(
-            humanStandardToken.balanceOf(
-                balanceOfParameters._owner
-            ).send()
-        )
-    override fun symbol(): PrimitivesModel<String> =
-        org.web3j.openapi.core.models.PrimitivesModel<kotlin.String>(humanStandardToken.symbol().send())
-    override fun transfer(transferParameters: TransferParameters): TransactionReceiptModel =
-        TransactionReceiptModel(
-            humanStandardToken.transfer(
-                transferParameters._to, transferParameters._value
-            ).send()
-        )
-    override fun approveAndCall(approveAndCallParameters: ApproveAndCallParameters):
-    TransactionReceiptModel = TransactionReceiptModel(
-        humanStandardToken.approveAndCall(
-
-            approveAndCallParameters._spender, approveAndCallParameters._value, approveAndCallParameters._extraData
-        ).send()
-    )
-    override fun allowance(allowanceParameters: AllowanceParameters): PrimitivesModel<BigInteger> =
-        org.web3j.openapi.core.models.PrimitivesModel<java.math.BigInteger>(
-            humanStandardToken.allowance(
-                allowanceParameters._owner, allowanceParameters._spender
-            ).send()
-        )
-
-    override fun getTransferEvent(transactionReceiptModel: TransactionReceiptModel): List<TransferEventResponse> {
-        TODO("To be removed, only added until generation is implemented")
-    }
-
-    override fun getApprovalEvent(transactionReceiptModel: TransactionReceiptModel): List<ApprovalEventResponse> {
-        TODO("To be removed, only added until generation is implemented")
-    }
-
-    companion object : KLogging()
 }
