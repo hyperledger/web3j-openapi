@@ -53,7 +53,9 @@ integrationTest.dependsOn generateOpenApiProject
 integrationTest.mustRunAfter generateOpenApiProject
 
 sourceSets {
-    integrationTest.kotlin.srcDirs += ["$outputDirectory/testProject/core/src/main/kotlin",
-                                       "$outputDirectory/testProject/server/src/main/kotlin",
-                                       "$outputDirectory/testProject/server/src/main/java"]
+    integrationTest.kotlin.srcDirs += [
+        "$outputDirectory/testProject/core/src/main/kotlin",
+        "$outputDirectory/testProject/server/src/main/kotlin",
+        "$outputDirectory/testProject/server/src/main/java"
+    ]
 }

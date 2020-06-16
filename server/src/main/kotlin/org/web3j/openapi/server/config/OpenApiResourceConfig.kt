@@ -33,7 +33,6 @@ import org.web3j.openapi.server.IllegalArgumentExceptionMapper
 import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.Properties
 import org.web3j.openapi.server.Web3jFactory
-import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.spi.OpenApiResourceProvider
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
@@ -43,7 +42,7 @@ import javax.inject.Singleton
 
 /**
  * The JAX-RS application configuration.
- * 
+ *
  * @see OpenApiResource
  * @see OpenApiResourceProvider
  */
