@@ -42,21 +42,20 @@ internal class ClientInvocationHandler<T>(
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         return if (method.isEvent()) {
             logger.debug { "Invoking event method: $method" }
-            invokeOnEvent(args!!)
+            invokeOnEvent(args!![0])
         } else {
             logger.debug { "Invoking client method: $method" }
             invokeClient(method, args)
         }
     }
 
-    private fun invokeOnEvent(args: Array<out Any>): CompletableFuture<Void> {
+    private fun invokeOnEvent(onEvent: Any): CompletableFuture<Void> {
         @Suppress("UNCHECKED_CAST")
-        val consumer = args[0] as (Any) -> Unit
-        val eventType = args[0].typeArguments[0]
-        val eventTarget = clientTarget()
+        val consumer = onEvent as (Any) -> Unit
+        val eventType = onEvent.typeArguments[0]
 
-        val source = SseEventSource.target(eventTarget).build()
-        return SseEventSourceResult(source, eventType, consumer).also {
+        val source = SseEventSource.target(clientTarget()).build()
+        return SseEventSourceResult(source, consumer, eventType).also {
             it.open()
         }
     }
@@ -126,8 +125,8 @@ internal class ClientInvocationHandler<T>(
 
     private class SseEventSourceResult(
         private val source: SseEventSource,
-        eventType: Class<*>,
-        consumer: (Any) -> Unit
+        consumer: (Any) -> Unit,
+        eventType: Class<*>
     ) : CompletableFuture<Void>() {
         init {
             source.register(
