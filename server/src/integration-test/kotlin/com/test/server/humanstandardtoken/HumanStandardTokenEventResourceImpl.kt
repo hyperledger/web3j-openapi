@@ -12,11 +12,13 @@
  */
 package com.test.server.humanstandardtoken
 
-import com.test.core.humanstandardtoken.HumanStandardTokenResource
+import com.test.core.humanstandardtoken.HumanStandardTokenEventResource
 import com.test.core.humanstandardtoken.model.AllowanceParameters
+import com.test.core.humanstandardtoken.model.ApprovalEventResponse
 import com.test.core.humanstandardtoken.model.ApproveAndCallParameters
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.BalanceOfParameters
+import com.test.core.humanstandardtoken.model.TransferEventResponse
 import com.test.core.humanstandardtoken.model.TransferFromParameters
 import com.test.core.humanstandardtoken.model.TransferParameters
 import com.test.wrappers.HumanStandardToken
@@ -27,9 +29,9 @@ import java.math.BigInteger
 import javax.inject.Singleton
 
 @Singleton // FIXME Why Singleton?
-class HumanStandardTokenResourceImpl(
+class HumanStandardTokenEventResourceImpl(
     private val humanStandardToken: HumanStandardToken
-) : HumanStandardTokenResource {
+) : HumanStandardTokenEventResource {
 
     override val transferEvents = TransferEventResourceImpl(humanStandardToken)
     override val approvalEvents = ApprovalEventResourceImpl(humanStandardToken)
@@ -81,6 +83,14 @@ class HumanStandardTokenResourceImpl(
                 allowanceParameters._owner, allowanceParameters._spender
             ).send()
         )
+
+    override fun getTransferEvent(transactionReceiptModel: TransactionReceiptModel): List<TransferEventResponse> {
+        TODO("To be removed, only added until generation is implemented")
+    }
+
+    override fun getApprovalEvent(transactionReceiptModel: TransactionReceiptModel): List<ApprovalEventResponse> {
+        TODO("To be removed, only added until generation is implemented")
+    }
 
     companion object : KLogging()
 }
