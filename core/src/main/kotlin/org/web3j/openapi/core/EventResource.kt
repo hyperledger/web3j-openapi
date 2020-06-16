@@ -15,7 +15,23 @@ package org.web3j.openapi.core
 import org.web3j.openapi.core.models.TransactionReceiptModel
 import java.util.concurrent.CompletableFuture
 
+/**
+ * Generic resource for contract events.
+ *
+ * @param T the event return type.
+ */
 interface EventResource<T> {
+
+    /**
+     * Asynchronous contract event subscription.
+     *
+     * @param onEvent the event consumer function.
+     * @return the current state of the subscription. 
+     */
     fun onEvent(onEvent: (T) -> Unit): CompletableFuture<Void>
+
+    /**
+     * Retrieve events by a transaction receipt model.
+     */
     fun findBy(transactionReceiptModel: TransactionReceiptModel): List<T>
 }
