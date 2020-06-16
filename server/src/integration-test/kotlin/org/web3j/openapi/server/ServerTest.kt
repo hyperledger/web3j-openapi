@@ -36,9 +36,9 @@ import java.net.URL
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/*
-  * Classes used in this test will be generated using a gradle task
-*/
+/**
+ * Classes used in this test will be generated using a gradle task.
+ */
 @EVMTest(type = NodeType.BESU)
 class ServerTest : JerseyTest() {
 
