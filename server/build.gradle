@@ -30,3 +30,30 @@ dependencies {
     integrationTestImplementation "org.web3j:web3j-unit:${versions.web3j}-SNAPSHOT" // FIXME Release web3j unit
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
+
+ext{
+    generatedProjectName = "testProject"
+    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated-project"
+}
+
+task generateOpenApiProject(type : Exec) {
+    dependsOn(":web3j-openapi-console:installShadowDist")
+    mustRunAfter(":web3j-openapi-console:installShadowDist")
+    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi-console",
+            'generate',
+            '--name', "$generatedProjectName",
+            '--context-path', 'api',
+            '--package-name', 'com.test',
+            '--abi', "$projectDir/src/integration-test/resources/contracts",
+            '--bin', "$projectDir/src/integration-test/resources/contracts",
+            '-o', "$outputDirectory"
+}
+
+integrationTest.dependsOn generateOpenApiProject
+integrationTest.mustRunAfter generateOpenApiProject
+
+sourceSets {
+    integrationTest.kotlin.srcDirs += ["$outputDirectory/testProject/core/src/main/kotlin",
+                                       "$outputDirectory/testProject/server/src/main/kotlin",
+                                       "$outputDirectory/testProject/server/src/main/java"]
+}
