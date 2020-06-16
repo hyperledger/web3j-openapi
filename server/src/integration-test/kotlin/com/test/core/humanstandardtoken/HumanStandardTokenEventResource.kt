@@ -20,14 +20,14 @@ import javax.ws.rs.core.MediaType
 
 /**
  * Redefined only for compilation purposes until generation is implemented.
- * 
+ *
  * This subclass shouldn't be a new resource,
  * all methods and values should be in [HumanStandardTokenResource].
  */
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface HumanStandardTokenEventResource: HumanStandardTokenResource {
+interface HumanStandardTokenEventResource : HumanStandardTokenResource {
 
     @get:Path("TransferEvent")
     val transferEvents: TransferEventResource
