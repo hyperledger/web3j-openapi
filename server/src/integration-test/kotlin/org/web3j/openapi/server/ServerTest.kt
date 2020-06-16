@@ -94,10 +94,10 @@ class ServerTest : JerseyTest() {
         )
         val countDownLatch = CountDownLatch(1)
         client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-            approvalEvents.onEvent { countDownLatch.countDown() }.join()
+            approvalEvents.onEvent { countDownLatch.countDown() }
             approve(ApproveParameters(ADDRESS, BigInteger.TEN))
         }
-        assertThat(countDownLatch.await(2, TimeUnit.MINUTES)).isTrue()
+        assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue()
     }
 
     companion object {

@@ -20,7 +20,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Proxy
 import java.net.URL
-import java.util.Arrays
 import java.util.concurrent.CompletableFuture
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.client.WebTarget
@@ -42,10 +41,10 @@ internal class ClientInvocationHandler<T>(
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         return if (method.isEvent()) {
-            logger.debug { "Invoking event method $method with arguments ${Arrays.toString(args)}" }
+            logger.debug { "Invoking event method: $method" }
             invokeOnEvent(args!!)
         } else {
-            logger.debug { "Invoking client method $method with arguments ${Arrays.toString(args)}" }
+            logger.debug { "Invoking client method: $method" }
             invokeClient(method, args)
         }
     }
@@ -53,19 +52,13 @@ internal class ClientInvocationHandler<T>(
     private fun invokeOnEvent(args: Array<out Any>): CompletableFuture<Void> {
         @Suppress("UNCHECKED_CAST")
         val consumer = args[0] as (Any) -> Unit
-        val result = CompletableFuture<Void>()
         val eventType = args[0].typeArguments[0]
         val eventTarget = clientTarget()
 
-        SseEventSource.target(eventTarget).build().apply {
-            register(
-                { consumer.invoke(it.readData(eventType)) },
-                { result.completeExceptionally(it) },
-                { result.complete(null) }
-            )
-            open() // Opens the event sink!
+        val source = SseEventSource.target(eventTarget).build()
+        return SseEventSourceResult(source, eventType, consumer).also {
+            it.open()
         }
-        return result
     }
 
     private fun invokeClient(method: Method, args: Array<out Any>?): Any {
@@ -130,6 +123,33 @@ internal class ClientInvocationHandler<T>(
             val parameterizedType = this::class.java.genericInterfaces[0] as ParameterizedType
             return parameterizedType.actualTypeArguments.map { it as Class<*> }
         }
+
+    private class SseEventSourceResult(
+        private val source: SseEventSource,
+        eventType: Class<*>,
+        consumer: (Any) -> Unit
+    ) : CompletableFuture<Void>() {
+        init {
+            source.register(
+                { consumer.invoke(it.readData(eventType)) },
+                { completeExceptionally(it) },
+                { complete(null) }
+            )
+            whenComplete { _, _ ->
+                // Close the source gracefully by client
+                if (source.isOpen) source.close()
+            }
+        }
+        fun open() {
+            Thread {
+                source.open()
+                while (source.isOpen) {
+                    logger.debug { "Listening on event source..." }
+                    Thread.sleep(5000)
+                }
+            }.start()
+        }
+    }
 
     companion object : KLogging()
 }
