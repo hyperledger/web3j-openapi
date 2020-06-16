@@ -31,31 +31,32 @@ dependencies {
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
 
-ext{
+ext {
     generatedProjectName = "testProject"
-    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated-project"
+    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
 }
 
-task generateOpenApiProject(type : Exec) {
+task generateOpenApiProject(type : Exec, group: 'web3j') {
     dependsOn(":web3j-openapi-console:installShadowDist")
-    mustRunAfter(":web3j-openapi-console:installShadowDist")
-    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi-console",
+    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
             'generate',
             '--name', "$generatedProjectName",
             '--context-path', 'api',
             '--package-name', 'com.test',
             '--abi', "$projectDir/src/integration-test/resources/contracts",
             '--bin', "$projectDir/src/integration-test/resources/contracts",
-            '-o', "$outputDirectory"
+            '--output', "$outputDirectory"
 }
 
-integrationTest.dependsOn generateOpenApiProject
-integrationTest.mustRunAfter generateOpenApiProject
+compileIntegrationTestKotlin.dependsOn generateOpenApiProject
 
 sourceSets {
+    integrationTest.java.srcDirs += [
+        "$outputDirectory/$generatedProjectName/server/src/main/java"
+    ]
     integrationTest.kotlin.srcDirs += [
-        "$outputDirectory/testProject/core/src/main/kotlin",
-        "$outputDirectory/testProject/server/src/main/kotlin",
-        "$outputDirectory/testProject/server/src/main/java"
+        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
+        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
+        "$outputDirectory/$generatedProjectName/server/src/main/java"
     ]
 }
