@@ -24,7 +24,9 @@ interface EventResource<T> {
 
     /**
      * Contract event client-side subscription.
-     * This method does not add any endpoint to the OpenAPI.
+     * 
+     * This method does not add any endpoint to the server OpenAPI,
+     * it's implemented dynamically by a client invocation handler.
      *
      * @param onEvent the event consumer function.
      * @return the current state of the subscription. 
