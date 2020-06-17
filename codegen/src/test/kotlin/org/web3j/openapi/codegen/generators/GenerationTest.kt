@@ -47,6 +47,7 @@ class GenerationTest {
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
             160,
+            "test",
             "0.1.0-SNAPSHOT"
         )
 

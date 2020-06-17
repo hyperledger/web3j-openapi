@@ -17,5 +17,10 @@ object Properties {
     const val PRIVATE_KEY = "web3j.openApi.privateKey"
     const val WALLET_FILE = "web3j.openApi.wallet.file"
     const val WALLET_PASSWORD = "web3j.openApi.wallet.password"
+
+//    const val WEB3J = "web3j.openApi.web3j"
+//    const val TRANSACTION_MANAGER = "web3j.openApi.transactionManager"
+//    const val GAS_PROVIDER = "web3j.openApi.gasProvider"
+
     // TODO Add more configurations, eg. gas price/limit
 }

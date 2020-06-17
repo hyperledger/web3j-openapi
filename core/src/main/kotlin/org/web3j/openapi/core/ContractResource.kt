@@ -16,10 +16,15 @@ import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
+/**
+ * A Web3j OpenAPI can contains multiple contracts.
+ *
+ * Subclasses may define additional contracts as JAX-RS sub-resources.
+ */
 interface ContractResource {
 
     /**
-     * Lists all available contract types.
+     * Lists all available contract paths.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

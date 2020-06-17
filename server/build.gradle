@@ -1,3 +1,11 @@
+apply plugin: 'org.unbroken-dome.test-sets'
+
+testSets {
+    integrationTest {
+        dirName = 'integration-test'
+    }
+}
+
 dependencies {
     api project(':web3j-openapi-core')
 
@@ -18,4 +26,37 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2:${versions.swagger}"
 
     testImplementation project(':web3j-openapi-client')
+
+    integrationTestImplementation "org.web3j:web3j-unit:${versions.web3j}-SNAPSHOT" // FIXME Release web3j unit
+    integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
+}
+
+ext {
+    generatedProjectName = "testProject"
+    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
+}
+
+task generateOpenApiProject(type : Exec, group: 'web3j') {
+    dependsOn(":web3j-openapi-console:installShadowDist")
+    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
+            'generate',
+            '--name', "$generatedProjectName",
+            '--context-path', 'api',
+            '--package-name', 'com.test',
+            '--abi', "$projectDir/src/integration-test/resources/contracts",
+            '--bin', "$projectDir/src/integration-test/resources/contracts",
+            '--output', "$outputDirectory"
+}
+
+compileIntegrationTestKotlin.dependsOn generateOpenApiProject
+
+sourceSets {
+    integrationTest.java.srcDirs += [
+        "$outputDirectory/$generatedProjectName/server/src/main/java"
+    ]
+    integrationTest.kotlin.srcDirs += [
+        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
+        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
+        "$outputDirectory/$generatedProjectName/server/src/main/java"
+    ]
 }

@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 package org.web3j.openapi.server
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
+
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -21,11 +21,9 @@ import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.Loader.getResource
 import org.eclipse.jetty.util.resource.Resource
 import org.glassfish.jersey.servlet.ServletContainer
-import org.web3j.openapi.core.spi.OpenApiResourceProvider
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.net.URI
-import java.util.ServiceLoader
 
 class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
     init {
@@ -39,12 +37,7 @@ class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
     }
 
     private fun configureOpenApi() {
-        val resourceConfig = OpenApiResourceConfig(serverConfig).apply {
-            registerClasses(OpenApiResource::class.java)
-        }
-        ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
-            resourceConfig.register(it.get())
-        }
+        val resourceConfig = OpenApiResourceConfig(serverConfig)
         val servletHolder = ServletHolder(ServletContainer(resourceConfig))
         (handler as ServletContextHandler).apply {
             addServlet(servletHolder, "/*")

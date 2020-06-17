@@ -18,10 +18,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 /**
- * Entry point for a generated Web3j Open API.
- *
- * A Web3j Open API generation can contains multiple contracts.
- * This class will contain all generated contracts as sub-resources.
+ * Entry point for Web3j OpenAPIs.
  */
 @Path("/api")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,7 +26,8 @@ import javax.ws.rs.core.MediaType
 interface Web3jOpenApi {
 
     /**
-     * Generated applications override this property to add a custom resource containing all contract types.
+     * Generated applications override this property
+     * to add a custom resource containing all contract types.
      */
     @get:Path("contracts")
     val contracts: ContractResource

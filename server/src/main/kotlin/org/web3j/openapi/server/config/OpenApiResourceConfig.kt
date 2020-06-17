@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
@@ -25,21 +26,46 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.ContractCallExceptionMapper
+import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
 import org.web3j.openapi.server.IllegalArgumentExceptionMapper
-import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.Properties
-import org.web3j.openapi.server.ContractGasProviderFactory
+import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.spi.OpenApiResourceProvider
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
+import java.util.ServiceLoader
 import java.util.logging.Logger
 import javax.inject.Singleton
 
+/**
+ * The JAX-RS application configuration.
+ *
+ * @see OpenApiResource
+ * @see OpenApiResourceProvider
+ */
 class OpenApiResourceConfig(
-    openApiServerConfig: OpenApiServerConfig
+    serverConfig: OpenApiServerConfig
 ) : ResourceConfig() {
+
+//    /**
+//     * Used mainly for testing.
+//     *
+//     * The given Web3j, transaction manager and gas provider instances
+//     * will override the server configuration.
+//     */
+//    constructor(
+//        web3j: Web3j,
+//        gasProvider: ContractGasProvider,
+//        transactionManager: TransactionManager,
+//        serverConfig: OpenApiServerConfig
+//    ) : this(serverConfig) {
+//        property(Properties.WEB3J, web3j)
+//        property(Properties.GAS_PROVIDER, gasProvider)
+//        property(Properties.TRANSACTION_MANAGER, transactionManager)
+//    }
 
     private val mapper = jacksonObjectMapper()
         .setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY))
@@ -49,6 +75,12 @@ class OpenApiResourceConfig(
         .enable(SerializationFeature.INDENT_OUTPUT)
 
     init {
+        // Register all Web3j OpenAPI resources in the classpath
+        ServiceLoader.load(OpenApiResourceProvider::class.java).forEach {
+            register(it.get())
+        }
+
+        register(OpenApiResource::class.java)
         register(JsonMappingExceptionMapper::class.java)
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
@@ -56,11 +88,11 @@ class OpenApiResourceConfig(
         register(LoggingFeature(logger))
         register(InjectionBinder())
 
-        property(ServerProperties.APPLICATION_NAME, openApiServerConfig.projectName)
-        property(Properties.NODE_ADDRESS, openApiServerConfig.nodeEndpoint)
-        property(Properties.PRIVATE_KEY, openApiServerConfig.privateKey)
-        property(Properties.WALLET_FILE, openApiServerConfig.walletFile?.absolutePath)
-        property(Properties.WALLET_PASSWORD, openApiServerConfig.walletPassword)
+        property(ServerProperties.APPLICATION_NAME, serverConfig.projectName)
+        property(Properties.NODE_ADDRESS, serverConfig.nodeEndpoint)
+        property(Properties.PRIVATE_KEY, serverConfig.privateKey)
+        property(Properties.WALLET_FILE, serverConfig.walletFile?.absolutePath)
+        property(Properties.WALLET_PASSWORD, serverConfig.walletPassword)
     }
 
     private class InjectionBinder : AbstractBinder() {

@@ -4,6 +4,7 @@ plugins {
 }
 
 mainClassName = 'org.web3j.openapi.console.OpenApiCommand'
+applicationName = 'web3j-openapi'
 
 repositories {
     maven { url 'https://repo.gradle.org/gradle/libs-releases' }
