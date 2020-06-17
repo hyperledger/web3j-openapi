@@ -50,8 +50,7 @@ internal class ClientInvocationHandler(
 
     private fun invokeOnEvent(onEvent: Any): CompletableFuture<Void> {
         @Suppress("UNCHECKED_CAST")
-        onEvent as (Any) -> Unit
-        val eventType = onEvent.typeArguments[0]
+        val eventType = (onEvent as (Any) -> Unit).typeArguments[0]
         val source = SseEventSource.target(clientTarget()).build()
         return SseEventSourceResult(source, onEvent, eventType).also {
             it.open()
