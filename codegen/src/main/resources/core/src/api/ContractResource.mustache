@@ -19,11 +19,10 @@ import javax.ws.rs.core.MediaType
 interface {{capitalizedContractName}}Resource {
 {{/contractDetails}}
 {{#contractResources}}
-        @{{method}}
-        @Produces(MediaType.APPLICATION_JSON)
-        @Path("{{functionName}}")
-        @Operation(tags = ["{{contractName}}"],
-            summary = "{{description}}")
+        {{mediaType}}
+        {{{path}}}
+        {{{operationTag}}}
+        {{{method}}}
         {{resource}} : {{{returnType}}}
 
 {{/contractResources}}

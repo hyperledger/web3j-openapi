@@ -84,26 +84,25 @@ internal class CoreApiGenerator(
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
                         else ""
+                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Get the ${it.name.capitalize()} event\")"
                     resources.add(
                         ContractResource(
-                            it.name,
-                            "fun ${it.name}($parameters)",
-                            if (it.inputs.isEmpty()) "GET" else "POST",
-                            it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
-                            contractDetails.capitalizedContractName,
-                            "Executes the ${it.name.capitalize()} method"
+                            functionName = it.name,
+                            resource =  "fun ${it.name}($parameters)",
+                            method = if (it.inputs.isEmpty()) "@GET" else "@POST",
+                            returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
+                            operationTag = operationTag,
+                            mediaType = "@Produces(MediaType.APPLICATION_JSON)",
+                            path = "@Path(\"${it.name.capitalize()}\")"
                         )
                     )
                 } else {
-                    val parameters = "transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel"
                     resources.add(
                         ContractResource(
-                            "${it.name}Event",
-                            "fun get${it.name.capitalize()}Event($parameters)",
-                            "POST",
-                            "List<${it.name.capitalize()}EventResponse>",
-                            contractDetails.capitalizedContractName,
-                            "Get the ${it.name.capitalize()} event"
+                            functionName = "${it.name}Event",
+                            resource = "val ${it.name.decapitalize()}Events",
+                            method = "@get:Path(\"${it.name.capitalize()}Event\")",
+                            returnType = "${it.name.capitalize()}EventResource"
                         )
                     )
                 }
