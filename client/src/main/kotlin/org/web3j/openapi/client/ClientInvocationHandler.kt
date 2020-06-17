@@ -13,7 +13,6 @@
 package org.web3j.openapi.client
 
 import mu.KLogging
-import org.web3j.openapi.core.Web3jOpenApi
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -32,6 +31,9 @@ import javax.ws.rs.sse.SseEventSource
  *
  * Also implements an exception mapping mechanism to avoid reporting
  * [ClientErrorException]s to the client.
+ * 
+ * @see [org.web3j.openapi.core.EventResource.onEvent]
+ * @see [ClientException]
  */
 internal class ClientInvocationHandler(
     private val target: WebTarget,
