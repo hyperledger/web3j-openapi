@@ -33,10 +33,9 @@ import javax.ws.rs.sse.SseEventSource
  * Also implements an exception mapping mechanism to avoid reporting
  * [ClientErrorException]s to the client.
  */
-internal class ClientInvocationHandler<T>(
-    private val apiClass: Class<out Web3jOpenApi>,
+internal class ClientInvocationHandler(
     private val target: WebTarget,
-    private val client: T
+    private val client: Any
 ) : InvocationHandler {
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
@@ -69,7 +68,7 @@ internal class ClientInvocationHandler<T>(
                     Proxy.newProxyInstance(
                         method.returnType.classLoader,
                         arrayOf(method.returnType),
-                        ClientInvocationHandler(apiClass, target, it)
+                        ClientInvocationHandler(target, it)
                     )
                 } else {
                     it
