@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.codegen.utils
 
-import com.google.common.io.Resources
 import com.pinterest.ktlint.core.KtLint
 import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
 import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
@@ -34,7 +33,7 @@ internal object CopyUtils {
 
     fun copyResource(name: String, outputDir: File) {
         Files.copy(
-            Resources.getResource(name)?.openStream()!!,
+            javaClass.classLoader.getResourceAsStream(name)!!,
             outputDir.resolve(name).toPath(),
             StandardCopyOption.REPLACE_EXISTING
         )

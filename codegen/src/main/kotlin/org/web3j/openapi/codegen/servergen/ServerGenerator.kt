@@ -102,6 +102,7 @@ internal class ServerGenerator(
 //            File(folderPath.substringBefore("server"))
 //        )
 
+        // FIXME Copies SPI resource in main
         val spiFolder = File(
             Path.of(
                 folderPath.substringBefore("server"),
