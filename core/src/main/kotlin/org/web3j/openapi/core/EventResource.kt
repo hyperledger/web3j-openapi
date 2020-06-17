@@ -23,7 +23,8 @@ import java.util.concurrent.CompletableFuture
 interface EventResource<T> {
 
     /**
-     * Asynchronous contract event subscription.
+     * Contract event client-side subscription.
+     * This method does not add any endpoint to the OpenAPI.
      *
      * @param onEvent the event consumer function.
      * @return the current state of the subscription. 

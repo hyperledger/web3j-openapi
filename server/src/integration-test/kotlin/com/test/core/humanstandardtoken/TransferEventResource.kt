@@ -34,9 +34,6 @@ interface TransferEventResource : EventResource<TransferEventResponse> {
         transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel
     ): List<TransferEventResponse>
 
-    /**
-     * This method will not add endpoints.
-     */
     override fun onEvent(onEvent: (TransferEventResponse) -> Unit): CompletableFuture<Void> =
             CompletableFuture.completedFuture(null)
 }
