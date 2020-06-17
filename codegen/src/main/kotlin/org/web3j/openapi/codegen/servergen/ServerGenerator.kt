@@ -96,11 +96,10 @@ internal class ServerGenerator(
             mkdirs()
         }
         logger.debug("Copying server/resources")
-        // FIXME: Throws exception (java.nio.file.NoSuchFileException) when running the integration test generation
-//        CopyUtils.copyResource(
-//            "server/src/main/resources/logging.properties",
-//            File(folderPath.substringBefore("server"))
-//        )
+        CopyUtils.copyResource(
+            "server/src/main/resources/logging.properties",
+            File(folderPath.substringBefore("server"))
+        )
 
         val spiFolder = File(
             Path.of(
