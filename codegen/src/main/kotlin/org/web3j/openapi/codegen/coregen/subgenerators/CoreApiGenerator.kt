@@ -104,7 +104,7 @@ internal class CoreApiGenerator(
                     resources.add(
                         ContractResource(
                             functionName = it.name,
-                            resource =  "fun ${it.name}($parameters)",
+                            resource = "fun ${it.name}($parameters)",
                             method = if (it.inputs.isEmpty()) "@GET" else "@POST",
                             returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
                             operationTag = operationTag,
