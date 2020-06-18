@@ -13,11 +13,12 @@
 package org.web3j.openapi.codegen.servergen.subgenerators
 
 import org.web3j.openapi.codegen.utils.TemplateUtils
+import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
 class EventsResourceImplGenerator(
-    packageName: String,
-    contractName: String,
+    val packageName: String,
+    val contractName: String,
     private val folderPath: String,
     private val abiDefinitions: List<AbiDefinition>
 ) {
@@ -31,10 +32,6 @@ class EventsResourceImplGenerator(
         context["lowerCaseContractName"] = contractName.toLowerCase()
     }
 
-    private fun args(inputs: MutableList<AbiDefinition.NamedType>): String { // TODO: will this support structs ?
-        return inputs.joinToString(",") { "it.${it.name}" }
-    }
-
     fun generate() {
         abiDefinitions
             .filter { it.type == "event" }
@@ -42,7 +39,7 @@ class EventsResourceImplGenerator(
                 context["eventNameCap"] = abiDefinition.name.capitalize()
                 context["eventName"] = abiDefinition.name.decapitalize()
                 context["eventNameUp"] = abiDefinition.name.toUpperCase()
-                context["args"] = args(abiDefinition.inputs)
+                context["args"] = getEventResponseParameters(abiDefinition)
 
                 TemplateUtils.generateFromTemplate(
                     context = context,
@@ -51,5 +48,23 @@ class EventsResourceImplGenerator(
                     name = "${abiDefinition.name.capitalize()}EventResourceImpl.kt"
                 )
             }
+    }
+
+    private fun getEventResponseParameters(abiDef: AbiDefinition): String {
+        return abiDef.inputs.joinToString(",") {
+            if (it.components.isEmpty()) "it.${it.name}"
+            else
+                getStructEventParameters(it, abiDef.name, "it.${it.name}")
+        }
+    }
+
+    private fun getStructEventParameters(input: AbiDefinition.NamedType, functionName: String, callTree: String = ""): String {
+        val structName = input.internalType.structName
+        val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
+        val parameters = input.components.joinToString(",") { component ->
+            if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
+            else getStructEventParameters(component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
+        }
+        return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)" // FIXME: Are you sure about the lower case ?
     }
 }

@@ -116,7 +116,7 @@ internal class CoreApiGenerator(
                     resources.add(
                         ContractResource(
                             functionName = "${it.name}Event",
-                            resource = "val ${it.name.decapitalize()}Events",
+                            resource = "val ${it.name.decapitalize()}Event",
                             method = "@get:Path(\"${it.name.capitalize()}Event\")",
                             returnType = "${it.name.capitalize()}EventResource"
                         )
