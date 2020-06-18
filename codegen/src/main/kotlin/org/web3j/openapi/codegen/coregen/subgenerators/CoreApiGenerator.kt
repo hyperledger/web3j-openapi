@@ -33,6 +33,7 @@ internal class CoreApiGenerator(
     init {
         context["packageName"] = packageName
         context["contractName"] = contractDetails.lowerCaseContractName
+        context["contractNameCap"] = contractDetails.capitalizedContractName
         context["contractDetails"] = contractDetails
         context["imports"] = imports()
         context["contractResources"] = contractResources()
@@ -43,8 +44,23 @@ internal class CoreApiGenerator(
             mkdirs()
         }
         copySources()
+        generateEventsResources()
         generateModels()
         generateStructsModels()
+    }
+
+    private fun generateEventsResources() {
+        contractDetails.abiDefinitions
+            .filter { it.type == "event" }
+            .forEach { abiDefinition ->
+                context["eventName"] = abiDefinition.name.capitalize()
+                TemplateUtils.generateFromTemplate(
+                    context = context,
+                    outputDir = folderPath,
+                    template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
+                    name = "${abiDefinition.name.capitalize()}EventResource.kt"
+                )
+            }
     }
 
     private fun generateStructsModels() {
