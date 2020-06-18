@@ -17,6 +17,7 @@ import org.web3j.openapi.codegen.AbstractGenerator
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
+import org.web3j.openapi.codegen.servergen.subgenerators.EventsResourceImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.StructExtensionsGenerator
@@ -71,6 +72,16 @@ internal class ServerGenerator(
                     "kotlin"
                 ).toString(),
                 resourcesDefinition = it.contractDetails.abiDefinitions
+            ).generate()
+
+            EventsResourceImplGenerator(
+                packageName = configuration.packageName,
+                contractName = it.contractDetails.contractName,
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName
+                ).toString(),
+                abiDefinitions = it.contractDetails.abiDefinitions
             ).generate()
 
             StructExtensionsGenerator(
