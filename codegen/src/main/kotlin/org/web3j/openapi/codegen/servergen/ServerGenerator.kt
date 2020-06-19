@@ -136,10 +136,10 @@ internal class ServerGenerator(
                         "resources",
                         "META-INF",
                         "services",
-                        "org.web3j.openapi.core.spi.OpenApiResourceProvider.mustache"
+                        "org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"
                     ).toString()
             ),
-            name = "org.web3j.openapi.core.spi.OpenApiResourceProvider"
+            name = "org.web3j.openapi.server.spi.OpenApiResourceProvider"
         )
     }
 
