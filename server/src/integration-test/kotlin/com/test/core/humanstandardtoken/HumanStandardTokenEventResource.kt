@@ -10,23 +10,28 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package com.test.core.humanstandardtoken
 
-import javax.ws.rs.GET
+import javax.annotation.processing.Generated
+import javax.ws.rs.Consumes
+import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 /**
- * A Web3j OpenAPI can contain multiple contracts.
+ * Redefined only for compilation purposes until generation is implemented.
  *
- * Subclasses may define additional contracts as JAX-RS sub-resources.
+ * This subclass shouldn't be a new resource,
+ * all methods and values should be in [HumanStandardTokenResource].
  */
-interface ContractResource {
+@Generated
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+interface HumanStandardTokenEventResource : HumanStandardTokenResource {
 
-    /**
-     * Lists all available contract paths.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findAll(): List<String>
+    @get:Path("TransferEvent")
+    val transferEvents: TransferEventResource
+
+    @get:Path("ApprovalEvent")
+    val approvalEvents: ApprovalEventResource
 }

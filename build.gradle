@@ -52,6 +52,7 @@ subprojects {
     }
 
     tasks.withType(Test) {
+        // FIXME To be removed or fix signature issue
         dependsOn publishToMavenLocal
         mustRunAfter publishToMavenLocal
         reports.html.destination = file("${reporting.baseDir}/${name}")
@@ -63,6 +64,8 @@ subprojects {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
         implementation "ch.qos.logback:logback-classic:${versions.logback}"
+        implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+        implementation "org.slf4j:jul-to-slf4j:${versions.slf4j}"
 
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "org.junit.jupiter:junit-jupiter:${versions.junit}"

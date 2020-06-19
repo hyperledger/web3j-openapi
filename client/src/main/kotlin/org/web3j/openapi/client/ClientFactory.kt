@@ -28,7 +28,7 @@ object ClientFactory {
         token?.run { target.register(AuthenticationFilter.token(token)) }
 
         val client = WebResourceFactory.newResource(type, target)
-        val handler = ClientErrorHandler(client, ClientException.Companion::of)
+        val handler = ClientInvocationHandler(target, client)
 
         @Suppress("UNCHECKED_CAST")
         return Proxy.newProxyInstance(type.classLoader, arrayOf(type), handler) as T
