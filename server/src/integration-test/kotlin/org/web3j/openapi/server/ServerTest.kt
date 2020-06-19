@@ -18,7 +18,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
-import com.test.core.humanstandardtoken.HumanStandardTokenEventResource
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import org.glassfish.jersey.test.JerseyTest
