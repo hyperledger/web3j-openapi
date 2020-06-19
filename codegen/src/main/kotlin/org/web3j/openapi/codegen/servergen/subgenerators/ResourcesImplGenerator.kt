@@ -94,7 +94,7 @@ internal class ResourcesImplGenerator(
                     "${abiDefinition.name.capitalize()}EventResourceImpl"
                 )
                 val propertySpec =
-                    PropertySpec.builder("${abiDefinition.name.decapitalize()}Event", eventResourceImplClass)
+                    PropertySpec.builder("${abiDefinition.name.decapitalize()}Events", eventResourceImplClass)
                         .initializer("${abiDefinition.name.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
                         .addModifiers(KModifier.OVERRIDE)
                 events.add(propertySpec.build())
