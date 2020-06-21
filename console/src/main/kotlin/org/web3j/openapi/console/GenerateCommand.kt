@@ -106,7 +106,7 @@ class GenerateCommand : Callable<Int> {
             generate(projectFolder)
             ExitCode.OK
         } catch (e: Exception) {
-            if (!dev) projectFolder.deleteOnExit()
+            if (!dev) projectFolder.deleteOnExit() // FIXME project doesn't get deleted when there is an exception, try messing with the Mustache templates to reproduce
             e.printStackTrace()
             ExitCode.SOFTWARE
         }

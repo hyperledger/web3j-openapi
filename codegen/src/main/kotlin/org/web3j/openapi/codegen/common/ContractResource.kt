@@ -17,6 +17,7 @@ data class ContractResource(
     val resource: String,
     val method: String,
     val returnType: String,
-    val contractName: String,
-    val description: String = ""
+    val mediaType: String = "",
+    val path: String = "",
+    val operationTag: String = ""
 )
