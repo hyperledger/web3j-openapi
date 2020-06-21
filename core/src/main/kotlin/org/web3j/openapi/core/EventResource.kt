@@ -23,13 +23,11 @@ import java.util.concurrent.CompletableFuture
 interface EventResource<T> {
 
     /**
-     * Contract event client-side subscription.
-     * 
-     * This method does not add any endpoint to the server OpenAPI,
-     * it's implemented dynamically by a client invocation handler.
+     * Contract event client-side subscription for this event resource.
+     * This method is handled by a SSE endpoint on the server side.
      *
      * @param onEvent the event consumer function.
-     * @return the current state of the subscription. 
+     * @return the current state of the subscription.
      */
     fun onEvent(onEvent: (T) -> Unit): CompletableFuture<Void>
 
