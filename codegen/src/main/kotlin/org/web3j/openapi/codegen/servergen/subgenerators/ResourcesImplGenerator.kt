@@ -16,14 +16,12 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
-import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 
@@ -79,58 +77,29 @@ internal class ResourcesImplGenerator(
             ).addSuperinterface(contractResourceClass)
 
         resourcesClass.addFunctions(generateFunctions())
-        resourcesClass.addFunctions(generateEvents())
+        resourcesClass.addProperties(generateEvents())
 
         return resourcesFile
             .addType(resourcesClass.build())
             .build()
     }
 
-    private fun generateEvents(): List<FunSpec> {
-        val events = mutableListOf<FunSpec>()
+    private fun generateEvents(): List<PropertySpec> {
+        val events = mutableListOf<PropertySpec>()
         resourcesDefinition
             .filter { it.type == "event" }
-            .forEach {
-                val eventResponseClass =
-                    ClassName("kotlin.collections", "List")
-                        .plusParameter(
-                            ClassName(
-                                "$packageName.core.${contractName.toLowerCase()}.model",
-                                "${it.name.capitalize()}EventResponse"
-                            )
-                        )
-                val funSpec = FunSpec.builder("get${it.name.capitalize()}Event")
-                    .returns(
-                        eventResponseClass
-                    )
-                    .addModifiers(KModifier.OVERRIDE)
-
-                funSpec.addParameter(
-                    "transactionReceiptModel",
-                    ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
+            .forEach { abiDefinition ->
+                val eventResourceImplClass = ClassName(
+                    "$packageName.server.${contractName.toLowerCase()}",
+                    "${abiDefinition.name.capitalize()}EventResourceImpl"
                 )
-                    .addCode(
-                        """
-                                val eventResponse = ${contractName.decapitalize()}.get${it.name.capitalize()}Events(
-                                    transactionReceiptModel.toTransactionReceipt())
-                                return eventResponse.map{${it.name.capitalize()}EventResponse(${getEventResponseParameters(
-                            it
-                        )})}
-                            """.trimIndent()
-                    )
-                events.add(funSpec.build())
+                val propertySpec =
+                    PropertySpec.builder("${abiDefinition.name.decapitalize()}Events", eventResourceImplClass)
+                        .initializer("${abiDefinition.name.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
+                        .addModifiers(KModifier.OVERRIDE)
+                events.add(propertySpec.build())
             }
         return events
-    }
-
-    private fun getEventResponseParameters(abiDef: AbiDefinition): String {
-        var params = ""
-        abiDef.inputs.forEach {
-            params += if (it.components.isEmpty()) ", it.${it.name}"
-            else
-                ", ${getStructEventParameters(it, abiDef.name, "it.${it.name}")}"
-        }
-        return params.removePrefix(",")
     }
 
     private fun generateFunctions(): List<FunSpec> {
@@ -214,15 +183,5 @@ internal class ResourcesImplGenerator(
                     "${functionName.decapitalize()}Parameters.${input.name ?: "input$index"},"
         }
         return callParameters.removeSuffix(",")
-    }
-
-    private fun getStructEventParameters(input: AbiDefinition.NamedType, functionName: String, callTree: String = ""): String {
-        val structName = input.internalType.structName
-        val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
-        val parameters = input.components.joinToString(",") { component ->
-            if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
-            else getStructEventParameters(component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
-        }
-        return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)" // FIXME: Are you sure about the lower case ?
     }
 }

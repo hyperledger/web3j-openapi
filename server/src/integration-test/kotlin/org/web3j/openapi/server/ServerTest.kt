@@ -16,6 +16,7 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
@@ -31,10 +32,12 @@ import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
 import java.math.BigInteger
 import java.net.URL
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
-/*
-  * Classes used in this test will be generated using a gradle task
-*/
+/**
+ * Classes used in this test will be generated using a gradle task.
+ */
 @EVMTest(type = NodeType.BESU)
 class ServerTest : JerseyTest() {
 
@@ -49,10 +52,10 @@ class ServerTest : JerseyTest() {
         OpenApiResourceConfig(
             OpenApiServerConfig(
                 projectName = "Test",
-                host = "localhost",
-                port = 9090,
                 nodeEndpoint = URL("http://localhost:8545"),
-                privateKey = PRIVATE_KEY
+                privateKey = PRIVATE_KEY,
+                host = "localhost",
+                port = 0
             )
         )
 
@@ -74,12 +77,26 @@ class ServerTest : JerseyTest() {
                 BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
             )
         )
-
         client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
             assertThat(approve(ApproveParameters(ADDRESS, BigInteger.TEN))).isNotNull()
             assertThat(decimals().result).isEqualTo(BigInteger.ZERO)
             assertThat(symbol().result).isEqualTo("TEST")
         }
+    }
+
+    @Test
+    fun `on contract event`() {
+        val receipt = client.contracts.humanStandardToken.deploy(
+            HumanStandardTokenDeployParameters(
+                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
+            )
+        )
+        val countDownLatch = CountDownLatch(1)
+        client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
+            approvalEvents.onEvent { countDownLatch.countDown() }
+            approve(ApproveParameters(ADDRESS, BigInteger.TEN))
+        }
+        assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue()
     }
 
     companion object {

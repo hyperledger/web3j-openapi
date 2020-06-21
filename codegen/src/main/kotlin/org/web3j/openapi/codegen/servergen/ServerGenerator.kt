@@ -17,6 +17,7 @@ import org.web3j.openapi.codegen.AbstractGenerator
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
+import org.web3j.openapi.codegen.servergen.subgenerators.EventsResourceImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.StructExtensionsGenerator
@@ -73,6 +74,16 @@ internal class ServerGenerator(
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
 
+            EventsResourceImplGenerator(
+                packageName = configuration.packageName,
+                contractName = it.contractDetails.contractName,
+                folderPath = Path.of(
+                    folderPath,
+                    it.contractDetails.lowerCaseContractName
+                ).toString(),
+                abiDefinitions = it.contractDetails.abiDefinitions
+            ).generate()
+
             StructExtensionsGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
@@ -102,6 +113,7 @@ internal class ServerGenerator(
 //            File(folderPath.substringBefore("server"))
 //        )
 
+        // FIXME Copies SPI resource in main
         val spiFolder = File(
             Path.of(
                 folderPath.substringBefore("server"),
@@ -124,10 +136,10 @@ internal class ServerGenerator(
                         "resources",
                         "META-INF",
                         "services",
-                        "org.web3j.openapi.core.spi.OpenApiResourceProvider.mustache"
+                        "org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"
                     ).toString()
             ),
-            name = "org.web3j.openapi.core.spi.OpenApiResourceProvider"
+            name = "org.web3j.openapi.server.spi.OpenApiResourceProvider"
         )
     }
 

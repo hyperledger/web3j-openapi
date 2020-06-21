@@ -31,7 +31,6 @@ import java.util.stream.Collectors
 import kotlin.reflect.KClass
 
 internal fun String.toNativeType(isParameter: Boolean = true, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
-    // TODO: support for Fixed point numbers, enums, mappings, struct, library
     return if (this == "address" || this == "string") {
         getParameterMapping(isParameter, String::class)
     } else if (this == "int") {
@@ -113,7 +112,7 @@ internal fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
 }
 
 internal val String.structName
-        get() = split(".").last() // FIXME: is this correct ?
+    get() = split(".").last()
 
 // FIXME: Use web3j.codegen one
 fun extractStructs(
