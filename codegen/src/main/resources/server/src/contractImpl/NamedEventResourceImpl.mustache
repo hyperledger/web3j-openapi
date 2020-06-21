@@ -1,0 +1,40 @@
+package {{packageName}}.server.{{lowerCaseContractName}}
+
+import {{packageName}}.core.{{lowerCaseContractName}}.{{eventNameCap}}EventResource
+import {{packageName}}.core.{{lowerCaseContractName}}.model.{{eventNameCap}}EventResponse
+import {{packageName}}.wrappers.{{contractNameCap}}
+import {{packageName}}.wrappers.{{contractNameCap}}.{{eventNameUp}}_EVENT
+import org.web3j.openapi.core.models.TransactionReceiptModel
+import org.web3j.openapi.server.SseUtils
+import org.web3j.protocol.core.methods.request.EthFilter
+import javax.annotation.processing.Generated
+import javax.ws.rs.GET
+import javax.ws.rs.Produces
+import javax.ws.rs.core.Context
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.sse.Sse
+import javax.ws.rs.sse.SseEventSink
+
+@Generated
+class {{eventNameCap}}EventResourceImpl(
+    private val {{contractName}}: {{contractNameCap}}
+) : {{eventNameCap}}EventResource {
+
+    override fun findBy(transactionReceiptModel: TransactionReceiptModel):
+            List<{{eventNameCap}}EventResponse> {
+        val eventResponse = {{contractName}}.get{{eventNameCap}}Events(
+            transactionReceiptModel.toTransactionReceipt()
+        )
+        return eventResponse.map { {{eventNameCap}}EventResponse({{args}}) }
+    }
+
+    @GET
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    fun subscribe(@Context eventSink: SseEventSink, @Context sse: Sse) {
+        val flowable = {{contractName}}.{{eventName}}EventFlowable(EthFilter())
+        val eventClass = {{contractNameCap}}.{{eventNameCap}}EventResponse::class.java
+        SseUtils.subscribe({{eventNameUp}}_EVENT, eventClass, flowable, eventSink, sse) {
+            {{eventNameCap}}EventResponse({{args}})
+        }
+    }
+}

@@ -18,7 +18,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
-import com.test.core.humanstandardtoken.HumanStandardTokenEventResource
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import org.glassfish.jersey.test.JerseyTest
@@ -94,7 +93,6 @@ class ServerTest : JerseyTest() {
         )
         val countDownLatch = CountDownLatch(1)
         client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-            this as HumanStandardTokenEventResource // TODO Remove when generation is done
             approvalEvents.onEvent { countDownLatch.countDown() }
             approve(ApproveParameters(ADDRESS, BigInteger.TEN))
         }
