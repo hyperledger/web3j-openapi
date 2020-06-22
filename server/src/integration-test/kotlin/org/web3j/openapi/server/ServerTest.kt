@@ -18,12 +18,14 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.test.core.TestProjectApi
+import com.test.core.humanstandardtoken.HumanStandardTokenResource
 import com.test.core.humanstandardtoken.model.ApproveParameters
 import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import org.glassfish.jersey.test.JerseyTest
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.web3j.EVMTest
 import org.web3j.NodeType
 import org.web3j.openapi.client.ClientFactory
@@ -39,7 +41,10 @@ import java.util.concurrent.TimeUnit
  * Classes used in this test will be generated using a gradle task.
  */
 @EVMTest(type = NodeType.BESU)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ServerTest : JerseyTest() {
+
+    private lateinit var contract: HumanStandardTokenResource
 
     private val client: TestProjectApi by lazy {
         ClientFactory.create(
@@ -59,10 +64,19 @@ class ServerTest : JerseyTest() {
             )
         )
 
-    @BeforeEach
-    override fun setUp() = super.setUp()
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+        contract = client.contracts.humanStandardToken.deploy(
+            HumanStandardTokenDeployParameters(
+                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
+            )
+        ).let {
+            client.contracts.humanStandardToken.load(it.contractAddress)
+        }
+    }
 
-    @AfterEach
+    @AfterAll
     override fun tearDown() = super.tearDown()
 
     @Test
@@ -71,31 +85,17 @@ class ServerTest : JerseyTest() {
     }
 
     @Test
-    fun `deploy and invoke contract`() {
-        val receipt = client.contracts.humanStandardToken.deploy(
-            HumanStandardTokenDeployParameters(
-                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
-            )
-        )
-        client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-            assertThat(approve(ApproveParameters(ADDRESS, BigInteger.TEN))).isNotNull()
-            assertThat(decimals().result).isEqualTo(BigInteger.ZERO)
-            assertThat(symbol().result).isEqualTo("TEST")
-        }
+    fun `invoke contract function`() {
+        assertThat(contract.approve(ApproveParameters(ADDRESS, BigInteger.TEN))).isNotNull()
+        assertThat(contract.decimals().result).isEqualTo(BigInteger.ZERO)
+        assertThat(contract.symbol().result).isEqualTo("TEST")
     }
 
     @Test
     fun `on contract event`() {
-        val receipt = client.contracts.humanStandardToken.deploy(
-            HumanStandardTokenDeployParameters(
-                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
-            )
-        )
         val countDownLatch = CountDownLatch(1)
-        client.contracts.humanStandardToken.load(receipt.contractAddress).apply {
-            approvalEvents.onEvent { countDownLatch.countDown() }
-            approve(ApproveParameters(ADDRESS, BigInteger.TEN))
-        }
+        contract.approvalEvents.onEvent { countDownLatch.countDown() }
+        contract.approve(ApproveParameters(ADDRESS, BigInteger.TEN))
         assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue()
     }
 
