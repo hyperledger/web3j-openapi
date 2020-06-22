@@ -18,6 +18,11 @@ data class ContractDetails(
     val contractName: String,
     val abiDefinitions: List<AbiDefinition>
 ) {
+    init {
+        abiDefinitions.filter { it.isPayable }
+            .forEach { it.inputs.add(AbiDefinition.NamedType("weiValue", "uint")) }
+    }
+
     val lowerCaseContractName: String
         get() = contractName.toLowerCase()
 
