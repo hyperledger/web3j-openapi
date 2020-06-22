@@ -31,7 +31,7 @@ import javax.ws.rs.sse.SseEventSource
  *
  * Also implements an exception mapping mechanism to avoid reporting
  * [ClientErrorException]s to the client.
- * 
+ *
  * @see [org.web3j.openapi.core.EventResource.onEvent]
  * @see [ClientException]
  */
