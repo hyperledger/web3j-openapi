@@ -16,7 +16,7 @@ import org.web3j.abi.datatypes.Address
 
 data class GeneratorConfiguration(
     val projectName: String,
-    val packageName: String,
+    var packageName: String,
     val outputDir: String,
     val contracts: List<ContractConfiguration>,
     val addressLength: Int = Address.DEFAULT_LENGTH / java.lang.Byte.SIZE,
@@ -24,4 +24,8 @@ data class GeneratorConfiguration(
     val version: String
 ) {
     val rootProjectName = projectName.toLowerCase().replace(' ', '-')
+
+    init {
+        packageName = packageName.toLowerCase()
+    }
 }
