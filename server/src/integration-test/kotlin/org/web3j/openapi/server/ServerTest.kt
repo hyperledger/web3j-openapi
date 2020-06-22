@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle
 import org.web3j.EVMTest
 import org.web3j.NodeType
 import org.web3j.openapi.client.ClientFactory
@@ -41,7 +42,7 @@ import java.util.concurrent.TimeUnit
  * Classes used in this test will be generated using a gradle task.
  */
 @EVMTest(type = NodeType.BESU)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 class ServerTest : JerseyTest() {
 
     private lateinit var contract: HumanStandardTokenResource
