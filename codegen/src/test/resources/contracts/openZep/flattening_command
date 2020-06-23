@@ -1,0 +1,1 @@
+solidity_flattener web3labs/Token.sol --solc-path=" solc --allow-paths $PWD/openzeppelin=openzeppelin" --output web3labs/FlattenedToken.sol
