@@ -80,9 +80,9 @@ internal class CoreApiGenerator(
 
     private fun imports(): List<Import> {
         return contractDetails.abiDefinitions
-            .filter { it.type == "function" || it.type == "event" }
+            .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
-                if (it.type == "function" && it.inputs.isNotEmpty())
+                if (it.type == "function")
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}Parameters")
                 else
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}EventResponse")
