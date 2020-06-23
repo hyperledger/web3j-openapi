@@ -63,7 +63,7 @@ class GenerateCommand : Callable<Int> {
 
     @Option(
         names = ["-b", "--bin"],
-        description = ["input BIN files nd folders."],
+        description = ["input BIN files and folders."],
         arity = "1..*",
         required = true
     )
