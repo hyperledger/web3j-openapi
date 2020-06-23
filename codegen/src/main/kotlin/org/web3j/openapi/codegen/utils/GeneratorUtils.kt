@@ -45,3 +45,5 @@ object GeneratorUtils {
         return list.flatMap { folder -> folder.walkTopDown().filter { it.extension == extension }.toList() }
     }
 }
+
+fun String.argumentName(index: Int) : String = if(isNullOrEmpty()) "input$index" else this
