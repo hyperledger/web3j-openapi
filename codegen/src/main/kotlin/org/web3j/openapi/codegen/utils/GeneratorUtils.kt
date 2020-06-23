@@ -16,20 +16,17 @@ import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.IllegalStateException
 
 object GeneratorUtils {
 
     fun loadContractConfigurations(abiList: List<File>, binList: List<File>): List<ContractConfiguration> {
-        val abis = recurseIntoFolders(abiList, "abi")
-        val bins = recurseIntoFolders(binList, "bin")
+        val abis = checkDuplicates(recurseIntoFolders(abiList, "abi"))
+        val bins = recurseIntoFolders(binList, "bin").associateBy({ it.nameWithoutExtension }, { it })
         return abis.map { abiFile ->
-            val binFile = bins.find { bin ->
-                bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
-            } ?: throw FileNotFoundException("${abiFile.name.removeSuffix(".abi")}.bin")
-
             ContractConfiguration(
                 abiFile,
-                binFile,
+                bins[abiFile.nameWithoutExtension] ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
@@ -38,11 +35,13 @@ object GeneratorUtils {
         }
     }
 
-    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
-        return list.flatMap { folder ->
-            folder.walkTopDown().filter {
-                it.extension == extension
-            }.toList()
+    private fun checkDuplicates(files: List<File>): List<File> {
+        return files.distinctBy { it.name }.also {
+            if (it.size != files.size) throw IllegalStateException("Duplicate contracts names found!")
         }
+    }
+
+    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
+        return list.flatMap { folder -> folder.walkTopDown().filter { it.extension == extension }.toList() }
     }
 }
