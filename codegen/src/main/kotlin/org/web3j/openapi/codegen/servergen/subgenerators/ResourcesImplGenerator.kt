@@ -19,7 +19,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.utils.CopyUtils
-import org.web3j.openapi.codegen.utils.argumentName
+import org.web3j.openapi.codegen.utils.GeneratorUtils.argumentName
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
@@ -179,9 +179,9 @@ internal class ResourcesImplGenerator(
         inputs.forEachIndexed { index, input ->
             callParameters +=
                 if (input.type == "tuple")
-                    "${getStructCallParameters(contractName, input, functionName, "${functionName.decapitalize()}Parameters.${input.name.argumentName(index)}")},"
+                    "${getStructCallParameters(contractName, input, functionName, "${functionName.decapitalize()}Parameters.${argumentName(input.name, index)}")},"
                 else
-                    "${functionName.decapitalize()}Parameters.${input.name.argumentName(index)},"
+                    "${functionName.decapitalize()}Parameters.${argumentName(input.name, index)},"
         }
         return callParameters.removeSuffix(",")
     }

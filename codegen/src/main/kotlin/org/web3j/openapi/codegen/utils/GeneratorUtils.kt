@@ -44,6 +44,7 @@ object GeneratorUtils {
     private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
         return list.flatMap { folder -> folder.walkTopDown().filter { it.extension == extension }.toList() }
     }
+
+    internal fun argumentName(name: String?, index: Int) : String = if(name.isNullOrEmpty()) "input$index" else name
 }
 
-fun String.argumentName(index: Int) : String = if(isNullOrEmpty()) "input$index" else this
