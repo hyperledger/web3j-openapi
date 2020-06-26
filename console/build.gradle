@@ -17,6 +17,7 @@ shadowJar {
 dependencies {
     implementation project(":web3j-openapi-server")
     implementation project(":web3j-openapi-codegen")
+    implementation "org.web3j:abi:${versions.web3j}"
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
     implementation "org.apache.logging.log4j:log4j-to-slf4j:${versions.log4j}"
