@@ -20,8 +20,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
-import org.web3j.abi.datatypes.AbiTypes
-import org.web3j.abi.datatypes.Type
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.math.BigInteger
@@ -30,7 +28,6 @@ import java.util.Comparator
 import java.util.HashMap
 import java.util.LinkedHashMap
 import java.util.stream.Collectors
-import kotlin.jvm.internal.Reflection
 import kotlin.reflect.KClass
 
 internal fun String.toNativeType(isParameter: Boolean = true, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
@@ -68,16 +65,16 @@ internal fun String.toNativeType(isParameter: Boolean = true, structName: String
 }
 
 fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
-    return if(isParameter) getParameterMapping(isParameter, BigInteger::class)
+    return if (isParameter) getParameterMapping(isParameter, BigInteger::class)
     else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class) // FIXME: remove this when web3j-codegen fixes this problem
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16
-            || type.startsWith("uint") && type.substringAfter("int").toInt() < 16)
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 16)
         getParameterMapping(isParameter, Short::class)
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32
-            || type.startsWith("uint") && type.substringAfter("int").toInt() < 32 )
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 32)
         getParameterMapping(isParameter, Integer::class)
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64
-            || type.startsWith("uint") && type.substringAfter("int").toInt() < 64)
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 64)
         getParameterMapping(isParameter, Long::class)
     else
         getParameterMapping(isParameter, BigInteger::class)
