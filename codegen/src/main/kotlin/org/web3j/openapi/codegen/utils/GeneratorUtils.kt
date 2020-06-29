@@ -56,7 +56,7 @@ object GeneratorUtils {
                     if (distinctAbis[abiDefinition.name.capitalize()] != null ||
                         distinctAbis[abiDefinition.name.decapitalize()] != null) {
                         var counter = 0
-                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null);
+                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null)
                         distinctAbis["${abiDefinition.name}$counter"] =
                             abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
                     } else {
