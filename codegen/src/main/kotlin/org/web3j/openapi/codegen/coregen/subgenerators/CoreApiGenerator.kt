@@ -100,7 +100,7 @@ internal class CoreApiGenerator(
                         if (it.inputs.isNotEmpty())
                             "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
                         else ""
-                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Get the ${it.name.capitalize()} event\")"
+                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Execute the ${it.name.capitalize()} method\")"
                     resources.add(
                         ContractResource(
                             functionName = it.name,
