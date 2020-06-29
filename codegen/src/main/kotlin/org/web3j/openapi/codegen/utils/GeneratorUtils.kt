@@ -56,7 +56,7 @@ object GeneratorUtils {
                     if (distinctAbis[abiDefinition.name.capitalize()] != null ||
                         distinctAbis[abiDefinition.name.decapitalize()] != null) {
                         var counter = 0
-                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null)
+                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null);
                         distinctAbis["${abiDefinition.name}$counter"] =
                             abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
                     } else {
@@ -65,9 +65,25 @@ object GeneratorUtils {
                 }
             }
         }
-        return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().also {
-            it.addAll(abiDefinitions.filter { abiDef -> abiDef.type != "function" && abiDef.type != "event" })
+        return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().apply {
+            addAll(abiDefinitions.filter { abiDef -> abiDef.type != "function" && abiDef.type != "event" })
         }
+    }
+
+    internal fun handleDuplicateInputNames(inputs: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
+        val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
+        inputs.sortedWith(compareBy { it.name?.toLowerCase() }).also {
+            it.forEachIndexed { index, namedType ->
+                    if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
+                        inputs.filter { input -> input.name == namedType.name }.first().apply {
+                            this.name = "${this.name}Dup"
+                        }
+                    } else {
+                        distinctInputs[argumentName(namedType.name, index).capitalize()] = namedType
+                    }
+            }
+        }
+        return inputs
     }
 
     internal fun AbiDefinition.functionName(wrapperCall: Boolean = false): String? {
