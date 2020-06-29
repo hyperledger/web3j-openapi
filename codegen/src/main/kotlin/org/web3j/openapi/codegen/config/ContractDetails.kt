@@ -46,21 +46,4 @@ data class ContractDetails(
             ?.run {
                 "(parameters: ${capitalizedContractName}DeployParameters)"
             } ?: "()"
-
-//    private fun handleDuplicateInputNames(namedTypes: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
-//        var counter = 1
-//        var previousElement = ""
-//        namedTypes.sortedWith(compareBy { argumentName(it.name, 0).toLowerCase() }).also {
-//            it.forEach { namedType ->
-//                if (namedType.name != null) {
-//                    if (namedType.name.toLowerCase() == previousElement) {
-//                        namedType.name = "${namedType.name}${++counter}"
-//                    } else {
-//                        previousElement = namedType.name.toLowerCase()
-//                        counter = 0
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
