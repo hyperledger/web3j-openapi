@@ -16,6 +16,7 @@ import mu.KLogging
 import org.web3j.openapi.codegen.common.ContractResource
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.openapi.codegen.utils.GeneratorUtils.functionName
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import org.web3j.openapi.codegen.utils.extractStructs
 import org.web3j.openapi.codegen.utils.getReturnType
@@ -53,12 +54,12 @@ internal class CoreApiGenerator(
         contractDetails.abiDefinitions
             .filter { it.type == "event" }
             .forEach { abiDefinition ->
-                context["eventName"] = abiDefinition.name.capitalize()
+                context["eventName"] = abiDefinition.functionName()!!.capitalize()
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = folderPath,
                     template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
-                    name = "${abiDefinition.name.capitalize()}EventResource.kt"
+                    name = "${abiDefinition.functionName()!!.capitalize()}EventResource.kt"
                 )
             }
     }
@@ -83,9 +84,9 @@ internal class CoreApiGenerator(
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
                 if (it.type == "function")
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}Parameters")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.functionName()!!.capitalize()}Parameters")
                 else
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.name.capitalize()}EventResponse")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.functionName()!!.capitalize()}EventResponse")
             }
     }
 
@@ -98,27 +99,27 @@ internal class CoreApiGenerator(
                     if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
-                            "${it.name.decapitalize()}Parameters : ${it.name.capitalize()}Parameters"
+                            "${it.functionName()!!.decapitalize()}Parameters : ${it.functionName()!!.capitalize()}Parameters"
                         else ""
-                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Execute the ${it.name.capitalize()} method\")"
+                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Execute the ${it.functionName()!!.capitalize()} method\")"
                     resources.add(
                         ContractResource(
-                            functionName = it.name,
-                            resource = "fun ${it.name}($parameters)",
+                            functionName = it.functionName()!!,
+                            resource = "fun ${it.functionName()}($parameters)",
                             method = if (it.inputs.isEmpty()) "@GET" else "@POST",
                             returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
                             operationTag = operationTag,
                             mediaType = "@Produces(MediaType.APPLICATION_JSON)",
-                            path = "@Path(\"${it.name.capitalize()}\")"
+                            path = "@Path(\"${it.functionName()!!.capitalize()}\")"
                         )
                     )
                 } else {
                     resources.add(
                         ContractResource(
-                            functionName = "${it.name}Event",
-                            resource = "val ${it.name.decapitalize()}Events",
-                            method = "@get:Path(\"${it.name.capitalize()}Events\")",
-                            returnType = "${it.name.capitalize()}EventResource"
+                            functionName = "${it.functionName()}Event",
+                            resource = "val ${it.functionName()!!.decapitalize()}Events",
+                            method = "@get:Path(\"${it.functionName()!!.capitalize()}Events\")",
+                            returnType = "${it.functionName()!!.capitalize()}EventResource"
                         )
                     )
                 }
@@ -128,7 +129,7 @@ internal class CoreApiGenerator(
 
     private fun generateModels() {
         contractDetails.abiDefinitions.forEach {
-            logger.debug("Generating ${it.name} model")
+            logger.debug("Generating ${it.functionName(true)} model")
 
             when (it.type) {
                 "constructor" -> {
@@ -148,7 +149,7 @@ internal class CoreApiGenerator(
                         CoreFunctionsModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
-                            functionName = it.name,
+                            functionName = it.functionName()!!,
                             folderPath = Path.of(
                                 folderPath.substringBefore("kotlin"),
                                 "kotlin"
@@ -160,7 +161,7 @@ internal class CoreApiGenerator(
                     CoreEventsModelGenerator(
                         packageName = packageName,
                         contractName = contractDetails.capitalizedContractName,
-                        eventName = it.name,
+                        eventName = it.functionName()!!,
                         folderPath = Path.of(
                             folderPath.substringBefore("kotlin"),
                             "kotlin"

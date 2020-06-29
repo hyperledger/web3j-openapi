@@ -14,6 +14,7 @@ package org.web3j.openapi.codegen.utils
 
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.io.FileNotFoundException
 import java.lang.IllegalStateException
@@ -46,5 +47,32 @@ object GeneratorUtils {
     }
 
     internal fun argumentName(name: String?, index: Int) : String = if(name.isNullOrEmpty()) "input$index" else name
+
+    internal fun handleDuplicateFunctionNames(abiDefinitions: List<AbiDefinition>): List<AbiDefinition> {
+        val distinctAbis = mutableMapOf<String, AbiDefinition>()
+        abiDefinitions.sortedWith(compareBy { it.name?.toLowerCase() }).also {
+            it.forEach { abiDefinition ->
+                if(abiDefinition.type == "function" || abiDefinition.type == "event"){
+                    if (distinctAbis[abiDefinition.name.capitalize()] != null
+                        || distinctAbis[abiDefinition.name.decapitalize()] != null) {
+                        var counter = 0
+                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null);
+                        distinctAbis["${abiDefinition.name}$counter"] =
+                            abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
+                    } else {
+                        distinctAbis[abiDefinition.name] = abiDefinition
+                    }
+                }
+            }
+        }
+        return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().also{
+            it.addAll(abiDefinitions.filter { abiDef -> abiDef.type != "function" && abiDef.type != "event" })
+        }
+    }
+
+    internal fun AbiDefinition.functionName(wrapperCall: Boolean = false) : String? {
+        return if(wrapperCall) name?.substringBefore("&")
+        else name?.replace("&", "")
+    }
 }
 

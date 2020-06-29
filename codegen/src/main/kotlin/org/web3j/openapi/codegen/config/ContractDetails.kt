@@ -12,15 +12,17 @@
  */
 package org.web3j.openapi.codegen.config
 
+import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateFunctionNames
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
 data class ContractDetails(
     val contractName: String,
-    val abiDefinitions: List<AbiDefinition>
+    var abiDefinitions: List<AbiDefinition>
 ) {
     init {
         abiDefinitions.filter { it.isPayable }
             .forEach { it.inputs.add(AbiDefinition.NamedType("weiValue", "uint")) }
+        abiDefinitions = handleDuplicateFunctionNames(abiDefinitions)
     }
 
     val lowerCaseContractName: String
@@ -39,4 +41,21 @@ data class ContractDetails(
             ?.run {
                 "(parameters: ${capitalizedContractName}DeployParameters)"
             } ?: "()"
+
+//    private fun handleDuplicateInputNames(namedTypes: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
+//        var counter = 1
+//        var previousElement = ""
+//        namedTypes.sortedWith(compareBy { argumentName(it.name, 0).toLowerCase() }).also {
+//            it.forEach { namedType ->
+//                if (namedType.name != null) {
+//                    if (namedType.name.toLowerCase() == previousElement) {
+//                        namedType.name = "${namedType.name}${++counter}"
+//                    } else {
+//                        previousElement = namedType.name.toLowerCase()
+//                        counter = 0
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
