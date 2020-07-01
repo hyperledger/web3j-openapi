@@ -48,15 +48,15 @@ object GeneratorUtils {
 
     internal fun argumentName(name: String?, index: Int): String = if (name.isNullOrEmpty()) "input$index" else name
 
-    internal fun handleDuplicateFunctionNames(abiDefinitions: List<AbiDefinition>): List<AbiDefinition> {
+    internal fun handleDuplicateNames(abiDefinitions: List<AbiDefinition>, type: String): List<AbiDefinition> {
         val distinctAbis = mutableMapOf<String, AbiDefinition>()
         abiDefinitions.sortedWith(compareBy { it.name?.toLowerCase() }).also {
             it.forEach { abiDefinition ->
-                if (abiDefinition.type == "function" || abiDefinition.type == "event") {
+                if (abiDefinition.type == type) {
                     if (distinctAbis[abiDefinition.name.capitalize()] != null ||
                         distinctAbis[abiDefinition.name.decapitalize()] != null) {
-                        var counter = 0
-                        while (distinctAbis["${abiDefinition.name}${counter++}"] != null)
+                        var counter = 1
+                        while (distinctAbis["${abiDefinition.name}${++counter}"] != null);
                         distinctAbis["${abiDefinition.name}$counter"] =
                             abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
                     } else {
@@ -66,7 +66,7 @@ object GeneratorUtils {
             }
         }
         return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().apply {
-            addAll(abiDefinitions.filter { abiDef -> abiDef.type != "function" && abiDef.type != "event" })
+            addAll(abiDefinitions.filter { abiDef -> abiDef.type != type })
         }
     }
 
