@@ -20,7 +20,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.GeneratorUtils.argumentName
-import org.web3j.openapi.codegen.utils.GeneratorUtils.functionName
+import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
@@ -93,11 +93,11 @@ internal class ResourcesImplGenerator(
             .forEach { abiDefinition ->
                 val eventResourceImplClass = ClassName(
                     "$packageName.server.${contractName.toLowerCase()}",
-                    "${abiDefinition.functionName()!!.capitalize()}EventResourceImpl"
+                    "${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl"
                 )
                 val propertySpec =
-                    PropertySpec.builder("${abiDefinition.functionName()!!.decapitalize()}Events", eventResourceImplClass)
-                        .initializer("${abiDefinition.functionName()!!.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
+                    PropertySpec.builder("${abiDefinition.sanitizedName()!!.decapitalize()}Events", eventResourceImplClass)
+                        .initializer("${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
                         .addModifiers(KModifier.OVERRIDE)
                 events.add(propertySpec.build())
             }
@@ -111,23 +111,23 @@ internal class ResourcesImplGenerator(
             .forEach {
                 if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                 val returnType = it.getReturnType(packageName, contractName.toLowerCase())
-                val funSpec = FunSpec.builder(it.functionName()!!)
+                val funSpec = FunSpec.builder(it.sanitizedName()!!)
                     .returns(returnType)
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
-                    "${contractName.decapitalize()}.${it.functionName(true)}().send()"
+                    "${contractName.decapitalize()}.${it.sanitizedName(true)}().send()"
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
-                        "${it.functionName()!!.capitalize()}Parameters"
+                        "${it.sanitizedName()!!.capitalize()}Parameters"
                     )
                     funSpec.addParameter(
-                        "${it.functionName()!!.decapitalize()}Parameters",
+                        "${it.sanitizedName()!!.decapitalize()}Parameters",
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${getFunctionName(it.functionName(true)!!)}(
-                                ${getCallParameters(it.inputs, it.functionName()!!)}
+                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true)!!)}(
+                                ${getCallParameters(it.inputs, it.sanitizedName()!!)}
                             ).send()
                     """.trimIndent()
                 }

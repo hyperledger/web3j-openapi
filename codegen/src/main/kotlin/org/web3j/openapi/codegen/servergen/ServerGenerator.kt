@@ -41,7 +41,7 @@ internal class ServerGenerator(
     init {
         context["contracts"] = configuration.contracts
         context["serverImports"] = serverImports
-        context["projectName"] = configuration.projectName.capitalize()
+        context["projectName"] = configuration.sanitizedProjectName.capitalize()
         context["rootProjectName"] = configuration.rootProjectName
         context["version"] = configuration.version
     }
@@ -148,19 +148,19 @@ internal class ServerGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsApiImpl.mustache"),
-            name = "${configuration.projectName.capitalize()}ApiImpl.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ApiImpl.kt"
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsResourceProvider.mustache"),
-            name = "${configuration.projectName.capitalize()}ResourceProvider.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ResourceProvider.kt"
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/GeneratedContractsResourceImpl.mustache"),
-            name = "${configuration.projectName.capitalize()}ResourceImpl.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ResourceImpl.kt"
         )
     }
 
