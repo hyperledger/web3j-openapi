@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.web3j.openapi.codegen.servergen.subgenerators.StructExtensionsGenerator
 import org.web3j.openapi.codegen.utils.GeneratorUtils
-import org.web3j.openapi.codegen.utils.extractStructs
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path

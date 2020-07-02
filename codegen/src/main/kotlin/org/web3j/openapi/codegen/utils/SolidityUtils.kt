@@ -38,7 +38,7 @@ internal fun String.toNativeType(isParameter: Boolean = true, structName: String
     } else if (endsWith("]")) {
         toNativeArrayType(isParameter)
     } else if (startsWith("uint") || startsWith("int")) {
-        getParameterMapping(isParameter, BigInteger::class)
+        getNumbersMapping(isParameter, this)
     } else if (this == "byte") {
         getParameterMapping(isParameter, Byte::class)
     } else if (startsWith("bytes") || this == "dynamicbytes") {
@@ -62,6 +62,22 @@ internal fun String.toNativeType(isParameter: Boolean = true, structName: String
             "Unsupported type: $this, no native type mapping exists."
         )
     }
+}
+
+fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
+    return if (isParameter) getParameterMapping(isParameter, BigInteger::class)
+    else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class) // FIXME: remove this when web3j-codegen fixes this problem
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 16)
+        getParameterMapping(isParameter, Short::class)
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 32)
+        getParameterMapping(isParameter, Integer::class)
+    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64 ||
+            type.startsWith("uint") && type.substringAfter("int").toInt() < 64)
+        getParameterMapping(isParameter, Long::class)
+    else
+        getParameterMapping(isParameter, BigInteger::class)
 }
 
 private fun getParameterMapping(isParameter: Boolean, kClass: KClass<*>): TypeName {

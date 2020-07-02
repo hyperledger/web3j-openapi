@@ -14,22 +14,21 @@ package org.web3j.openapi.codegen.utils
 
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.IllegalStateException
 
 object GeneratorUtils {
 
     fun loadContractConfigurations(abiList: List<File>, binList: List<File>): List<ContractConfiguration> {
-        val abis = recurseIntoFolders(abiList, "abi")
-        val bins = recurseIntoFolders(binList, "bin")
+        val abis = checkDuplicates(recurseIntoFolders(abiList, "abi"))
+        val bins = recurseIntoFolders(binList, "bin").associateBy({ it.nameWithoutExtension }, { it })
         return abis.map { abiFile ->
-            val binFile = bins.find { bin ->
-                bin.endsWith("${abiFile.name.removeSuffix(".abi")}.bin")
-            } ?: throw FileNotFoundException("${abiFile.name.removeSuffix(".abi")}.bin")
-
             ContractConfiguration(
                 abiFile,
-                binFile,
+                bins[abiFile.nameWithoutExtension]
+                    ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
@@ -38,11 +37,55 @@ object GeneratorUtils {
         }
     }
 
-    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
-        return list.flatMap { folder ->
-            folder.walkTopDown().filter {
-                it.extension == extension
-            }.toList()
+    private fun checkDuplicates(files: List<File>): List<File> {
+        return files.distinctBy { it.name }.also {
+            if (it.size != files.size) throw IllegalStateException("Duplicate contracts names found!")
         }
+    }
+
+    private fun recurseIntoFolders(list: List<File>, extension: String): List<File> {
+        return list.flatMap { folder -> folder.walkTopDown().filter { it.extension == extension }.toList() }
+    }
+
+    internal fun argumentName(name: String?, index: Int): String = if (name.isNullOrEmpty()) "input$index" else name
+
+    fun handleDuplicateNames(abiDefinitions: List<AbiDefinition>, type: String): List<AbiDefinition> {
+        val distinctAbis = mutableMapOf<String, AbiDefinition>()
+        abiDefinitions.forEach { abiDefinition ->
+            if (abiDefinition.type == type) {
+                if (distinctAbis[abiDefinition.name.capitalize()] != null ||
+                    distinctAbis[abiDefinition.name.decapitalize()] != null
+                ) {
+                    var counter = 2
+                    while (distinctAbis["${abiDefinition.name}$counter"] != null) counter++
+                    distinctAbis["${abiDefinition.name}$counter"] =
+                        abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
+                } else {
+                    distinctAbis[abiDefinition.name] = abiDefinition
+                }
+            }
+        }
+        return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().apply {
+            addAll(abiDefinitions.filter { abiDef -> abiDef.type != type })
+        }
+    }
+
+    fun handleDuplicateInputNames(inputs: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
+        val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
+        inputs.forEachIndexed { index, namedType ->
+            if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
+                inputs.filter { input -> input.name == namedType.name }.first().apply {
+                    this.name = "${this.name}Dup"
+                }
+            } else {
+                distinctInputs[argumentName(namedType.name, index).capitalize()] = namedType
+            }
+        }
+        return inputs
+    }
+
+    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String? {
+        return if (wrapperCall) name?.substringBefore("&")
+        else name?.replace("&", "")
     }
 }

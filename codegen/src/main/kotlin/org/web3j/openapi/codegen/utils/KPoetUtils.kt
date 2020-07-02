@@ -40,7 +40,7 @@ internal fun List<NamedType>.toDataClass(
     val constructorBuilder = FunSpec.constructorBuilder()
 
     forEachIndexed { index, input ->
-        val inputName = input.name ?: "input$index"
+        val inputName = GeneratorUtils.argumentName(input.name, index)
         val inputType =
             if (input.type == "tuple") input.type.toNativeType(true, input.internalType.structName, basePackageName, contractName.toLowerCase())
             else input.type.toNativeType()

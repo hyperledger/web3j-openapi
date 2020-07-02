@@ -36,7 +36,7 @@ class CoreGenerator(
         context["apiImports"] = getApiImports()
         context["tags"] = getTags()
         context["contextPath"] = configuration.contextPath
-        context["projectName"] = configuration.projectName.capitalize()
+        context["projectName"] = configuration.sanitizedProjectName.capitalize()
         context["version"] = configuration.version
     }
 
@@ -81,13 +81,13 @@ class CoreGenerator(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/ContractsApi.mustache"),
-            name = "${configuration.projectName.capitalize()}Api.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}Api.kt"
         )
         generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
-            name = "${configuration.projectName.capitalize()}Resource.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}Resource.kt"
         )
     }
 

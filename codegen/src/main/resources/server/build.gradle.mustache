@@ -47,19 +47,8 @@ resolve {
     outputDir = file('src/main/resources/static')
 }
 
-shadowJar {
-    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
-}
-
-installDist {
-    dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
-}
-
 task completeSwaggerUiGeneration {
     dependsOn resolve, generateSwaggerUI, moveSwaggerUiToResources
     generateSwaggerUI.mustRunAfter resolve
     moveSwaggerUiToResources.mustRunAfter generateSwaggerUI
 }
-
-shadowJar.dependsOn completeSwaggerUiGeneration
-installDist.dependsOn completeSwaggerUiGeneration

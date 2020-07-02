@@ -12,12 +12,21 @@
  */
 package org.web3j.openapi.codegen.config
 
+import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateInputNames
+import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateNames
 import org.web3j.protocol.core.methods.response.AbiDefinition
 
 data class ContractDetails(
     val contractName: String,
-    val abiDefinitions: List<AbiDefinition>
+    var abiDefinitions: List<AbiDefinition>
 ) {
+    init {
+        abiDefinitions.filter { it.isPayable }
+            .forEach { it.inputs.add(AbiDefinition.NamedType("weiValue", "uint")) }
+        abiDefinitions = handleDuplicateNames(handleDuplicateNames(abiDefinitions, "event"), "function")
+            .apply { forEach { abiDefinition -> abiDefinition.inputs = handleDuplicateInputNames(abiDefinition.inputs) } }
+    }
+
     val lowerCaseContractName: String
         get() = contractName.toLowerCase()
 

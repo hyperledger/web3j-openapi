@@ -53,8 +53,8 @@ subprojects {
 
     tasks.withType(Test) {
         // FIXME To be removed or fix signature issue
-        dependsOn publishToMavenLocal
-        mustRunAfter publishToMavenLocal
+//        dependsOn publishToMavenLocal
+//        mustRunAfter publishToMavenLocal
         reports.html.destination = file("${reporting.baseDir}/${name}")
         useJUnitPlatform()
     }
