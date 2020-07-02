@@ -12,21 +12,22 @@
  */
 package org.web3j.openapi.codegen.config
 
+import org.jetbrains.kotlin.ir.backend.js.utils.sanitizeName
 import org.web3j.abi.datatypes.Address
 
 data class GeneratorConfiguration(
-    var projectName: String,
+    val projectName: String,
     var packageName: String,
     val outputDir: String,
     val contracts: List<ContractConfiguration>,
     val addressLength: Int = Address.DEFAULT_LENGTH / java.lang.Byte.SIZE,
     val contextPath: String,
-    val version: String
+    val version: String,
+    val sanitizedProjectName: String = sanitizeName(projectName)
 ) {
-    val rootProjectName = projectName.toLowerCase().replace(' ', '-')
+    val rootProjectName = sanitizedProjectName.toLowerCase().replace(' ', '-')
 
     init {
         packageName = packageName.toLowerCase()
-        projectName = projectName.replace("-", "_")
     }
 }
