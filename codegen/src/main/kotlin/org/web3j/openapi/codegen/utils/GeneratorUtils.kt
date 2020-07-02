@@ -27,7 +27,8 @@ object GeneratorUtils {
         return abis.map { abiFile ->
             ContractConfiguration(
                 abiFile,
-                bins[abiFile.nameWithoutExtension] ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
+                bins[abiFile.nameWithoutExtension]
+                    ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
@@ -48,20 +49,19 @@ object GeneratorUtils {
 
     internal fun argumentName(name: String?, index: Int): String = if (name.isNullOrEmpty()) "input$index" else name
 
-    internal fun handleDuplicateNames(abiDefinitions: List<AbiDefinition>, type: String): List<AbiDefinition> {
+    fun handleDuplicateNames(abiDefinitions: List<AbiDefinition>, type: String): List<AbiDefinition> {
         val distinctAbis = mutableMapOf<String, AbiDefinition>()
-        abiDefinitions.sortedWith(compareBy { it.name?.toLowerCase() }).also {
-            it.forEach { abiDefinition ->
-                if (abiDefinition.type == type) {
-                    if (distinctAbis[abiDefinition.name.capitalize()] != null ||
-                        distinctAbis[abiDefinition.name.decapitalize()] != null) {
-                        var counter = 2
-                        while (distinctAbis["${abiDefinition.name}${counter}"] != null) counter++
-                        distinctAbis["${abiDefinition.name}$counter"] =
-                            abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
-                    } else {
-                        distinctAbis[abiDefinition.name] = abiDefinition
-                    }
+        abiDefinitions.forEach { abiDefinition ->
+            if (abiDefinition.type == type) {
+                if (distinctAbis[abiDefinition.name.capitalize()] != null ||
+                    distinctAbis[abiDefinition.name.decapitalize()] != null
+                ) {
+                    var counter = 2
+                    while (distinctAbis["${abiDefinition.name}$counter"] != null) counter++
+                    distinctAbis["${abiDefinition.name}$counter"] =
+                        abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
+                } else {
+                    distinctAbis[abiDefinition.name] = abiDefinition
                 }
             }
         }
@@ -70,23 +70,21 @@ object GeneratorUtils {
         }
     }
 
-    internal fun handleDuplicateInputNames(inputs: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
+    fun handleDuplicateInputNames(inputs: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
         val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
-        inputs.sortedWith(compareBy { it.name?.toLowerCase() }).also {
-            it.forEachIndexed { index, namedType ->
-                    if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
-                        inputs.filter { input -> input.name == namedType.name }.first().apply {
-                            this.name = "${this.name}Dup"
-                        }
-                    } else {
-                        distinctInputs[argumentName(namedType.name, index).capitalize()] = namedType
-                    }
+        inputs.forEachIndexed { index, namedType ->
+            if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
+                inputs.filter { input -> input.name == namedType.name }.first().apply {
+                    this.name = "${this.name}Dup"
+                }
+            } else {
+                distinctInputs[argumentName(namedType.name, index).capitalize()] = namedType
             }
         }
         return inputs
     }
 
-    internal fun AbiDefinition.functionName(wrapperCall: Boolean = false): String? {
+    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String? {
         return if (wrapperCall) name?.substringBefore("&")
         else name?.replace("&", "")
     }
