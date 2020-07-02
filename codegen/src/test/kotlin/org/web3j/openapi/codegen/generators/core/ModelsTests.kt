@@ -21,6 +21,7 @@ import org.web3j.openapi.codegen.coregen.subgenerators.CoreEventsModelGenerator
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreFunctionsModelGenerator
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreStructsModelGenerator
 import org.web3j.openapi.codegen.utils.GeneratorUtils
+import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.extractStructs
 import java.io.File
 import java.io.FileNotFoundException
@@ -77,7 +78,7 @@ class ModelsTests {
                         CoreFunctionsModelGenerator(
                             "com.test",
                             contractConfiguration.contractDetails.capitalizedContractName,
-                            it.name,
+                            it.sanitizedName()!!,
                             tempFolder.canonicalPath,
                             it.inputs
                         ).generate()
@@ -97,7 +98,7 @@ class ModelsTests {
                         CoreEventsModelGenerator(
                             "com.test",
                             contractConfiguration.contractDetails.capitalizedContractName,
-                            it.name,
+                            it.sanitizedName()!!,
                             tempFolder.canonicalPath,
                             it.inputs
                         ).generate()

@@ -14,6 +14,7 @@ package org.web3j.openapi.codegen.utils
 
 import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
+import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.io.FileNotFoundException
 import java.lang.IllegalStateException
@@ -26,7 +27,8 @@ object GeneratorUtils {
         return abis.map { abiFile ->
             ContractConfiguration(
                 abiFile,
-                bins[abiFile.nameWithoutExtension] ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
+                bins[abiFile.nameWithoutExtension]
+                    ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
@@ -45,6 +47,45 @@ object GeneratorUtils {
         return list.flatMap { folder -> folder.walkTopDown().filter { it.extension == extension }.toList() }
     }
 
-    internal fun argumentName(name: String?, index: Int) : String = if(name.isNullOrEmpty()) "input$index" else name
-}
+    internal fun argumentName(name: String?, index: Int): String = if (name.isNullOrEmpty()) "input$index" else name
 
+    fun handleDuplicateNames(abiDefinitions: List<AbiDefinition>, type: String): List<AbiDefinition> {
+        val distinctAbis = mutableMapOf<String, AbiDefinition>()
+        abiDefinitions.forEach { abiDefinition ->
+            if (abiDefinition.type == type) {
+                if (distinctAbis[abiDefinition.name.capitalize()] != null ||
+                    distinctAbis[abiDefinition.name.decapitalize()] != null
+                ) {
+                    var counter = 2
+                    while (distinctAbis["${abiDefinition.name}$counter"] != null) counter++
+                    distinctAbis["${abiDefinition.name}$counter"] =
+                        abiDefinition.also { abiDef -> abiDef.name += "&$counter" }
+                } else {
+                    distinctAbis[abiDefinition.name] = abiDefinition
+                }
+            }
+        }
+        return distinctAbis.map { duplicate -> duplicate.value }.toMutableList().apply {
+            addAll(abiDefinitions.filter { abiDef -> abiDef.type != type })
+        }
+    }
+
+    fun handleDuplicateInputNames(inputs: List<AbiDefinition.NamedType>): List<AbiDefinition.NamedType> {
+        val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
+        inputs.forEachIndexed { index, namedType ->
+            if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
+                inputs.filter { input -> input.name == namedType.name }.first().apply {
+                    this.name = "${this.name}Dup"
+                }
+            } else {
+                distinctInputs[argumentName(namedType.name, index).capitalize()] = namedType
+            }
+        }
+        return inputs
+    }
+
+    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String? {
+        return if (wrapperCall) name?.substringBefore("&")
+        else name?.replace("&", "")
+    }
+}

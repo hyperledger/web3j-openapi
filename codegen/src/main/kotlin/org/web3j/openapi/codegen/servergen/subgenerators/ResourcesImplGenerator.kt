@@ -20,6 +20,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.GeneratorUtils.argumentName
+import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
@@ -92,11 +93,11 @@ internal class ResourcesImplGenerator(
             .forEach { abiDefinition ->
                 val eventResourceImplClass = ClassName(
                     "$packageName.server.${contractName.toLowerCase()}",
-                    "${abiDefinition.name.capitalize()}EventResourceImpl"
+                    "${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl"
                 )
                 val propertySpec =
-                    PropertySpec.builder("${abiDefinition.name.decapitalize()}Events", eventResourceImplClass)
-                        .initializer("${abiDefinition.name.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
+                    PropertySpec.builder("${abiDefinition.sanitizedName()!!.decapitalize()}Events", eventResourceImplClass)
+                        .initializer("${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
                         .addModifiers(KModifier.OVERRIDE)
                 events.add(propertySpec.build())
             }
@@ -110,23 +111,23 @@ internal class ResourcesImplGenerator(
             .forEach {
                 if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                 val returnType = it.getReturnType(packageName, contractName.toLowerCase())
-                val funSpec = FunSpec.builder(it.name)
+                val funSpec = FunSpec.builder(it.sanitizedName()!!)
                     .returns(returnType)
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
-                    "${contractName.decapitalize()}.${it.name}().send()"
+                    "${contractName.decapitalize()}.${it.sanitizedName(true)}().send()"
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
-                        "${it.name.capitalize()}Parameters"
+                        "${it.sanitizedName()!!.capitalize()}Parameters"
                     )
                     funSpec.addParameter(
-                        "${it.name.decapitalize()}Parameters",
+                        "${it.sanitizedName()!!.decapitalize()}Parameters",
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${getFunctionName(it.name)}(
-                                ${getCallParameters(it.inputs, it.name)}
+                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true)!!)}(
+                                ${getCallParameters(it.inputs, it.sanitizedName()!!)}
                             ).send()
                     """.trimIndent()
                 }
