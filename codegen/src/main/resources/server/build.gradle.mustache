@@ -52,7 +52,3 @@ task completeSwaggerUiGeneration {
     generateSwaggerUI.mustRunAfter resolve
     moveSwaggerUiToResources.mustRunAfter generateSwaggerUI
 }
-
-shadowJar.dependsOn completeSwaggerUiGeneration
-installDist.dependsOn completeSwaggerUiGeneration
-run.dependsOn completeSwaggerUiGeneration

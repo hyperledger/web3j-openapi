@@ -16,6 +16,7 @@ import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import org.web3j.openapi.console.options.ProjectOptions
+import org.web3j.openapi.console.utils.GradleUtils.runGradleTask
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Mixin
@@ -125,6 +126,7 @@ class GenerateCommand : Callable<Int> {
         )
 
         GenerateOpenApi(generatorConfiguration).generateAll()
+        runGradleTask(projectFolder, "completeSwaggerUiGeneration", "Generating SwaggerUI...")
 
         println("Done.")
     }
