@@ -1,4 +1,4 @@
-rootProject.name = 'web3j-openapi-poc'
+rootProject.name = 'web3j-openapi'
 
 include 'server'
 findProject(':server')?.name = 'web3j-openapi-server'
