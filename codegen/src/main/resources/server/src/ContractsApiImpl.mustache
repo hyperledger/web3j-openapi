@@ -12,13 +12,13 @@ import javax.ws.rs.core.Context
 
 @Generated
 class {{projectName}}ApiImpl @Inject constructor(
-web3j: Web3j,
-credentials: Credentials,
-gasProvider: ContractGasProvider,
-@Context uriInfo: ExtendedUriInfo
+    web3j: Web3j,
+    credentials: Credentials,
+    gasProvider: ContractGasProvider,
+    @Context uriInfo: ExtendedUriInfo
 ) : {{projectName}}Api {
 
-override val contracts = {{projectName}}ResourceImpl(
-web3j, RawTransactionManager(web3j, credentials), gasProvider, uriInfo
-)
+    override val contracts = {{projectName}}ResourceImpl(
+        web3j, RawTransactionManager(web3j, credentials), gasProvider, uriInfo
+    )
 }
