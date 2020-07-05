@@ -29,5 +29,5 @@ interface Web3jOpenApi {
      * to add a custom resource containing all contract types.
      */
     @get:Path("contracts")
-    val contracts: ContractResource
+    val contracts: SubResource
 }

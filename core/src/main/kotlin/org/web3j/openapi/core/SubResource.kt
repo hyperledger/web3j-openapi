@@ -17,14 +17,14 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 /**
- * A Web3j OpenAPI can contain multiple contracts.
+ * A Web3j OpenAPI can contain nested resources.
  *
- * Subclasses may define additional contracts as JAX-RS sub-resources.
+ * Subclasses may define additional values as JAX-RS sub-resources.
  */
-interface ContractResource {
+interface SubResource {
 
     /**
-     * Lists all available contract paths.
+     * Lists all available sub-resources.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
