@@ -15,11 +15,11 @@ package org.web3j.openapi.server
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.glassfish.jersey.server.internal.routing.UriRoutingContext
 import org.glassfish.jersey.server.model.Resource
-import org.web3j.openapi.core.ContractResource
+import org.web3j.openapi.core.SubResource
 
-abstract class ContractResourceImpl(
+abstract class SubResourceImpl(
     private val uriInfo: ExtendedUriInfo
-) : ContractResource {
+) : SubResource {
 
     override fun findAll(): List<String> {
         val resourceClass = (uriInfo as UriRoutingContext).resourceClass
