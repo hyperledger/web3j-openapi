@@ -26,13 +26,7 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.crypto.Credentials
-import org.web3j.openapi.server.ContractCallExceptionMapper
-import org.web3j.openapi.server.ContractGasProviderFactory
-import org.web3j.openapi.server.CredentialsFactory
-import org.web3j.openapi.server.IllegalArgumentExceptionMapper
-import org.web3j.openapi.server.JsonMappingExceptionMapper
-import org.web3j.openapi.server.Properties
-import org.web3j.openapi.server.Web3jFactory
+import org.web3j.openapi.server.*
 import org.web3j.openapi.server.spi.OpenApiResourceProvider
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
@@ -84,6 +78,9 @@ class OpenApiResourceConfig(
         register(JsonMappingExceptionMapper::class.java)
         register(IllegalArgumentExceptionMapper::class.java)
         register(ContractCallExceptionMapper::class.java)
+        register(JsonParseExceptionMapper::class.java)
+        register(TransactionExceptionMapper::class.java)
+        register(UnsupportedOperationExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
         register(LoggingFeature(logger))
         register(InjectionBinder())
