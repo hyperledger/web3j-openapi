@@ -15,7 +15,6 @@ shadowJar {
 }
 
 dependencies {
-    implementation project(":web3j-openapi-server")
     implementation project(":web3j-openapi-codegen")
     api "org.web3j:abi:${versions.web3j}"
     implementation "info.picocli:picocli:${versions.picocli}"

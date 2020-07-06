@@ -10,22 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console
+package org.web3j.openapi.server.console.options
 
-import org.web3j.openapi.console.options.ConfigFileOptions
-import picocli.CommandLine.Command
-import picocli.CommandLine.Mixin
-import picocli.CommandLine.Unmatched
+import picocli.CommandLine.Option
+import java.net.InetAddress
 
-// allows two pass approach to obtain optional config file
-@Command(
-    mixinStandardHelpOptions = true
-)
-class ConfigFileCommand {
+class ServerOptions {
 
-    @Mixin
-    internal val configFileOptions = ConfigFileOptions()
+    @Option(
+        names = ["--host"],
+        description = ["specify the host name"],
+        defaultValue = "localhost"
+    )
+    lateinit var host: InetAddress
 
-    @Unmatched
-    private var otherOptions: List<String>? = null
+    @Option(
+        names = ["--port"],
+        description = ["specify the port number"],
+        defaultValue = "8080"
+    )
+    var port: Int = 8080
 }

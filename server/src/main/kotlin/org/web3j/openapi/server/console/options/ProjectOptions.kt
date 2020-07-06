@@ -10,16 +10,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.console.options
+package org.web3j.openapi.server.console.options
 
 import picocli.CommandLine.Option
-import java.net.URL
 
-class NetworkOptions {
+class ProjectOptions {
+
     @Option(
-        names = ["-e", "--endpoint"],
-        description = ["specify the endpoint"],
+        names = ["-n", "--name"],
+        description = ["specify the project name."],
+        defaultValue = "Web3j-OpenAPI",
         required = true
     )
-    lateinit var endpoint: URL
+    lateinit var projectName: String
+
+    @Option(
+        names = ["--context-path"],
+        description = ["set the API context path (default: the project name)"]
+    )
+    var contextPath: String? = null
 }
