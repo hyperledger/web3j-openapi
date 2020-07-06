@@ -9,8 +9,5 @@ findProject(':core')?.name = 'web3j-openapi-core'
 include 'client'
 findProject(':client')?.name = 'web3j-openapi-client'
 
-include 'console'
-findProject(':console')?.name = 'web3j-openapi-console'
-
 include 'codegen'
 findProject(':codegen')?.name = 'web3j-openapi-codegen'
