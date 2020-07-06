@@ -14,7 +14,6 @@ package org.web3j.openapi.server
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.ser.Serializers
 import org.eclipse.jetty.http.HttpStatus
 import org.web3j.openapi.core.ErrorResponse
 import org.web3j.protocol.exceptions.TransactionException
