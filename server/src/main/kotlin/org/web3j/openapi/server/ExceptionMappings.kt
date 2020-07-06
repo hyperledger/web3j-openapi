@@ -12,9 +12,11 @@
  */
 package org.web3j.openapi.server
 
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import org.eclipse.jetty.http.HttpStatus
 import org.web3j.openapi.core.ErrorResponse
+import org.web3j.protocol.exceptions.TransactionException
 import org.web3j.tx.exceptions.ContractCallException
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.core.Context
@@ -50,6 +52,9 @@ sealed class BaseExceptionMapper<E : Throwable>(
 }
 
 class JsonMappingExceptionMapper : BaseExceptionMapper<JsonMappingException>(Status.BAD_REQUEST)
+class JsonParseExceptionMapper : BaseExceptionMapper<JsonParseException>(Status.BAD_REQUEST)
+class TransactionExceptionMapper : BaseExceptionMapper<TransactionException>(Status.BAD_REQUEST)
+class UnsupportedOperationExceptionMapper : BaseExceptionMapper<UnsupportedOperationException>(Status.BAD_REQUEST)
 class IllegalArgumentExceptionMapper : BaseExceptionMapper<IllegalArgumentException>(CustomStatus.UNPROCESSABLE_ENTITY)
 class ContractCallExceptionMapper : BaseExceptionMapper<ContractCallException>(CustomStatus.UNPROCESSABLE_ENTITY)
 
