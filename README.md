@@ -1,6 +1,8 @@
 Web3j Open API
 ==============
 
+[![Build Status](https://travis-ci.org/web3j/web3j-openapi.svg?branch=master)](https://travis-ci.org/web3j/web3j-openapi)
+
 ## Modules
 
  * openapi: JAX-RS, Web3j Core (only interfaces), Swagger annotations
