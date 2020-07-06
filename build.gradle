@@ -51,6 +51,20 @@ subprojects {
         }
     }
 
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                pom {
+                    scm {
+                        url = "https://github.com/web3j/web3j-openapi"
+                        connection = "scm:https://github.com/web3j/web3j-openapi.git"
+                        developerConnection = "scm:git://github.com/web3j/web3j-openapi.git"
+                    }
+                }
+            }
+        }
+    }
+
     tasks.withType(Test) {
         // FIXME To be removed or fix signature issue
 //        dependsOn publishToMavenLocal
