@@ -20,6 +20,8 @@ dependencies {
 
     implementation "org.slf4j:jul-to-slf4j:${versions.slf4j}"
 
+    implementation "info.picocli:picocli:${versions.picocli}"
+
     api "org.eclipse.jetty:jetty-server:${versions.jetty}"
     implementation "org.eclipse.jetty:jetty-servlet:${versions.jetty}"
 
