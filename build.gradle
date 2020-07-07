@@ -66,9 +66,9 @@ subprojects {
     }
 
     tasks.withType(Test) {
-        // FIXME To be removed or fix signature issue
-//        dependsOn publishToMavenLocal
-//        mustRunAfter publishToMavenLocal
+        // Comment the following two lines if you don't have pgp signatures set on your machine
+        dependsOn publishToMavenLocal
+        mustRunAfter publishToMavenLocal
         reports.html.destination = file("${reporting.baseDir}/${name}")
         useJUnitPlatform()
     }

@@ -12,6 +12,8 @@
  */
 package org.web3j.openapi.codegen.generators
 
+import assertk.assertThat
+import assertk.assertions.isSuccess
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
@@ -51,18 +53,18 @@ class GenerationTest {
 
         GenerateOpenApi(generatorConfiguration).generateAll()
 
-        // FIXME uncomment this test after publishing the OpenAPI artifacts
-//        assertThat {
-//            runGradleTask(
-//                tempFolder,
-//                "shadowJar")
-//        }.isSuccess()
-//
-//        assertThat {
-//            runGradleTask(
-//                tempFolder,
-//                "installDist")
-//        }.isSuccess()
+        // Might not work if you don't have current version artifacts published to MavenLocal
+        assertThat {
+            runGradleTask(
+                tempFolder,
+                "shadowJar")
+        }.isSuccess()
+
+        assertThat {
+            runGradleTask(
+                tempFolder,
+                "installDist")
+        }.isSuccess()
     }
 
     @Throws(IOException::class)
