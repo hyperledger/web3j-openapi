@@ -30,7 +30,7 @@ dependencies {
 
     testImplementation project(':web3j-openapi-client')
 
-    integrationTestImplementation "org.web3j:web3j-unit:${versions.web3j}-SNAPSHOT" // FIXME Release web3j unit
+    integrationTestImplementation "org.web3j:web3j-unit:${versions.web3j}" // FIXME Release web3j unit
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
 
