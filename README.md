@@ -6,7 +6,7 @@ Web3j Open API
 Web3j-OpenAPI is an OpenAPI generator from solidity smart contracts. 
 
 ## Description 
-Web3j-OpenAPI provides a way to interact with the Ethereum blockchain via simple and intuitive HTTP requests. These interactions can be done using plain HTTP requests or via the Swagger-UI, which is generated with every project.
+Web3j-OpenAPI provides a way to interact with the Ethereum blockchain via simple and intuitive HTTP requests, abstracting the coding layer. These interactions can be done using plain HTTP requests or via the Swagger-UI, which is generated with every project.
 
 The workflow can be summed in the following steps:
 - Writing a solidity smart contract
