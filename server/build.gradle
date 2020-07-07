@@ -1,3 +1,5 @@
+description 'web3j-openapi server module'
+
 apply plugin: 'org.unbroken-dome.test-sets'
 
 testSets {
