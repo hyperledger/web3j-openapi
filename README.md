@@ -3,49 +3,64 @@ Web3j Open API
 
 [![Build Status](https://travis-ci.org/web3j/web3j-openapi.svg?branch=master)](https://travis-ci.org/web3j/web3j-openapi)
 
-The Web3j Open API project allows you to easily generated OpenAPI services for integrating with Ethereum.
+Web3j-OpenAPI is an OpenAPI generator from solidity smart contracts. 
 
-It builds on top of Web3j's smart contract wrappers to provide a fully typesafe integration from the client through to the blockchain.
+## Description 
+Web3j-OpenAPI provides a way to interact with the Ethereum blockchain via simple and intuitive HTTP requests. These interactions can be done using plain HTTP requests or via the Swagger-UI, which is generated with every project.
 
-## Modules
+The workflow can be summed in the following steps:
+- Writing a solidity smart contract
+- Generating the corresponding OpenAPI project using Web3j-OpenAPI
+- Running the generated project
+- Sending HTTP requests using Curls or Swagger-UI
 
- * openapi: JAX-RS, Web3j Core (only interfaces), Swagger annotations
- * core: openapi, Jersey Core, Swager UI
- * server: core, Jersey Server, Jetty, integration tests
- * codegen: Mustache, Kotlinpoet?, openapi (Based on CorDappGenerator for Gradle project)
- * client: core, Jersey Client
- * console: Command-line tools command `epirus-openapi`, sub-commands `generate`, `run`
- * helloworld:
-   * openapi
-   * server: web3j-openapi-server (org.web3j.openapi.server.MainKt or generated main)
+### Why an OpenAPI generator
+As stated above, the Web3j-OpenAPI generator generates an OpenAPI project from a smart contract. Thus, providing a way to interact with the Etheruem blockchain using HTTP requests.
+
+Such generator is beneficial in the following way:
+#### Making it easier to interact with the Ethereum blockchain:
+Interacting with the Ethereum blockchain before, required knowing a programming language beside, solidity, and then hardcoding the desired logic in that logic. This, makes it hard for people wishing to get involved in the smart contracts world and adds extra technical requirements aside from knowing the smart contracts language.
+#### Interact with smart contracts without code:
+Being able to generate an OpenAPI project from a smart contract and interacting with it using HTTP requests, eliminates the need to code any interactions to be able to send them to the blockchain. Thus, it is legitimate to say that using the Web3j-OpenAPI, it is possible to interact with the Ethereum blockchain using no code, besides solidity.
+
 
 ## Use cases
+An OpenAPI project can be generated using the following:
 
 ```ssh
-$ epirus generate openapi Greeter.sol -p com.helloworld -o helloworld
+$ epirus generate openapi -p com.helloworld -o . --abi helloworld.abi --bin helloworld.bin --name helloworld
 ```
 
-Creates Gradle project with one module to run a server (with application plugin) and another with interfaces.
+Then, the generated project can be using in the following ways:
+
+
+**Creates Gradle project that can be run using the application plugin:**
 ```ssh
-$ cd /home/rachid/helloworld
-$ ./gradle run // Starts the server exposing Greeter.sol
+$ cd helloworld
+$ ./gradle run // Starts the server exposing Helloworld.sol
 ...
 ```
 
-Also start the server with:
+**Also, start the server using the ShadowJar:**
 ```ssh
 $ ./gradle shadowJar // Create an executable JAR that starts the server
-$ java -jar helloworld-0.1.0-all.jar
+$ java -jar helloworld-server-all.jar
 ...
 ```
 
-Or using the CLI:
+**Or, using the CLI:**
 
 ```ssh
-$ epirus openapi generate/run
+$ ./helloworld-server
 ```
 
-To interact via Java/Kotlin with this API:
+### Interact with the generated project:
+Interactions can be done using HTTP request either through the `SwaggerUI` or `Curls`:
+```ssh
+$ curl -X POST "http://{host}:{port}/{application name}/contracts/helloworld/{contractAddress}/SayIt" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"greeting\":\"Hello OpenAPI\"}"
+```
+
+To interact via Java/Kotlin:
 
 ```groovy
 dependencies {
@@ -65,3 +80,5 @@ val receipt = helloWorldApi.contracts.greeter.deploy(
 
 val greeter = helloWorldApi.contracts.greeter.load(receipt.contractAddress)
 ```
+
+**For more explanations**, check the following blog post: (link to blog post), or the demo project
