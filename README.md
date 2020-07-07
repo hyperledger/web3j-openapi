@@ -37,13 +37,13 @@ Then, the generated project can be using in the following ways:
 **Creates Gradle project that can be run using the application plugin:**
 ```ssh
 $ cd helloworld
-$ ./gradle run // Starts the server exposing Helloworld.sol
+$ ./gradlew run // Starts the server exposing Helloworld.sol
 ...
 ```
 
 **Also, start the server using the ShadowJar:**
 ```ssh
-$ ./gradle shadowJar // Create an executable JAR that starts the server
+$ ./gradlew shadowJar // Create an executable JAR that starts the server
 $ java -jar helloworld-server-all.jar
 ...
 ```
@@ -51,6 +51,7 @@ $ java -jar helloworld-server-all.jar
 **Or, using the CLI:**
 
 ```ssh
+$ ./gradlew installDist // Create an executable to start the server
 $ ./helloworld-server
 ```
 
