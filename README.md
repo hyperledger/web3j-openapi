@@ -73,13 +73,13 @@ And within a client application:
 
 ```
 val service = ClientService("http://localhost:8080")
-val helloWorld = ClientBuilder.build(HelloWorldApi::class.java, service)
+val helloWorld = ClientFactory.create(HelloWorldApi::class.java, service)
 
-val receipt = helloWorldApi.contracts.greeter.deploy(
+val receipt = helloWorld.contracts.greeter.deploy(
     GreeterDeployParameters("Test greeter")
 )
 
-val greeter = helloWorldApi.contracts.greeter.load(receipt.contractAddress)
+val greeter = helloWorld.contracts.greeter.load(receipt.contractAddress)
 ```
 
 **For more explanations**, check the following blog post: (link to blog post), or the demo project
