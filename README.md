@@ -17,38 +17,37 @@ The workflow can be summed in the following steps:
 ### Why an OpenAPI generator
 As stated above, the Web3j-OpenAPI generator generates an OpenAPI project from a smart contract. Thus, providing a way to interact with the Etheruem blockchain using HTTP requests.
 
-Such generator is beneficial in the following way:
+Such generator is beneficial in the following ways:
 #### Making it easier to interact with the Ethereum blockchain:
-Interacting with the Ethereum blockchain before, required knowing a programming language beside, solidity, and then hardcoding the desired logic in that logic. This, makes it hard for people wishing to get involved in the smart contracts world and adds extra technical requirements aside from knowing the smart contracts language.
+Interacting with the Ethereum blockchain before required knowing a programming language besides solidity, and then hardcoding the desired logic. This, makes it hard for people wishing to get involved in the smart contracts world and adds extra technical requirements in addition to knowing the smart contracts language.
 #### Interact with smart contracts without code:
-Being able to generate an OpenAPI project from a smart contract and interacting with it using HTTP requests, eliminates the need to code any interactions to be able to send them to the blockchain. Thus, it is legitimate to say that using the Web3j-OpenAPI, it is possible to interact with the Ethereum blockchain using no code, besides solidity.
+Being able to generate an OpenAPI project from a smart contract and interacting with it using HTTP requests, eliminates the need to code any interactions and being able to send them to the blockchain. Thus, it is legitimate to say that the Web3j-OpenAPI lets you interact with the Ethereum blockchain using no code, besides solidity.
 
 
 ## Use cases
-An OpenAPI project can be generated using the following:
+An OpenAPI project can be generated using the following command:
 
 ```ssh
 $ epirus generate openapi -p com.helloworld -o . --abi helloworld.abi --bin helloworld.bin --name helloworld
 ```
 
-Then, the generated project can be using in the following ways:
+Then, the generated project can be used in the following ways:
 
-
-**Creates Gradle project that can be run using the application plugin:**
+**Creating a Gradle project that can be run using the application plugin:**
 ```ssh
 $ cd helloworld
 $ ./gradlew run // Starts the server exposing Helloworld.sol
 ...
 ```
 
-**Also, start the server using the ShadowJar:**
+**Starting the server using the ShadowJar:**
 ```ssh
 $ ./gradlew shadowJar // Create an executable JAR that starts the server
 $ java -jar helloworld-server-all.jar
 ...
 ```
 
-**Or, using the CLI:**
+**Using the CLI:**
 
 ```ssh
 $ ./gradlew installDist // Create an executable to start the server
@@ -56,7 +55,7 @@ $ ./helloworld-server
 ```
 
 ### Interact with the generated project:
-Interactions can be done using HTTP request either through the `SwaggerUI` or `Curls`:
+Interactions can be done using HTTP requests either through the `SwaggerUI` or `Curls`:
 ```ssh
 $ curl -X POST "http://{host}:{port}/{application name}/contracts/helloworld/{contractAddress}/SayIt" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"greeting\":\"Hello OpenAPI\"}"
 ```
