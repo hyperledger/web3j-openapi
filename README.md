@@ -25,7 +25,7 @@ Being able to generate an OpenAPI project from a smart contract and interacting 
 
 
 ## Use cases
-An OpenAPI project can be generated using the following command:
+An OpenAPI project can be generated using the [Epirus-CLI](https://github.com/epirus-io/epirus-cli) as follows:
 
 ```ssh
 $ epirus generate openapi -p com.helloworld -o . --abi helloworld.abi --bin helloworld.bin --name helloworld
