@@ -55,7 +55,7 @@ $ ./helloworld-server
 ```
 
 ### Interact with the generated project:
-Interactions can be done using HTTP requests either through the `SwaggerUI` or `Curls`:
+Interactions can be done using HTTP requests either through the `SwaggerUI` on `{host}:{post}/swagger-ui` or `Curls`:
 ```ssh
 $ curl -X POST "http://{host}:{port}/{application name}/contracts/helloworld/{contractAddress}/SayIt" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"greeting\":\"Hello OpenAPI\"}"
 ```
