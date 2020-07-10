@@ -186,6 +186,12 @@ internal class CoreApiGenerator(
             template = TemplateUtils.mustacheTemplate("core/src/api/ContractResource.mustache"),
             name = "${contractDetails.capitalizedContractName}Resource.kt"
         )
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = folderPath,
+            template = TemplateUtils.mustacheTemplate("core/src/api/EventsResource.mustache"),
+            name = "${contractDetails.capitalizedContractName}Events.kt"
+        )
     }
 
     companion object : KLogging()
