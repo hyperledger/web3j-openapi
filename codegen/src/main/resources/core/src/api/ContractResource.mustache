@@ -1,8 +1,8 @@
 package {{packageName}}.core.{{contractName}}
 
-{{#imports}}
+{{#modelsImports}}
     {{import}}
-{{/imports}}
+{{/modelsImports}}
 import io.swagger.v3.oas.annotations.Operation
 import javax.annotation.processing.Generated
 import javax.ws.rs.Consumes
@@ -21,13 +21,13 @@ interface {{capitalizedContractName}}Resource {
     @get:Path("events")
     val events: {{capitalizedContractName}}Events
 
-{{/contractDetails}}
-{{#contractResources.functionsResources}}
-        {{{method}}}
-        {{{path}}}
-        {{mediaType}}
-        {{{operationTag}}}
-        {{resource}} : {{{returnType}}}
+    {{/contractDetails}}
+    {{#contractResources.functionsResources}}
+            {{{method}}}
+            {{{path}}}
+            {{mediaType}}
+            {{{operationTag}}}
+            {{resource}} : {{{returnType}}}
 
-{{/contractResources.functionsResources}}
+    {{/contractResources.functionsResources}}
 }

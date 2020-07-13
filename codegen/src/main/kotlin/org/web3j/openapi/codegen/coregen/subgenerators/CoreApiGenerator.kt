@@ -38,7 +38,8 @@ internal class CoreApiGenerator(
         context["contractName"] = contractDetails.lowerCaseContractName
         context["contractNameCap"] = contractDetails.capitalizedContractName
         context["contractDetails"] = contractDetails
-        context["imports"] = imports()
+        context["modelsImports"] = modelsImports()
+        context["eventsImports"] = eventsImports()
         context["contractResources"] = contractResources()
     }
 
@@ -47,7 +48,6 @@ internal class CoreApiGenerator(
             mkdirs()
         }
         copySources()
-        generateEventsResources()
         generateModels()
         generateStructsModels()
     }
@@ -67,7 +67,7 @@ internal class CoreApiGenerator(
         }
     }
 
-    private fun imports(): List<Import> {
+    private fun modelsImports(): List<Import> {
         return contractDetails.abiDefinitions
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
@@ -75,6 +75,14 @@ internal class CoreApiGenerator(
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName()!!.capitalize()}Parameters")
                 else
                     Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName()!!.capitalize()}EventResponse")
+            }
+    }
+
+    private fun eventsImports(): List<Import> {
+        return contractDetails.abiDefinitions
+            .filter {it.type == "event" }
+            .map {
+                Import("import $packageName.core.${contractDetails.lowerCaseContractName}.events.${it.sanitizedName()!!.capitalize()}EventResource")
             }
     }
 
@@ -105,6 +113,7 @@ internal class CoreApiGenerator(
                 } else {
                     eventResources.add(
                         EventResource(
+                            name = it.sanitizedName()!!.capitalize(),
                             resource = "val ${it.sanitizedName()!!.decapitalize()}Events",
                             path = "@get:Path(\"${it.sanitizedName()!!.capitalize()}Events\")",
                             returnType = "${it.sanitizedName()!!.capitalize()}EventResource"
@@ -161,20 +170,6 @@ internal class CoreApiGenerator(
         }
     }
 
-    private fun generateEventsResources() {
-        contractDetails.abiDefinitions
-            .filter { it.type == "event" }
-            .forEach { abiDefinition ->
-                context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
-                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResource.kt"
-                )
-            }
-    }
-
     private fun copySources() {
         TemplateUtils.generateFromTemplate(
             context = context,
@@ -194,6 +189,25 @@ internal class CoreApiGenerator(
             template = TemplateUtils.mustacheTemplate("core/src/api/EventsResource.mustache"),
             name = "${contractDetails.capitalizedContractName}Events.kt"
         )
+
+        val eventsFolder = File(
+            Path.of(
+                folderPath,
+                "events"
+            ).toString()).apply {
+            mkdirs()
+        }
+        contractDetails.abiDefinitions
+            .filter { it.type == "event" }
+            .forEach { abiDefinition ->
+                context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
+                TemplateUtils.generateFromTemplate(
+                    context = context,
+                    outputDir = eventsFolder.canonicalPath,
+                    template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
+                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResource.kt"
+                )
+            }
     }
 
     companion object : KLogging()
