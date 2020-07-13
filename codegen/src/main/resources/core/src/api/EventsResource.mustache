@@ -11,9 +11,9 @@ import javax.ws.rs.Path
 @Generated
 interface {{capitalizedContractName}}Events : SubResource {
 {{/contractDetails}}
-{{#contractResources}}
+{{#contractResources.eventsResources}}
     {{{path}}}
     {{resource}} : {{{returnType}}}
 
-{{/contractResources}}
+{{/contractResources.eventsResources}}
 }

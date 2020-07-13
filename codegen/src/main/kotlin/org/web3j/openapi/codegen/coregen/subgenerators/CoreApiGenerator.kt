@@ -13,7 +13,9 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
-import org.web3j.openapi.codegen.common.ContractResource
+import org.web3j.openapi.codegen.common.ContractResources
+import org.web3j.openapi.codegen.common.EventResource
+import org.web3j.openapi.codegen.common.FunctionResource
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
@@ -50,20 +52,6 @@ internal class CoreApiGenerator(
         generateStructsModels()
     }
 
-    private fun generateEventsResources() {
-        contractDetails.abiDefinitions
-            .filter { it.type == "event" }
-            .forEach { abiDefinition ->
-                context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
-                TemplateUtils.generateFromTemplate(
-                    context = context,
-                    outputDir = folderPath,
-                    template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
-                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResource.kt"
-                )
-            }
-    }
-
     private fun generateStructsModels() {
         extractStructs(contractDetails.abiDefinitions)?.forEach { structDefinition ->
             CoreStructsModelGenerator(
@@ -90,8 +78,9 @@ internal class CoreApiGenerator(
             }
     }
 
-    private fun contractResources(): List<ContractResource> {
-        val resources = mutableListOf<ContractResource>()
+    private fun contractResources(): ContractResources {
+        val functionResources = mutableListOf<FunctionResource>()
+        val eventResources = mutableListOf<EventResource>()
         contractDetails.abiDefinitions
             .filter { it.type == "function" || it.type == "event" }
             .forEach {
@@ -102,8 +91,8 @@ internal class CoreApiGenerator(
                             "${it.sanitizedName()!!.decapitalize()}Parameters : ${it.sanitizedName()!!.capitalize()}Parameters"
                         else ""
                     val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName}\"],  summary = \"Execute the ${it.sanitizedName()!!.capitalize()} method\")"
-                    resources.add(
-                        ContractResource(
+                    functionResources.add(
+                        FunctionResource(
                             functionName = it.sanitizedName()!!,
                             resource = "fun ${it.sanitizedName()}($parameters)",
                             method = if (it.inputs.isEmpty()) "@GET" else "@POST",
@@ -114,17 +103,16 @@ internal class CoreApiGenerator(
                         )
                     )
                 } else {
-                    resources.add(
-                        ContractResource(
-                            functionName = "${it.sanitizedName()}Event",
+                    eventResources.add(
+                        EventResource(
                             resource = "val ${it.sanitizedName()!!.decapitalize()}Events",
-                            method = "@get:Path(\"${it.sanitizedName()!!.capitalize()}Events\")",
+                            path = "@get:Path(\"${it.sanitizedName()!!.capitalize()}Events\")",
                             returnType = "${it.sanitizedName()!!.capitalize()}EventResource"
                         )
                     )
                 }
             }
-        return resources
+        return ContractResources(functionResources, eventResources)
     }
 
     private fun generateModels() {
@@ -171,6 +159,20 @@ internal class CoreApiGenerator(
                 }
             }
         }
+    }
+
+    private fun generateEventsResources() {
+        contractDetails.abiDefinitions
+            .filter { it.type == "event" }
+            .forEach { abiDefinition ->
+                context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
+                TemplateUtils.generateFromTemplate(
+                    context = context,
+                    outputDir = folderPath,
+                    template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
+                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResource.kt"
+                )
+            }
     }
 
     private fun copySources() {
