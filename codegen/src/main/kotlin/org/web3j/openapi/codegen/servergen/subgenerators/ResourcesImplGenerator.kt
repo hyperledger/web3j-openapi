@@ -45,8 +45,7 @@ internal class ResourcesImplGenerator(
             .forEach { file ->
                 CopyUtils.kotlinFormat(file)
             }
-        if (resourcesDefinition.filter { it.type == "event" }.isNotEmpty())
-            copySources()
+        copySources()
     }
 
     private fun generateClass(): FileSpec {

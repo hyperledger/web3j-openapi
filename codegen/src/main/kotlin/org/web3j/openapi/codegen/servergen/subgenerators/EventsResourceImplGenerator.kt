@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.codegen.servergen.subgenerators
 
+import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
 import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import org.web3j.openapi.codegen.utils.structName
@@ -40,11 +41,11 @@ class EventsResourceImplGenerator(
             Path.of(
                 folderPath,
                 "eventsImpl"
-            ).toString()).apply {
-            mkdirs()
-        }
+            ).toString())
+
         abiDefinitions
             .filter { it.type == "event" }
+            .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
                 context["eventNameCap"] = abiDefinition.sanitizedName()!!.capitalize()
                 context["eventName"] = abiDefinition.sanitizedName()!!.decapitalize()
