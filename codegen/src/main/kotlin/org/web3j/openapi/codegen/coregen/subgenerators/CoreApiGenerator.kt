@@ -81,7 +81,7 @@ internal class CoreApiGenerator(
 
     private fun eventsImports(): List<Import> {
         return contractDetails.abiDefinitions
-            .filter {it.type == "event" }
+            .filter { it.type == "event" }
             .map {
                 Import("import $packageName.core.${contractDetails.lowerCaseContractName}.events.${it.sanitizedName()!!.capitalize()}EventResource")
             }

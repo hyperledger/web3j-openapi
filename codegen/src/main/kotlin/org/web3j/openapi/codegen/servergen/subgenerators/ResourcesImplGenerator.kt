@@ -20,7 +20,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.openapi.codegen.common.EventResource
 import org.web3j.openapi.codegen.common.Import
-import org.web3j.openapi.codegen.utils.*
+import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.GeneratorUtils.argumentName
 import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
@@ -45,7 +45,7 @@ internal class ResourcesImplGenerator(
             .forEach { file ->
                 CopyUtils.kotlinFormat(file)
             }
-        if(resourcesDefinition.filter { it.type == "event" }.isNotEmpty())
+        if (resourcesDefinition.filter { it.type == "event" }.isNotEmpty())
             copySources()
     }
 
