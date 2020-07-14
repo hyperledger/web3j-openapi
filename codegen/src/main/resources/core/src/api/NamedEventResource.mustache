@@ -17,7 +17,7 @@ interface {{eventName}}EventResource : EventResource<{{eventName}}EventResponse>
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        tags = ["{{contractNameCap}}Events"],
+        tags = ["{{contractNameCap}} Events"],
         summary = "Get the {{eventName}} event"
     )
     override fun findBy(transactionReceiptModel: org.web3j.openapi.core.models.TransactionReceiptModel):
