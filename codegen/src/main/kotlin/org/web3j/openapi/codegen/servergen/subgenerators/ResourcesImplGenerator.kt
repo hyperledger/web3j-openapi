@@ -67,11 +67,19 @@ internal class ResourcesImplGenerator(
             .addParameter(
                 contractName.decapitalize(),
                 contractClass
+            ).addParameter(
+                "uriInfo",
+                extendedUriInfoClass
             )
 
         val contractResourceClass = ClassName(
             "$packageName.core.${contractName.toLowerCase()}",
             "${contractName.capitalize()}Resource"
+        )
+
+        val eventsResourcesClass = ClassName(
+            "$packageName.core.${contractName.toLowerCase()}",
+            "${contractName.capitalize()}Events"
         )
 
         val resourcesClass = TypeSpec
@@ -85,14 +93,21 @@ internal class ResourcesImplGenerator(
                 )
                     .initializer(contractName.decapitalize())
                     .build()
-            )
-            .addProperty(
+            ).addProperty(
                 PropertySpec.builder(
                     "uriInfo",
                     extendedUriInfoClass,
                     KModifier.PRIVATE
                 )
-                    .initializer(contractName.decapitalize())
+                    .initializer("uriInfo")
+                    .build()
+            ).addProperty(
+                PropertySpec.builder(
+                    "events",
+                    eventsResourcesClass,
+                    KModifier.OVERRIDE
+                )
+                    .initializer("${contractName.capitalize()}EventsImpl(${contractName.decapitalize()}, uriInfo)")
                     .build()
             ).addSuperinterface(contractResourceClass)
 
