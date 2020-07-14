@@ -13,6 +13,7 @@
 package org.web3j.openapi.codegen.coregen.subgenerators
 
 import mu.KLogging
+import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
 import org.web3j.openapi.codegen.common.ContractResources
 import org.web3j.openapi.codegen.common.EventResource
 import org.web3j.openapi.codegen.common.FunctionResource
@@ -194,11 +195,11 @@ internal class CoreApiGenerator(
             Path.of(
                 folderPath,
                 "events"
-            ).toString()).apply {
-            mkdirs()
-        }
+            ).toString())
+
         contractDetails.abiDefinitions
             .filter { it.type == "event" }
+            .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
                 context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
                 TemplateUtils.generateFromTemplate(
