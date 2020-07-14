@@ -24,7 +24,8 @@ class {{projectName}}ResourceImpl(
         override val {{decapitalizedContractName}} = {{capitalizedContractName}}LifecycleImpl(
         web3j,
         transactionManager,
-        defaultGasProvider)
+        defaultGasProvider,
+        uriInfo)
 
     {{/contractDetails}}
 {{/contracts}}

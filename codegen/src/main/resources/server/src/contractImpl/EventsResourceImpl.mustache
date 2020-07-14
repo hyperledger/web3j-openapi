@@ -1,0 +1,21 @@
+package {{packageName}}.server.{{lowerCaseContractName}}
+
+{{#eventsImports}}
+    {{import}}
+{{/eventsImports}}
+import {{packageName}}.core.{{lowerCaseContractName}}.{{capitalizedContractName}}Events
+import {{packageName}}.wrappers.{{capitalizedContractName}}
+import org.web3j.openapi.server.SubResourceImpl
+import javax.inject.Inject
+import javax.ws.rs.core.Context
+import org.glassfish.jersey.server.ExtendedUriInfo
+
+class {{capitalizedContractName}}EventsImpl(
+    private val {{decapitalizedContractName}} : {{capitalizedContractName}},
+    uriInfo : ExtendedUriInfo
+) :  {{capitalizedContractName}}Events, SubResourceImpl(uriInfo){
+
+{{#EventResource}}
+    override val {{decapitalizedName}}Events: {{capitalizedName}}EventResourceImpl = {{capitalizedName}}EventResourceImpl({{decapitalizedContractName}})
+{{/EventResource}}
+}

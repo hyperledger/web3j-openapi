@@ -113,7 +113,7 @@ internal class CoreApiGenerator(
                 } else {
                     eventResources.add(
                         EventResource(
-                            name = it.sanitizedName()!!.capitalize(),
+                            capitalizedName = it.sanitizedName()!!,
                             resource = "val ${it.sanitizedName()!!.decapitalize()}Events",
                             path = "@get:Path(\"${it.sanitizedName()!!.capitalize()}Events\")",
                             returnType = "${it.sanitizedName()!!.capitalize()}EventResource"
