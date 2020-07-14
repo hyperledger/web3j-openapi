@@ -62,7 +62,7 @@ class CoreGenerator(
     private fun getTags(): List<Tag> {
         return configuration.contracts.map {
             Tag(
-                it.contractDetails.capitalizedContractName,
+                "${it.contractDetails.capitalizedContractName} Methods",
                 "List ${it.contractDetails.capitalizedContractName} method's calls"
             )
         }.also {
