@@ -125,7 +125,7 @@ internal class ResourcesImplGenerator(
             .forEach {
                 if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                 val returnType = it.getReturnType(packageName, contractName.toLowerCase())
-                val funSpec = FunSpec.builder(it.sanitizedName()!!)
+                val funSpec = FunSpec.builder(it.sanitizedName())
                     .returns(returnType)
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
@@ -133,15 +133,15 @@ internal class ResourcesImplGenerator(
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
-                        "${it.sanitizedName()!!.capitalize()}Parameters"
+                        "${it.sanitizedName().capitalize()}Parameters"
                     )
                     funSpec.addParameter(
-                        "${it.sanitizedName()!!.decapitalize()}Parameters",
+                        "${it.sanitizedName().decapitalize()}Parameters",
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true)!!)}(
-                                ${getCallParameters(it.inputs, it.sanitizedName()!!)}
+                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true))}(
+                                ${getCallParameters(it.inputs, it.sanitizedName())}
                             ).send()
                     """.trimIndent()
                 }
@@ -216,7 +216,7 @@ internal class ResourcesImplGenerator(
             .filter { it.type == "event" }
             .map { abiDefinition ->
                 EventResource(
-                    capitalizedName = abiDefinition.sanitizedName()!!.capitalize()
+                    capitalizedName = abiDefinition.sanitizedName().capitalize()
                 )
             }
     }

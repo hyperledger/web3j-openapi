@@ -47,16 +47,16 @@ class EventsResourceImplGenerator(
             .filter { it.type == "event" }
             .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
-                context["eventNameCap"] = abiDefinition.sanitizedName()!!.capitalize()
-                context["eventName"] = abiDefinition.sanitizedName()!!.decapitalize()
-                context["eventNameUp"] = abiDefinition.sanitizedName()!!.toUpperCase()
+                context["eventNameCap"] = abiDefinition.sanitizedName().capitalize()
+                context["eventName"] = abiDefinition.sanitizedName().decapitalize()
+                context["eventNameUp"] = abiDefinition.sanitizedName().toUpperCase()
                 context["args"] = getEventResponseParameters(abiDefinition)
 
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = eventsFolder.canonicalPath,
                     template = TemplateUtils.mustacheTemplate("server/src/contractImpl/NamedEventResourceImpl.mustache"),
-                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl.kt"
+                    name = "${abiDefinition.sanitizedName().capitalize()}EventResourceImpl.kt"
                 )
             }
     }
@@ -65,7 +65,7 @@ class EventsResourceImplGenerator(
         return abiDef.inputs.joinToString(",") {
             if (it.components.isEmpty()) "it.${it.name}"
             else
-                getStructEventParameters(it, abiDef.sanitizedName()!!, "it.${it.name}")
+                getStructEventParameters(it, abiDef.sanitizedName(), "it.${it.name}")
         }
     }
 

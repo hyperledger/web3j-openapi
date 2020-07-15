@@ -84,8 +84,8 @@ object GeneratorUtils {
         return inputs
     }
 
-    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String? {
-        return if (wrapperCall) name?.substringBefore("&")
-        else name?.replace("&", "")
+    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String {
+        return if (wrapperCall) name?.substringBefore("&")!!
+        else name?.replace("&", "")!!
     }
 }

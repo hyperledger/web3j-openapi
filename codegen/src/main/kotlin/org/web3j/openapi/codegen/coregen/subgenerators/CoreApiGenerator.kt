@@ -73,9 +73,9 @@ internal class CoreApiGenerator(
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
                 if (it.type == "function")
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName()!!.capitalize()}Parameters")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName().capitalize()}Parameters")
                 else
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName()!!.capitalize()}EventResponse")
+                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName().capitalize()}EventResponse")
             }
     }
 
@@ -83,7 +83,7 @@ internal class CoreApiGenerator(
         return contractDetails.abiDefinitions
             .filter { it.type == "event" }
             .map {
-                Import("import $packageName.core.${contractDetails.lowerCaseContractName}.events.${it.sanitizedName()!!.capitalize()}EventResource")
+                Import("import $packageName.core.${contractDetails.lowerCaseContractName}.events.${it.sanitizedName().capitalize()}EventResource")
             }
     }
 
@@ -97,27 +97,28 @@ internal class CoreApiGenerator(
                     if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                     val parameters =
                         if (it.inputs.isNotEmpty())
-                            "${it.sanitizedName()!!.decapitalize()}Parameters : ${it.sanitizedName()!!.capitalize()}Parameters"
+                            "${it.sanitizedName().decapitalize()}Parameters : ${it.sanitizedName()!!.capitalize()}Parameters"
                         else ""
-                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName} Methods\"],  summary = \"Execute the ${it.sanitizedName()!!.capitalize()} method\")"
+                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName} Methods\"],  summary = \"Execute the ${it.sanitizedName()
+                        .capitalize()} method\")"
                     functionResources.add(
                         FunctionResource(
-                            functionName = it.sanitizedName()!!,
+                            functionName = it.sanitizedName(),
                             resource = "fun ${it.sanitizedName()}($parameters)",
                             method = if (it.inputs.isEmpty()) "@GET" else "@POST",
                             returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
                             operationTag = operationTag,
                             mediaType = "@Produces(MediaType.APPLICATION_JSON)",
-                            path = "@Path(\"${it.sanitizedName()!!.capitalize()}\")"
+                            path = "@Path(\"${it.sanitizedName().capitalize()}\")"
                         )
                     )
                 } else {
                     eventResources.add(
                         EventResource(
-                            capitalizedName = it.sanitizedName()!!,
-                            resource = "val ${it.sanitizedName()!!.decapitalize()}Events",
-                            path = "@get:Path(\"${it.sanitizedName()!!.capitalize()}Events\")",
-                            returnType = "${it.sanitizedName()!!.capitalize()}EventResource"
+                            capitalizedName = it.sanitizedName(),
+                            resource = "val ${it.sanitizedName().decapitalize()}Events",
+                            path = "@get:Path(\"${it.sanitizedName().capitalize()}Events\")",
+                            returnType = "${it.sanitizedName().capitalize()}EventResource"
                         )
                     )
                 }
@@ -147,7 +148,7 @@ internal class CoreApiGenerator(
                         CoreFunctionsModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
-                            functionName = it.sanitizedName()!!,
+                            functionName = it.sanitizedName(),
                             folderPath = Path.of(
                                 folderPath.substringBefore("kotlin"),
                                 "kotlin"
@@ -159,7 +160,7 @@ internal class CoreApiGenerator(
                     CoreEventsModelGenerator(
                         packageName = packageName,
                         contractName = contractDetails.capitalizedContractName,
-                        eventName = it.sanitizedName()!!,
+                        eventName = it.sanitizedName(),
                         folderPath = Path.of(
                             folderPath.substringBefore("kotlin"),
                             "kotlin"
@@ -201,12 +202,12 @@ internal class CoreApiGenerator(
             .filter { it.type == "event" }
             .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
-                context["eventName"] = abiDefinition.sanitizedName()!!.capitalize()
+                context["eventName"] = abiDefinition.sanitizedName().capitalize()
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = eventsFolder.canonicalPath,
                     template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
-                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResource.kt"
+                    name = "${abiDefinition.sanitizedName().capitalize()}EventResource.kt"
                 )
             }
     }

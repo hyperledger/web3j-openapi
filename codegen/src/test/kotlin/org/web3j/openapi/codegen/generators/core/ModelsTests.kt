@@ -78,7 +78,7 @@ class ModelsTests {
                         CoreFunctionsModelGenerator(
                             "com.test",
                             contractConfiguration.contractDetails.capitalizedContractName,
-                            it.sanitizedName()!!,
+                            it.sanitizedName(),
                             tempFolder.canonicalPath,
                             it.inputs
                         ).generate()
@@ -98,7 +98,7 @@ class ModelsTests {
                         CoreEventsModelGenerator(
                             "com.test",
                             contractConfiguration.contractDetails.capitalizedContractName,
-                            it.sanitizedName()!!,
+                            it.sanitizedName(),
                             tempFolder.canonicalPath,
                             it.inputs
                         ).generate()
