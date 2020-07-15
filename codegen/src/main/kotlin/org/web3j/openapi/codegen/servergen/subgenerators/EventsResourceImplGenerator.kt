@@ -47,16 +47,17 @@ class EventsResourceImplGenerator(
             .filter { it.type == "event" }
             .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
-                context["eventNameCap"] = abiDefinition.sanitizedName().capitalize()
-                context["eventName"] = abiDefinition.sanitizedName().decapitalize()
-                context["eventNameUp"] = abiDefinition.sanitizedName().toUpperCase()
+                val sanitizedAbiDefinitionName = abiDefinition.sanitizedName()
+                context["eventNameCap"] = sanitizedAbiDefinitionName.capitalize()
+                context["eventName"] = sanitizedAbiDefinitionName.decapitalize()
+                context["eventNameUp"] = sanitizedAbiDefinitionName.toUpperCase()
                 context["args"] = getEventResponseParameters(abiDefinition)
 
                 TemplateUtils.generateFromTemplate(
                     context = context,
                     outputDir = eventsFolder.canonicalPath,
                     template = TemplateUtils.mustacheTemplate("server/src/contractImpl/NamedEventResourceImpl.mustache"),
-                    name = "${abiDefinition.sanitizedName().capitalize()}EventResourceImpl.kt"
+                    name = "${sanitizedAbiDefinitionName.capitalize()}EventResourceImpl.kt"
                 )
             }
     }
