@@ -85,7 +85,7 @@ object GeneratorUtils {
     }
 
     fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String {
-        return when(true) {
+        return when (true) {
             name == null -> "" // Case of a constructor
             wrapperCall -> name.substringBefore("&")
             else -> name.replace("&", "")
