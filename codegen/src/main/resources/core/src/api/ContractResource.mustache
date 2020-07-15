@@ -22,12 +22,12 @@ interface {{capitalizedContractName}}Resource {
     val events: {{capitalizedContractName}}Events
 
     {{/contractDetails}}
-    {{#contractResources.functionsResources}}
+    {{#contractResources.functionResources}}
             {{{method}}}
             {{{path}}}
             {{mediaType}}
             {{{operationTag}}}
             {{resource}} : {{{returnType}}}
 
-    {{/contractResources.functionsResources}}
+    {{/contractResources.functionResources}}
 }
