@@ -74,8 +74,8 @@ object GeneratorUtils {
         val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
         inputs.forEachIndexed { index, namedType ->
             if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
-                inputs.first { input -> 
-                    input.name == namedType.name 
+                inputs.first { input ->
+                    input.name == namedType.name
                 }.apply {
                     this.name = "${this.name}Dup"
                 }

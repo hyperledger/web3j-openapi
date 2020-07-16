@@ -39,8 +39,8 @@ internal class CoreApiGenerator(
         context["contractName"] = contractDetails.lowerCaseContractName
         context["contractNameCap"] = contractDetails.capitalizedContractName
         context["contractDetails"] = contractDetails
-        context["modelsImports"] = modelsImports()
-        context["eventsImports"] = eventsImports()
+        context["modelImports"] = modelImports()
+        context["eventImports"] = eventImports()
         context["contractResources"] = contractResources()
     }
 
@@ -50,10 +50,10 @@ internal class CoreApiGenerator(
         }
         copySources()
         generateModels()
-        generateStructsModels()
+        generateStructModels()
     }
 
-    private fun generateStructsModels() {
+    private fun generateStructModels() {
         extractStructs(contractDetails.abiDefinitions)?.forEach { structDefinition ->
             CoreStructsModelGenerator(
                 packageName = packageName,
@@ -68,7 +68,7 @@ internal class CoreApiGenerator(
         }
     }
 
-    private fun modelsImports(): List<Import> {
+    private fun modelImports(): List<Import> {
         return contractDetails.abiDefinitions
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
@@ -79,7 +79,7 @@ internal class CoreApiGenerator(
             }
     }
 
-    private fun eventsImports(): List<Import> {
+    private fun eventImports(): List<Import> {
         return contractDetails.abiDefinitions
             .filter { it.type == "event" }
             .map {
