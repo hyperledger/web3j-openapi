@@ -14,4 +14,4 @@ The workflow can be summed in the following steps:
 - Running the generated project
 - Sending HTTP requests using Curls or Swagger-UI
 
-**For more explanations**, check the documentation, this blog post, or the demo project.
+**For more explanations**, a well detailed documentation and a sample project are on the way.
