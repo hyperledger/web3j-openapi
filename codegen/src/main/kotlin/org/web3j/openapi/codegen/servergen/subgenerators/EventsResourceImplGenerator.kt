@@ -12,10 +12,13 @@
  */
 package org.web3j.openapi.codegen.servergen.subgenerators
 
+import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
 import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.TemplateUtils
 import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
+import java.io.File
+import java.nio.file.Path
 
 class EventsResourceImplGenerator(
     val packageName: String,
@@ -34,19 +37,27 @@ class EventsResourceImplGenerator(
     }
 
     fun generate() {
+        val eventsFolder = File(
+            Path.of(
+                folderPath,
+                "eventsImpl"
+            ).toString())
+
         abiDefinitions
             .filter { it.type == "event" }
+            .apply { ifNotEmpty { eventsFolder.mkdirs() } }
             .forEach { abiDefinition ->
-                context["eventNameCap"] = abiDefinition.sanitizedName()!!.capitalize()
-                context["eventName"] = abiDefinition.sanitizedName()!!.decapitalize()
-                context["eventNameUp"] = abiDefinition.sanitizedName()!!.toUpperCase()
+                val sanitizedAbiDefinitionName = abiDefinition.sanitizedName()
+                context["eventNameCap"] = sanitizedAbiDefinitionName.capitalize()
+                context["eventName"] = sanitizedAbiDefinitionName.decapitalize()
+                context["eventNameUp"] = sanitizedAbiDefinitionName.toUpperCase()
                 context["args"] = getEventResponseParameters(abiDefinition)
 
                 TemplateUtils.generateFromTemplate(
                     context = context,
-                    outputDir = folderPath,
+                    outputDir = eventsFolder.canonicalPath,
                     template = TemplateUtils.mustacheTemplate("server/src/contractImpl/NamedEventResourceImpl.mustache"),
-                    name = "${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl.kt"
+                    name = "${sanitizedAbiDefinitionName.capitalize()}EventResourceImpl.kt"
                 )
             }
     }
@@ -55,7 +66,7 @@ class EventsResourceImplGenerator(
         return abiDef.inputs.joinToString(",") {
             if (it.components.isEmpty()) "it.${it.name}"
             else
-                getStructEventParameters(it, abiDef.sanitizedName()!!, "it.${it.name}")
+                getStructEventParameters(it, abiDef.sanitizedName(), "it.${it.name}")
         }
     }
 

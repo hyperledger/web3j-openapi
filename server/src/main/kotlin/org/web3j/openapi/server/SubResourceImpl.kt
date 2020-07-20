@@ -10,24 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.core
+package org.web3j.openapi.server
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import org.glassfish.jersey.server.ExtendedUriInfo
+import org.glassfish.jersey.server.internal.routing.UriRoutingContext
+import org.glassfish.jersey.server.model.Resource
+import org.web3j.openapi.core.SubResource
 
-/**
- * Entry point for Web3j OpenAPIs.
- */
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-interface Web3jOpenApi {
+abstract class SubResourceImpl(
+    private val uriInfo: ExtendedUriInfo
+) : SubResource {
 
-    /**
-     * Generated applications override this property
-     * to add a custom resource containing all contract types.
-     */
-    @get:Path("contracts")
-    val contracts: SubResource
+    override fun findAll(): List<String> {
+        val resourceClass = (uriInfo as UriRoutingContext).resourceClass
+        return Resource.builder(resourceClass).build().childResources.map { it.path }
+    }
 }

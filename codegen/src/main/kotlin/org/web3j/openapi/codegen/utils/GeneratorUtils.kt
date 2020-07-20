@@ -74,7 +74,9 @@ object GeneratorUtils {
         val distinctInputs = mutableMapOf<String, AbiDefinition.NamedType>()
         inputs.forEachIndexed { index, namedType ->
             if (distinctInputs[argumentName(namedType.name, index).capitalize()] != null) {
-                inputs.filter { input -> input.name == namedType.name }.first().apply {
+                inputs.first { input ->
+                    input.name == namedType.name
+                }.apply {
                     this.name = "${this.name}Dup"
                 }
             } else {
@@ -84,8 +86,11 @@ object GeneratorUtils {
         return inputs
     }
 
-    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String? {
-        return if (wrapperCall) name?.substringBefore("&")
-        else name?.replace("&", "")
+    fun AbiDefinition.sanitizedName(wrapperCall: Boolean = false): String {
+        return when (true) {
+            name == null -> "" // Case of a constructor
+            wrapperCall -> name.substringBefore("&")
+            else -> name.replace("&", "")
+        }
     }
 }

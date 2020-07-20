@@ -9,22 +9,23 @@ import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.ContractGasProvider
 import javax.annotation.processing.Generated
 import {{packageName}}.core.{{projectName}}Resource
-import org.web3j.openapi.server.ContractResourceImpl
+import org.web3j.openapi.server.SubResourceImpl
 
 @Generated
 class {{projectName}}ResourceImpl(
-web3j: Web3j,
-transactionManager: TransactionManager,
-defaultGasProvider: ContractGasProvider,
-uriInfo: ExtendedUriInfo
-) : {{projectName}}Resource, ContractResourceImpl(uriInfo) {
+    web3j: Web3j,
+    transactionManager: TransactionManager,
+    defaultGasProvider: ContractGasProvider,
+    uriInfo: ExtendedUriInfo
+) : {{projectName}}Resource, SubResourceImpl(uriInfo) {
 
 {{#contracts}}
     {{#contractDetails}}
         override val {{decapitalizedContractName}} = {{capitalizedContractName}}LifecycleImpl(
         web3j,
         transactionManager,
-        defaultGasProvider)
+        defaultGasProvider,
+        uriInfo)
 
     {{/contractDetails}}
 {{/contracts}}

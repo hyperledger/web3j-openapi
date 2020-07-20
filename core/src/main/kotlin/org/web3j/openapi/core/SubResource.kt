@@ -12,22 +12,21 @@
  */
 package org.web3j.openapi.core
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.Path
+import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 /**
- * Entry point for Web3j OpenAPIs.
+ * A Web3j OpenAPI can contain nested resources.
+ *
+ * Subclasses may define additional values as JAX-RS sub-resources.
  */
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-interface Web3jOpenApi {
+interface SubResource {
 
     /**
-     * Generated applications override this property
-     * to add a custom resource containing all contract types.
+     * Lists all available sub-resources.
      */
-    @get:Path("contracts")
-    val contracts: SubResource
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    fun findAll(): List<String>
 }

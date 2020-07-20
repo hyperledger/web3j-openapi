@@ -12,12 +12,7 @@
  */
 package org.web3j.openapi.codegen.common
 
-data class ContractResource(
-    val functionName: String,
-    val resource: String,
-    val method: String,
-    val returnType: String,
-    val mediaType: String = "",
-    val path: String = "",
-    val operationTag: String = ""
+class ContractResources(
+    val functionResources: List<FunctionResource>,
+    val eventResources: List<EventResource>
 )

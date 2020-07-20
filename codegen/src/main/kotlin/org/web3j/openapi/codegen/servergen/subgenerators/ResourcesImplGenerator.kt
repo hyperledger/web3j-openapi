@@ -18,14 +18,18 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import org.web3j.openapi.codegen.common.EventResource
+import org.web3j.openapi.codegen.common.Import
+import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.GeneratorUtils.argumentName
 import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
+import org.web3j.openapi.codegen.utils.TemplateUtils
 import org.web3j.openapi.codegen.utils.getReturnType
-import org.web3j.openapi.codegen.utils.getStructCallParameters
 import org.web3j.openapi.codegen.utils.isTransactional
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
+import java.nio.file.Path
 
 internal class ResourcesImplGenerator(
     val packageName: String,
@@ -41,6 +45,7 @@ internal class ResourcesImplGenerator(
             .forEach { file ->
                 CopyUtils.kotlinFormat(file)
             }
+        copySources()
     }
 
     private fun generateClass(): FileSpec {
@@ -53,16 +58,28 @@ internal class ResourcesImplGenerator(
             "$packageName.wrappers",
             contractName.capitalize()
         )
+        val extendedUriInfoClass = ClassName(
+            "org.glassfish.jersey.server",
+            "ExtendedUriInfo"
+        )
 
         val constructorBuilder = FunSpec.constructorBuilder()
             .addParameter(
                 contractName.decapitalize(),
                 contractClass
+            ).addParameter(
+                "uriInfo",
+                extendedUriInfoClass
             )
 
         val contractResourceClass = ClassName(
             "$packageName.core.${contractName.toLowerCase()}",
             "${contractName.capitalize()}Resource"
+        )
+
+        val eventsResourcesClass = ClassName(
+            "$packageName.core.${contractName.toLowerCase()}",
+            "${contractName.capitalize()}Events"
         )
 
         val resourcesClass = TypeSpec
@@ -76,32 +93,29 @@ internal class ResourcesImplGenerator(
                 )
                     .initializer(contractName.decapitalize())
                     .build()
+            ).addProperty(
+                PropertySpec.builder(
+                    "uriInfo",
+                    extendedUriInfoClass,
+                    KModifier.PRIVATE
+                )
+                    .initializer("uriInfo")
+                    .build()
+            ).addProperty(
+                PropertySpec.builder(
+                    "events",
+                    eventsResourcesClass,
+                    KModifier.OVERRIDE
+                )
+                    .initializer("${contractName.capitalize()}EventsImpl(${contractName.decapitalize()}, uriInfo)")
+                    .build()
             ).addSuperinterface(contractResourceClass)
 
         resourcesClass.addFunctions(generateFunctions())
-        resourcesClass.addProperties(generateEvents())
 
         return resourcesFile
             .addType(resourcesClass.build())
             .build()
-    }
-
-    private fun generateEvents(): List<PropertySpec> {
-        val events = mutableListOf<PropertySpec>()
-        resourcesDefinition
-            .filter { it.type == "event" }
-            .forEach { abiDefinition ->
-                val eventResourceImplClass = ClassName(
-                    "$packageName.server.${contractName.toLowerCase()}",
-                    "${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl"
-                )
-                val propertySpec =
-                    PropertySpec.builder("${abiDefinition.sanitizedName()!!.decapitalize()}Events", eventResourceImplClass)
-                        .initializer("${abiDefinition.sanitizedName()!!.capitalize()}EventResourceImpl(${contractName.decapitalize()})")
-                        .addModifiers(KModifier.OVERRIDE)
-                events.add(propertySpec.build())
-            }
-        return events
     }
 
     private fun generateFunctions(): List<FunSpec> {
@@ -109,9 +123,10 @@ internal class ResourcesImplGenerator(
         resourcesDefinition
             .filter { it.type == "function" }
             .forEach {
+                val sanitizedAbiDefinitionName = it.sanitizedName()
                 if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                 val returnType = it.getReturnType(packageName, contractName.toLowerCase())
-                val funSpec = FunSpec.builder(it.sanitizedName()!!)
+                val funSpec = FunSpec.builder(sanitizedAbiDefinitionName)
                     .returns(returnType)
                     .addModifiers(KModifier.OVERRIDE)
                 val code = if (it.inputs.isEmpty()) {
@@ -119,15 +134,15 @@ internal class ResourcesImplGenerator(
                 } else {
                     val nameClass = ClassName(
                         "$packageName.core.${contractName.toLowerCase()}.model",
-                        "${it.sanitizedName()!!.capitalize()}Parameters"
+                        "${sanitizedAbiDefinitionName.capitalize()}Parameters"
                     )
                     funSpec.addParameter(
-                        "${it.sanitizedName()!!.decapitalize()}Parameters",
+                        "${sanitizedAbiDefinitionName.decapitalize()}Parameters",
                         nameClass
                     )
                     """
-                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true)!!)}(
-                                ${getCallParameters(it.inputs, it.sanitizedName()!!)}
+                        ${contractName.decapitalize()}.${getFunctionName(it.sanitizedName(true))}(
+                                ${getCallParameters(it.inputs, sanitizedAbiDefinitionName)}
                             ).send()
                     """.trimIndent()
                 }
@@ -185,5 +200,54 @@ internal class ResourcesImplGenerator(
                     "${functionName.decapitalize()}Parameters.${argumentName(input.name, index)},"
         }
         return callParameters.removeSuffix(",")
+    }
+
+    private fun eventsImports(): List<Import> {
+        return resourcesDefinition
+            .filter { it.type == "event" }
+            .map { abiDefinition ->
+                Import(
+                    "import $packageName.server.${contractName.toLowerCase()}.eventsImpl.${abiDefinition.name.capitalize()}EventResourceImpl"
+                )
+            }
+    }
+
+    private fun eventsResources(): List<EventResource> {
+        return resourcesDefinition
+            .filter { it.type == "event" }
+            .map { abiDefinition ->
+                EventResource(
+                    capitalizedName = abiDefinition.sanitizedName().capitalize()
+                )
+            }
+    }
+
+    private fun copySources() {
+        val context = mutableMapOf<String, Any>()
+
+        context["packageName"] = packageName
+        context["lowerCaseContractName"] = contractName.toLowerCase()
+        context["decapitalizedContractName"] = contractName.decapitalize()
+        context["capitalizedContractName"] = contractName.capitalize()
+        context["EventResource"] = eventsResources()
+        context["eventsImports"] = eventsImports()
+
+        val contractFolder = File(
+            Path.of(
+                folderPath,
+                packageName.replace(".", "/"),
+                "server",
+                contractName.toLowerCase()
+            ).toString()
+        ).apply {
+            mkdirs()
+        }
+
+        TemplateUtils.generateFromTemplate(
+            context = context,
+            outputDir = contractFolder.canonicalPath,
+            template = TemplateUtils.mustacheTemplate("server/src/contractImpl/EventsResourceImpl.mustache"),
+            name = "${contractName.capitalize()}EventsImpl.kt"
+        )
     }
 }

@@ -1,0 +1,22 @@
+package {{packageName}}.core.{{contractName}}
+
+{{#eventImports}}
+    {{import}}
+{{/eventImports}}
+{{#modelImports}}
+    {{import}}
+{{/modelImports}}
+import org.web3j.openapi.core.SubResource
+import javax.annotation.processing.Generated
+import javax.ws.rs.Path
+
+{{#contractDetails}}
+@Generated
+interface {{capitalizedContractName}}Events : SubResource {
+{{/contractDetails}}
+{{#contractResources.eventResources}}
+    {{{path}}}
+    {{resource}} : {{{returnType}}}
+
+{{/contractResources.eventResources}}
+}
