@@ -10,7 +10,7 @@ Web3j-OpenAPI provides a way to interact with the Ethereum blockchain via simple
 
 The workflow can be summed in the following steps:
 - Writing a solidity smart contract
-- Generating the corresponding OpenAPI project using Web3j-OpenAPI
+- Generating the corresponding **OpenAPI** project using **Web3j-OpenAPI**
 - Running the generated project
 - Sending HTTP requests using Curls or Swagger-UI
 
