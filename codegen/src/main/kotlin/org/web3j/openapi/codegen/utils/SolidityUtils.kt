@@ -81,7 +81,7 @@ fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
 private fun getParameterMapping(isParameter: Boolean, typeName: TypeName): TypeName {
     return if (isParameter) typeName
     else {
-        ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
+        ClassName("org.web3j.openapi.core.models", "ResultModel")
             .parameterizedBy(typeName)
     }
 }

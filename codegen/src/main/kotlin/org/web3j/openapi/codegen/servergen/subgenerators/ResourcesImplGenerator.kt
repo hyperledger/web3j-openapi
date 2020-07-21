@@ -160,8 +160,8 @@ internal class ResourcesImplGenerator(
             val innerType = returnType.substringAfter("<").removeSuffix(">")
             when {
                 innerType.startsWith("org.web3j.tuples") -> wrapTuplesCode(code, innerType)
-                innerType.contains("StructModel") -> "return org.web3j.openapi.core.models.PrimitivesModel($code.toModel())"
-                else -> "return org.web3j.openapi.core.models.PrimitivesModel($code)"
+                innerType.contains("StructModel") -> "return org.web3j.openapi.core.models.ResultModel($code.toModel())"
+                else -> "return org.web3j.openapi.core.models.ResultModel($code)"
             }
         }
     }
@@ -182,7 +182,7 @@ internal class ResourcesImplGenerator(
         }.joinToString(",")
 
         return """val ($variableNames) = $code
-                return org.web3j.openapi.core.models.PrimitivesModel(
+                return org.web3j.openapi.core.models.ResultModel(
                     Tuple${components.size}($tupleConstructor)
                 )""".trimMargin()
     }
