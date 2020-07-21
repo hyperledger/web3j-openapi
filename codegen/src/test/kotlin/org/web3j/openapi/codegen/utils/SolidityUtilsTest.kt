@@ -39,9 +39,12 @@ class SolidityUtilsTest {
 
     @Test
     fun `toNativeArrayType for returns`() {
-        val expectedResult = ClassName("kotlin.collections", "List")
-            .plusParameter(ANY.copy(true))
-            .copy(true)
+        val expectedResult = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
+            .parameterizedBy(
+                ClassName("kotlin.collections", "List")
+                    .plusParameter(ANY.copy(true))
+                    .copy(true)
+            )
 
         val actualResult = "int[10][20]".mapType(false)
 
@@ -75,12 +78,15 @@ class SolidityUtilsTest {
 
     @Test
     fun getMultipleFunctionReturnTypeTest() {
-        val expectedResult = ClassName("org.web3j.tuples.generated", "Tuple2")
+        val expectedResult = ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
             .parameterizedBy(
-                listOf(
-                    Integer::class.asClassName(),
-                    String::class.asClassName()
-                )
+                ClassName("org.web3j.tuples.generated", "Tuple2")
+                    .parameterizedBy(
+                        listOf(
+                            Integer::class.asClassName(),
+                            String::class.asClassName()
+                        )
+                    )
             )
 
         val actualResult = AbiDefinition().apply {
