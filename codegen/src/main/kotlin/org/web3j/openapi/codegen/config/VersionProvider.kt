@@ -12,14 +12,13 @@
  */
 package org.web3j.openapi.codegen.config
 
-import picocli.CommandLine
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Properties
 
-object VersionProvider : CommandLine.IVersionProvider {
+object VersionProvider {
 
     val versionName: String
     val buildTimestamp: OffsetDateTime
@@ -38,7 +37,7 @@ object VersionProvider : CommandLine.IVersionProvider {
         }
     }
 
-    override fun getVersion(): Array<String> {
+    fun getVersion(): Array<String> {
         return arrayOf(
             "Version: $versionName",
             "Build timestamp: ${buildTimestamp.let { timeFormatter.format(it) }}"
