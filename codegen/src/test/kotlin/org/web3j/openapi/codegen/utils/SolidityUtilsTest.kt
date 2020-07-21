@@ -32,7 +32,7 @@ class SolidityUtilsTest {
                 ClassName("kotlin.collections", "List")
                     .plusParameter(Integer::class.asClassName())
             )
-        val actualResult = "int[10][20]".toNativeType()
+        val actualResult = "int[10][20]".mapType()
 
         assertThat(actualResult).isEqualTo(expectedResult)
     }
@@ -43,7 +43,7 @@ class SolidityUtilsTest {
             .plusParameter(ANY.copy(true))
             .copy(true)
 
-        val actualResult = "int[10][20]".toNativeType(false)
+        val actualResult = "int[10][20]".mapType(false)
 
         assertThat(actualResult).isEqualTo(expectedResult)
     }
