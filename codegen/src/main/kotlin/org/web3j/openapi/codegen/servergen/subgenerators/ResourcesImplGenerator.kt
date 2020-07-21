@@ -202,7 +202,7 @@ internal class ResourcesImplGenerator(
         return callParameters.removeSuffix(",")
     }
 
-    private fun eventsImports(): List<Import> {
+    private fun eventImports(): List<Import> {
         return resourcesDefinition
             .filter { it.type == "event" }
             .map { abiDefinition ->
@@ -230,7 +230,7 @@ internal class ResourcesImplGenerator(
         context["decapitalizedContractName"] = contractName.decapitalize()
         context["capitalizedContractName"] = contractName.capitalize()
         context["EventResource"] = eventsResources()
-        context["eventsImports"] = eventsImports()
+        context["eventImports"] = eventImports()
 
         val contractFolder = File(
             Path.of(
