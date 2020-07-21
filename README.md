@@ -3,6 +3,10 @@ Web3j Open API
 
 [![Build Status](https://travis-ci.org/web3j/web3j-openapi.svg?branch=master)](https://travis-ci.org/web3j/web3j-openapi)
 
+The Web3j Open API project allows you to easily generated OpenAPI services for integrating with Ethereum.
+
+It builds on top of Web3j's smart contract wrappers to provide a fully typesafe integration from the client through to the blockchain.
+
 ## Modules
 
  * openapi: JAX-RS, Web3j Core (only interfaces), Swagger annotations
@@ -18,7 +22,7 @@ Web3j Open API
 ## Use cases
 
 ```ssh
-$ epirus generate openapi Greeter.sol -p com.helloworld -o /home/rachid/helloworld
+$ epirus generate openapi Greeter.sol -p com.helloworld -o helloworld
 ```
 
 Creates Gradle project with one module to run a server (with application plugin) and another with interfaces.
