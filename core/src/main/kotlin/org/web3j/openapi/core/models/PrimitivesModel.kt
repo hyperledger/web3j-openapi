@@ -12,8 +12,6 @@
  */
 package org.web3j.openapi.core.models
 
-import com.fasterxml.jackson.annotation.JsonValue
-
 data class PrimitivesModel<T>(
     val result: T? = null
 )

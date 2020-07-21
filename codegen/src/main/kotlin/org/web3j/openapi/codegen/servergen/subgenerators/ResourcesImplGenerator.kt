@@ -159,9 +159,9 @@ internal class ResourcesImplGenerator(
         else {
             val innerType = returnType.substringAfter("<").removeSuffix(">")
             when {
-                innerType.startsWith("org.web3j.tuples") ->  wrapTuplesCode(code, innerType)
+                innerType.startsWith("org.web3j.tuples") -> wrapTuplesCode(code, innerType)
                 innerType.contains("StructModel") -> "return org.web3j.openapi.core.models.PrimitivesModel($code.toModel())"
-                else -> "return org.web3j.openapi.core.models.PrimitivesModel(${code})"
+                else -> "return org.web3j.openapi.core.models.PrimitivesModel($code)"
             }
         }
     }
