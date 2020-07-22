@@ -30,11 +30,14 @@ class KPoetUtilsTest {
         val expectedOutput = """
             package test
 
+            import com.fasterxml.jackson.annotation.JsonProperty
             import java.math.BigInteger
             import kotlin.String
 
             data class TestFunctionParameters(
+              @JsonProperty(value = "number")
               val number: BigInteger,
+              @JsonProperty(value = "string")
               val string: String
             )
             """.replace("\\s".toRegex(), "")
