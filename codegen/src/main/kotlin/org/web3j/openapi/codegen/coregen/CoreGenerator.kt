@@ -60,12 +60,22 @@ class CoreGenerator(
     }
 
     private fun getTags(): List<Tag> {
-        return configuration.contracts.map {
-            Tag(
-                "${it.contractDetails.capitalizedContractName} Methods",
-                "List ${it.contractDetails.capitalizedContractName} method's calls"
+        val tags = mutableListOf<Tag>()
+        configuration.contracts.forEach {
+            tags.add(
+                Tag(
+                    "${it.contractDetails.capitalizedContractName} Methods",
+                    "List ${it.contractDetails.capitalizedContractName} method's calls"
+                )
             )
-        }.also {
+            tags.add(
+                Tag(
+                    "${it.contractDetails.capitalizedContractName} Events",
+                    "List ${it.contractDetails.capitalizedContractName} event's calls"
+                )
+            )
+        }
+        return tags.also {
             it.ifNotEmpty { last().lastCharacter = "" }
         }
     }
