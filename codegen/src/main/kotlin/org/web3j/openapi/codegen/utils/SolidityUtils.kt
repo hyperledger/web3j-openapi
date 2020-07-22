@@ -18,7 +18,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
@@ -28,35 +27,34 @@ import java.util.Comparator
 import java.util.HashMap
 import java.util.LinkedHashMap
 import java.util.stream.Collectors
-import kotlin.reflect.KClass
 
-internal fun String.toNativeType(isParameter: Boolean = true, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
+internal fun String.mapType(isParameter: Boolean = true, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
     return if (this == "address" || this == "string") {
-        getParameterMapping(isParameter, String::class)
+        getParameterMapping(isParameter, String::class.asTypeName())
     } else if (this == "int") {
-        getParameterMapping(isParameter, Integer::class)
+        getParameterMapping(isParameter, Integer::class.asTypeName())
     } else if (endsWith("]")) {
-        toNativeArrayType(isParameter)
+        getParameterMapping(isParameter, toNativeArrayType(isParameter))
     } else if (startsWith("uint") || startsWith("int")) {
         getNumbersMapping(isParameter, this)
     } else if (this == "byte") {
-        getParameterMapping(isParameter, Byte::class)
+        getParameterMapping(isParameter, Byte::class.asTypeName())
     } else if (startsWith("bytes") || this == "dynamicbytes") {
-        getParameterMapping(isParameter, ByteArray::class)
+        getParameterMapping(isParameter, ByteArray::class.asTypeName())
     } else if (this == "bool" || this == "boolean") {
-        getParameterMapping(isParameter, Boolean::class)
+        getParameterMapping(isParameter, Boolean::class.asTypeName())
     } else if (toLowerCase() == "float") {
-        getParameterMapping(isParameter, Float::class)
+        getParameterMapping(isParameter, Float::class.asTypeName())
     } else if (toLowerCase() == "double") {
-        getParameterMapping(isParameter, Double::class)
+        getParameterMapping(isParameter, Double::class.asTypeName())
     } else if (toLowerCase() == "short") {
-        getParameterMapping(isParameter, Short::class)
+        getParameterMapping(isParameter, Short::class.asTypeName())
     } else if (toLowerCase() == "long") {
-        getParameterMapping(isParameter, Long::class)
+        getParameterMapping(isParameter, Long::class.asTypeName())
     } else if (toLowerCase() == "char") {
-        getParameterMapping(isParameter, Character::class)
+        getParameterMapping(isParameter, Character::class.asTypeName())
     } else if (toLowerCase() == "tuple") {
-        ClassName("$packageName.core.$contractName.model", "${structName}StructModel")
+        getParameterMapping(isParameter, ClassName("$packageName.core.$contractName.model", "${structName}StructModel"))
     } else {
         throw UnsupportedOperationException(
             "Unsupported type: $this, no native type mapping exists."
@@ -65,33 +63,33 @@ internal fun String.toNativeType(isParameter: Boolean = true, structName: String
 }
 
 fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
-    return if (isParameter) getParameterMapping(isParameter, BigInteger::class)
-    else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class) // FIXME: remove this when web3j-codegen fixes this problem
+    return if (isParameter) getParameterMapping(isParameter, BigInteger::class.asTypeName())
+    else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class.asTypeName()) // FIXME: remove this when web3j-codegen fixes this problem
     else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16 ||
             type.startsWith("uint") && type.substringAfter("int").toInt() < 16)
-        getParameterMapping(isParameter, Short::class)
+        getParameterMapping(isParameter, Short::class.asTypeName())
     else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32 ||
             type.startsWith("uint") && type.substringAfter("int").toInt() < 32)
-        getParameterMapping(isParameter, Integer::class)
+        getParameterMapping(isParameter, Integer::class.asTypeName())
     else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64 ||
             type.startsWith("uint") && type.substringAfter("int").toInt() < 64)
-        getParameterMapping(isParameter, Long::class)
+        getParameterMapping(isParameter, Long::class.asTypeName())
     else
-        getParameterMapping(isParameter, BigInteger::class)
+        getParameterMapping(isParameter, BigInteger::class.asTypeName())
 }
 
-private fun getParameterMapping(isParameter: Boolean, kClass: KClass<*>): TypeName {
-    return if (isParameter) kClass.asTypeName()
+private fun getParameterMapping(isParameter: Boolean, typeName: TypeName): TypeName {
+    return if (isParameter) typeName
     else {
-        ClassName("org.web3j.openapi.core.models", "PrimitivesModel")
-            .parameterizedBy(kClass.asClassName())
+        ClassName("org.web3j.openapi.core.models", "ResultModel")
+            .parameterizedBy(typeName)
     }
 }
 
 private fun String.toNativeArrayType(isParameter: Boolean, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
     return if (isParameter) {
         ClassName("kotlin.collections", "List")
-            .plusParameter(substringBeforeLast("[").toNativeType(isParameter, structName, packageName, contractName))
+            .plusParameter(substringBeforeLast("[").mapType(isParameter, structName, packageName, contractName))
     } else {
         ClassName("kotlin.collections", "List")
             .plusParameter(ANY.copy(true)).copy(true)
@@ -101,10 +99,12 @@ private fun String.toNativeArrayType(isParameter: Boolean, structName: String = 
 internal fun AbiDefinition.getReturnType(packageName: String = "", contractName: String = ""): TypeName {
     return if (!isTransactional()) {
         if (outputs.size == 1) {
-            outputs.first().type.toNativeType(false, outputs.first().internalType.structName, packageName, contractName)
+            outputs.first().type.mapType(false, outputs.first().internalType.structName, packageName, contractName)
         } else {
-            ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
-                .parameterizedBy(outputs.map { it.type.toNativeType(true, it.internalType.structName, packageName, contractName).copy() })
+            getParameterMapping(
+                false,
+                ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
+                    .parameterizedBy(outputs.map { it.type.mapType(true, it.internalType.structName, packageName, contractName).copy() }))
         }
     } else {
         ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")

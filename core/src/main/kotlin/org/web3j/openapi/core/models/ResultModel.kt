@@ -12,6 +12,6 @@
  */
 package org.web3j.openapi.core.models
 
-data class PrimitivesModel<T>(
+data class ResultModel<T>(
     val result: T? = null
 )
