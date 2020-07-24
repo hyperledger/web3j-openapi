@@ -48,7 +48,7 @@ task copyOpenApiResources(type: Copy) {
     delete('src/main/resources/META-INF')
 }
 
-task downloadEpirusCliInstaller(type: Download) {
+task downloadEpirusCliInstaller(type: Download, group: 'epirus') {
     src 'http://get.epirus.io'
     dest new File("$buildDir/tmp", 'epirus-installer.sh')
     onlyIfModified true
@@ -59,20 +59,15 @@ task downloadEpirusCliInstaller(type: Download) {
     }
 }
 
-task installEpirusCli(type: Exec, group: 'web3j') {
+task installEpirusCli(type: Exec, group: 'epirus') {
     dependsOn downloadEpirusCliInstaller
     commandLine "$buildDir/tmp/epirus-installer.sh"
-//    doLast {
-//        project.exec {
-//            commandLine('source',  "\$HOME/.epirus/source.sh")
-//        }
-//    }
 }
 
 task generateOpenApiProject(type : Exec, group: 'web3j') {
     dependsOn installEpirusCli
     dependsOn copyOpenApiResources
-    commandLine '/Users/xavier/.epirus/epirus',
+    commandLine 'epirus',
             'openapi',
             'generate',
             '--name', "$generatedProjectName",
