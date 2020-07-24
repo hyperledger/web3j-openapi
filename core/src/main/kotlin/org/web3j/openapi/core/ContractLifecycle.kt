@@ -18,6 +18,7 @@ import javax.ws.rs.PathParam
 
 interface ContractLifecycle {
     @Path(CONTRACT_ADDRESS_PATH)
+    @Operation(summary = "Loads the contract using the address passed in the URI")
     fun load(
         @PathParam(CONTRACT_ADDRESS)
         contractAddress: String
