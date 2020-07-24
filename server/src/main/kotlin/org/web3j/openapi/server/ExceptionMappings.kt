@@ -19,7 +19,6 @@ import org.web3j.openapi.core.ErrorResponse
 import org.web3j.protocol.exceptions.TransactionException
 import org.web3j.tx.exceptions.ContractCallException
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.NotFoundException
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Response
