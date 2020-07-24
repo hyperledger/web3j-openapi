@@ -17,7 +17,6 @@ import io.epirus.web3j.gas.EpirusGasProvider
 import io.epirus.web3j.gas.GasPrice
 import mu.KLogging
 import org.glassfish.hk2.api.Factory
-import org.web3j.abi.datatypes.Address
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.WalletUtils
 import org.web3j.openapi.server.Properties.CONTRACT_ADDRESSES

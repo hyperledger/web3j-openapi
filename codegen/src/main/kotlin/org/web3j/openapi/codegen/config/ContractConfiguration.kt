@@ -20,6 +20,6 @@ data class ContractConfiguration(
     val contractDetails: ContractDetails
 ) {
     init {
-        if(binFile == null) println("${abiFile.nameWithoutExtension} contract address will be expected to be defined later !")
+        if (binFile == null) println("${abiFile.nameWithoutExtension} contract address will be expected to be defined later !")
     }
 }

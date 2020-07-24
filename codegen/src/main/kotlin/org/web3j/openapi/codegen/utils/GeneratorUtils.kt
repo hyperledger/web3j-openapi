@@ -16,7 +16,6 @@ import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
-import java.io.FileNotFoundException
 import java.lang.IllegalStateException
 
 object GeneratorUtils {

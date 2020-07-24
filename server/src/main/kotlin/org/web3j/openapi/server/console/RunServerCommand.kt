@@ -16,7 +16,11 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.openapi.server.console.options.*
+import org.web3j.openapi.server.console.options.ConfigFileOptions
+import org.web3j.openapi.server.console.options.CredentialsOptions
+import org.web3j.openapi.server.console.options.NetworkOptions
+import org.web3j.openapi.server.console.options.ProjectOptions
+import org.web3j.openapi.server.console.options.ServerOptions
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
@@ -25,7 +29,6 @@ import picocli.CommandLine.Option
 import java.io.File
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
-
 
 @Command(
     showDefaultValues = true,
