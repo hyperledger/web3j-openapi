@@ -37,7 +37,7 @@ dependencies {
 }
 
 ext {
-    generatedProjectName = "testProject"
+    generatedProjectName = "test-project"
     outputDirectory = "$projectDir/build/generated/web3j-openapi"
 }
 
@@ -48,24 +48,20 @@ task copyOpenApiResources(type: Copy) {
     delete('src/main/resources/META-INF')
 }
 
-task downloadEpirusCliInstaller(type: Download, group: 'epirus') {
+task installEpirusCli(type: Download, group: 'epirus') {
     src 'http://get.epirus.io'
     dest new File("$buildDir/tmp", 'epirus-installer.sh')
     onlyIfModified true
     doLast {
         project.exec {
-            commandLine('chmod',  '+x', "$buildDir/tmp/epirus-installer.sh")
+            commandLine('chmod', '+x', "$buildDir/tmp/epirus-installer.sh")
+            commandLine("$buildDir/tmp/epirus-installer.sh")
         }
     }
 }
 
-task installEpirusCli(type: Exec, group: 'epirus') {
-    dependsOn downloadEpirusCliInstaller
-    commandLine "$buildDir/tmp/epirus-installer.sh"
-}
-
-task generateOpenApiProject(type : Exec, group: 'web3j') {
-    dependsOn installEpirusCli
+task generateOpenApiProject(type: Exec) {
+    dependsOn 'installEpirusCli'
     dependsOn copyOpenApiResources
     commandLine 'epirus',
             'openapi',
@@ -82,12 +78,12 @@ compileIntegrationTestKotlin.dependsOn generateOpenApiProject
 
 sourceSets {
     integrationTest.java.srcDirs += [
-        "$outputDirectory/$generatedProjectName/server/src/main/java"
+            "$outputDirectory/$generatedProjectName/server/src/main/java"
     ]
     integrationTest.kotlin.srcDirs += [
-        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
-        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
-        "$outputDirectory/$generatedProjectName/server/src/main/java"
+            "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
+            "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
+            "$outputDirectory/$generatedProjectName/server/src/main/java"
     ]
 }
 
