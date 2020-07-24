@@ -50,7 +50,6 @@ import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
 import org.web3j.openapi.server.Web3jFactory
 import org.web3j.openapi.server.spi.OpenApiResourceProvider
-import org.web3j.openapi.server.NotFoundExceptionMapper
 import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.ServiceLoader
