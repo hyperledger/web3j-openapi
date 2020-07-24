@@ -16,6 +16,7 @@ class {{projectName}}ResourceImpl(
     web3j: Web3j,
     transactionManager: TransactionManager,
     defaultGasProvider: ContractGasProvider,
+    contractAddresses: ContractAddresses,
     uriInfo: ExtendedUriInfo
 ) : {{projectName}}Resource, SubResourceImpl(uriInfo) {
 
@@ -25,6 +26,7 @@ class {{projectName}}ResourceImpl(
         web3j,
         transactionManager,
         defaultGasProvider,
+        contractAddresses.addresses?.get("{{capitalizedContractName}}"),
         uriInfo)
 
     {{/contractDetails}}

@@ -15,10 +15,11 @@ class {{projectName}}ApiImpl @Inject constructor(
     web3j: Web3j,
     credentials: Credentials,
     gasProvider: ContractGasProvider,
+    contractAddresses: ContractAddresses,
     @Context uriInfo: ExtendedUriInfo
 ) : {{projectName}}Api {
 
     override val contracts = {{projectName}}ResourceImpl(
-        web3j, RawTransactionManager(web3j, credentials), gasProvider, uriInfo
+        web3j, RawTransactionManager(web3j, credentials), gasProvider, contractAddresses, uriInfo
     )
 }
