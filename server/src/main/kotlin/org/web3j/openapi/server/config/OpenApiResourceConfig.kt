@@ -25,7 +25,9 @@ import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
 import org.slf4j.bridge.SLF4JBridgeHandler
+import org.web3j.abi.datatypes.Address
 import org.web3j.crypto.Credentials
+import org.web3j.openapi.server.*
 import org.web3j.openapi.server.TransactionExceptionMapper
 import org.web3j.openapi.server.UnsupportedOperationExceptionMapper
 import org.web3j.openapi.server.JsonParseExceptionMapper
@@ -92,6 +94,7 @@ class OpenApiResourceConfig(
         register(TransactionExceptionMapper::class.java)
         register(UnsupportedOperationExceptionMapper::class.java)
         register(IllegalStateExceptionMapper::class.java)
+        register(NotFoundExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
         register(LoggingFeature(logger))
         register(InjectionBinder())
@@ -101,6 +104,7 @@ class OpenApiResourceConfig(
         property(Properties.PRIVATE_KEY, serverConfig.privateKey)
         property(Properties.WALLET_FILE, serverConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, serverConfig.walletPassword)
+        property(Properties.CONTRACT_ADDRESSES, serverConfig.contractAddresses)
         property(Properties.NETWORK, serverConfig.network)
         property(Properties.GAS_PRICE, serverConfig.gasPrice)
     }
@@ -113,6 +117,8 @@ class OpenApiResourceConfig(
                 .to(Credentials::class.java).`in`(Singleton::class.java)
             bindFactory(ContractGasProviderFactory::class.java)
                 .to(ContractGasProvider::class.java).`in`(Singleton::class.java)
+            bindFactory(ContractAddressesFactory::class.java)
+                .to(ContractAddresses::class.java).`in`(Singleton::class.java)
         }
     }
 

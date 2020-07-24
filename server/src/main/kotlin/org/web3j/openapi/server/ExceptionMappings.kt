@@ -19,6 +19,7 @@ import org.web3j.openapi.core.ErrorResponse
 import org.web3j.protocol.exceptions.TransactionException
 import org.web3j.tx.exceptions.ContractCallException
 import javax.servlet.http.HttpServletRequest
+import javax.ws.rs.NotFoundException
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Response
@@ -58,6 +59,7 @@ class UnsupportedOperationExceptionMapper : BaseExceptionMapper<UnsupportedOpera
 class IllegalArgumentExceptionMapper : BaseExceptionMapper<IllegalArgumentException>(CustomStatus.UNPROCESSABLE_ENTITY)
 class ContractCallExceptionMapper : BaseExceptionMapper<ContractCallException>(CustomStatus.UNPROCESSABLE_ENTITY)
 class IllegalStateExceptionMapper : BaseExceptionMapper<IllegalStateException>(CustomStatus.UNPROCESSABLE_ENTITY)
+class NotFoundExceptionMapper : BaseExceptionMapper<NotFoundException>(CustomStatus.UNPROCESSABLE_ENTITY)
 
 enum class CustomStatus(
     private val _statusCode: Int,

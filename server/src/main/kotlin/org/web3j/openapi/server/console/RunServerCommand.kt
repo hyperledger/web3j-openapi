@@ -12,20 +12,20 @@
  */
 package org.web3j.openapi.server.console
 
-import org.web3j.openapi.server.console.options.ConfigFileOptions
-import org.web3j.openapi.server.console.options.CredentialsOptions
-import org.web3j.openapi.server.console.options.NetworkOptions
-import org.web3j.openapi.server.console.options.ProjectOptions
-import org.web3j.openapi.server.console.options.ServerOptions
+import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
+import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import org.web3j.openapi.server.console.options.*
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Mixin
+import picocli.CommandLine.Option
 import java.io.File
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
+
 
 @Command(
     showDefaultValues = true,
@@ -34,6 +34,15 @@ import kotlin.system.exitProcess
     version = ["1.0"] // TODO: Make version not hardcoded
 )
 class RunServerCommand : Callable<Int> {
+
+    @Option(
+        names = ["--contract-addresses"],
+        description = ["Add pre-deployed contract addresses"],
+        arity = "0..*",
+        split = ",",
+        required = false
+    )
+    private var contractAddresses: Map<String, String>? = null
 
     @Mixin
     private val credentials = CredentialsOptions()
@@ -76,6 +85,7 @@ class RunServerCommand : Callable<Int> {
             walletPassword = credentials.walletOptions.walletPassword,
             projectName = projectOptions.projectName,
             network = networkOptions.network
+            contractAddresses = ContractAddresses(contractAddresses?.mapValues { Address(it.value) })
         )
     }
 
