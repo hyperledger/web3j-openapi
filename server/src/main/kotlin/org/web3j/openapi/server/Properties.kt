@@ -17,6 +17,7 @@ object Properties {
     const val PRIVATE_KEY = "web3j.openApi.privateKey"
     const val WALLET_FILE = "web3j.openApi.wallet.file"
     const val WALLET_PASSWORD = "web3j.openApi.wallet.password"
+    const val CONTRACT_ADDRESSES = "web3j.openApi.contract.addresses"
     const val NETWORK = "web3j.openapi.network"
     const val GAS_PRICE = "web3j.openapi.gas.price"
 //    const val WEB3J = "web3j.openApi.web3j"
