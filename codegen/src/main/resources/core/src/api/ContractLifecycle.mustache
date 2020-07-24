@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 {{#contractDetails}}
-interface {{capitalizedContractName}}Lifecycle {
+interface {{capitalizedContractName}}Lifecycle : ContractLifecycle {
 
     @POST
     @Operation(
@@ -26,12 +26,5 @@ interface {{capitalizedContractName}}Lifecycle {
         summary = "Deploys the {{capitalizedContractName}} contract"
     )
     fun deploy{{deployParameters}}: TransactionReceipt
-    
-    @Path(CONTRACT_ADDRESS_PATH)
-    @Operation(
-        tags = ["{{capitalizedContractName}} Methods"],
-        summary = "Loads the {{capitalizedContractName}} contract"
-    )
-    fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
 }
 {{/contractDetails}}

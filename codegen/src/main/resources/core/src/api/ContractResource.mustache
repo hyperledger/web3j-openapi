@@ -3,6 +3,7 @@ package {{packageName}}.core.{{contractName}}
 {{#modelImports}}
     {{import}}
 {{/modelImports}}
+import org.web3j.openapi.core.ContractResource
 import io.swagger.v3.oas.annotations.Operation
 import javax.annotation.Generated
 import javax.ws.rs.Consumes
@@ -16,7 +17,7 @@ import javax.ws.rs.core.MediaType
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-interface {{capitalizedContractName}}Resource {
+interface {{capitalizedContractName}}Resource : ContractResource {
 
     @get:Path("events")
     val events: {{capitalizedContractName}}Events
