@@ -28,8 +28,7 @@ object GeneratorUtils {
         return abis.map { abiFile ->
             ContractConfiguration(
                 abiFile,
-                bins[abiFile.nameWithoutExtension]
-                    ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
+                bins[abiFile.nameWithoutExtension],
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
