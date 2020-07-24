@@ -38,7 +38,7 @@ dependencies {
 
 ext {
     generatedProjectName = "testProject"
-    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
+    outputDirectory = "$projectDir/build/generated/web3j-openapi"
 }
 
 task copyOpenApiResources(type: Copy) {
@@ -48,10 +48,32 @@ task copyOpenApiResources(type: Copy) {
     delete('src/main/resources/META-INF')
 }
 
+task downloadEpirusCliInstaller(type: Download) {
+    src 'http://get.epirus.io'
+    dest new File("$buildDir/tmp", 'epirus-installer.sh')
+    onlyIfModified true
+    doLast {
+        project.exec {
+            commandLine('chmod',  '+x', "$buildDir/tmp/epirus-installer.sh")
+        }
+    }
+}
+
+task installEpirusCli(type: Exec, group: 'web3j') {
+    dependsOn downloadEpirusCliInstaller
+    commandLine "$buildDir/tmp/epirus-installer.sh"
+//    doLast {
+//        project.exec {
+//            commandLine('source',  "\$HOME/.epirus/source.sh")
+//        }
+//    }
+}
+
 task generateOpenApiProject(type : Exec, group: 'web3j') {
-    dependsOn(":web3j-openapi-console:installShadowDist")
+    dependsOn installEpirusCli
     dependsOn copyOpenApiResources
-    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
+    commandLine '/Users/xavier/.epirus/epirus',
+            'openapi',
             'generate',
             '--name', "$generatedProjectName",
             '--context-path', 'api',
