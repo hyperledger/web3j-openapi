@@ -13,9 +13,14 @@
 package org.web3j.openapi.core
 
 import io.swagger.v3.oas.annotations.Operation
+import javax.ws.rs.Consumes
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
+import javax.ws.rs.Produces
+import javax.ws.rs.core.MediaType
 
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 interface ContractLifecycle {
     @Path(CONTRACT_ADDRESS_PATH)
     @Operation(summary = "Loads the contract using the address passed in the URI")
@@ -24,6 +29,7 @@ interface ContractLifecycle {
         contractAddress: String
     ): ContractResource
 
+    @Path("")
     @Operation(summary = "Loads the contract from a predefined address")
     fun load(): ContractResource
 }
