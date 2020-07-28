@@ -27,7 +27,7 @@ class {{projectName}}ResourceImpl(
         web3j,
         transactionManager,
         defaultGasProvider,
-        contractAddresses.addresses?.get("{{capitalizedContractName}}"),
+        contractAddresses["{{capitalizedContractName}}"],
         uriInfo)
 
     {{/contractDetails}}

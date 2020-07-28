@@ -88,7 +88,11 @@ class RunServerCommand : Callable<Int> {
             walletPassword = credentials.walletOptions.walletPassword,
             projectName = projectOptions.projectName,
             network = networkOptions.network
-            contractAddresses = ContractAddresses(contractAddresses?.mapValues { Address(it.value) })
+            contractAddresses = ContractAddresses().apply {
+                contractAddresses?.let {
+                    putAll(it.mapValues { Address(it.value) })
+                }
+            }
         )
     }
 
