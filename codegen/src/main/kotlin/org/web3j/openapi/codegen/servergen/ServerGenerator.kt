@@ -94,6 +94,12 @@ internal class ServerGenerator(
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
         }
+        TemplateUtils.generateFromTemplate(
+            context = mapOf(Pair("projectName", configuration.projectName.toLowerCase())),
+            outputDir = configuration.outputDir,
+            template = TemplateUtils.mustacheTemplate("server/Dockerfile.mustache"),
+            name = "Dockerfile"
+        )
     }
 
     private fun copyResources(folderPath: String) {
