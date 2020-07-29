@@ -16,19 +16,20 @@ import picocli.CommandLine.IDefaultValueProvider
 import picocli.CommandLine.Model.ArgSpec
 import picocli.CommandLine.Model.OptionSpec
 import java.io.File
-import java.io.FileReader
-import java.util.Properties
 
 internal class ConfigDefaultProvider(
     private val configFile: File?,
     private val environment: Map<String, String>,
-    private val defaultFile: File
+    defaultFile: File
 ) : IDefaultValueProvider {
+
+    private val consoleConfigMapper = ConfigMapper(configFile)
+    private val defaultConsoleConfigMapper = ConfigMapper(defaultFile)
 
     override fun defaultValue(argSpec: ArgSpec): String? {
         return configFile?.run {
-            getPropertyFromFile(configFile, argSpec)
-        } ?: getPropertyFromFile(defaultFile, argSpec)
+            getPropertyFromFile(argSpec)
+        } ?: getPropertyFromFile(argSpec, true)
         ?: environment[getEnvironmentName(argSpec)]
     }
 
@@ -37,7 +38,6 @@ internal class ConfigDefaultProvider(
             .longestName()
             .removePrefix("--")
             .replace("-", ".")
-            .prependIndent("web3j.openapi.")
     }
 
     private fun getEnvironmentName(argSpec: ArgSpec): String {
@@ -49,16 +49,8 @@ internal class ConfigDefaultProvider(
             .prependIndent("WEB3J_OPENAPI_")
     }
 
-    private fun getPropertyFromFile(configFile: File, argSpec: ArgSpec): String? {
-        return if (configFile.exists()) {
-            FileReader(configFile).use {
-                Properties().run {
-                    load(it)
-                    getProperty(getPropertyName(argSpec))
-                }
-            }
-        } else {
-            null
-        }
+    private fun getPropertyFromFile(argSpec: ArgSpec, defaultFile: Boolean = false): String? {
+        return if (defaultFile) defaultConsoleConfigMapper.value(getPropertyName(argSpec))
+        else consoleConfigMapper.value(getPropertyName(argSpec))
     }
 }

@@ -16,16 +16,10 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.openapi.server.console.options.ConfigFileOptions
-import org.web3j.openapi.server.console.options.CredentialsOptions
-import org.web3j.openapi.server.console.options.NetworkOptions
-import org.web3j.openapi.server.console.options.ProjectOptions
-import org.web3j.openapi.server.console.options.ServerOptions
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Mixin
-import picocli.CommandLine.Option
 import java.io.File
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -38,29 +32,8 @@ import kotlin.system.exitProcess
 )
 class RunServerCommand : Callable<Int> {
 
-    @Option(
-        names = ["--contract-addresses"],
-        description = ["Add pre-deployed contract addresses"],
-        arity = "0..*",
-        split = ",",
-        required = false
-    )
-    private var contractAddresses: Map<String, String>? = null
-
     @Mixin
-    private val credentials = CredentialsOptions()
-
-    @Mixin
-    private val serverOptions = ServerOptions()
-
-    @CommandLine.ArgGroup
-    private val networkOptions = NetworkOptions()
-
-    @Mixin
-    private val configFileOptions = ConfigFileOptions()
-
-    @Mixin
-    private val projectOptions = ProjectOptions()
+    private val consoleConfiguration = ConsoleConfiguration()
 
     override fun call(): Int {
         val serverConfig = serverConfig()
@@ -80,16 +53,15 @@ class RunServerCommand : Callable<Int> {
 
     private fun serverConfig(): OpenApiServerConfig {
         return OpenApiServerConfig(
-            host = serverOptions.host.hostName,
-            port = serverOptions.port,
-            nodeEndpoint = networkOptions.endpoint,
-            privateKey = credentials.privateKey,
-            walletFile = credentials.walletOptions.walletFile,
-            walletPassword = credentials.walletOptions.walletPassword,
-            projectName = projectOptions.projectName,
-            network = networkOptions.network
+            host = consoleConfiguration.serverOptions.host.hostName,
+            port = consoleConfiguration.serverOptions.port,
+            nodeEndpoint = consoleConfiguration.networkOptions.endpoint,
+            privateKey = consoleConfiguration.credentialsOptions.privateKey,
+            walletFile = consoleConfiguration.credentialsOptions.walletOptions.walletFile,
+            walletPassword = consoleConfiguration.credentialsOptions.walletOptions.walletPassword,
+            projectName = consoleConfiguration.projectOptions.projectName,
             contractAddresses = ContractAddresses().apply {
-                contractAddresses?.let {
+                consoleConfiguration.contractAddresses?.let {
                     putAll(it.mapValues { Address(it.value) })
                 }
             }
@@ -97,7 +69,7 @@ class RunServerCommand : Callable<Int> {
     }
 
     companion object {
-        private const val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
+        private val DEFAULT_FILE_PATH = "${System.getProperty("user.home")}/.epirus/web3j.openapi.properties"
         private const val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
 
         private val environment = System.getenv()
