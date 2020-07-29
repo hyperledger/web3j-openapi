@@ -4,4 +4,4 @@ RUN mkdir /opt/app
 COPY . /opt/app
 WORKDIR /opt/app
 RUN ./gradlew installDist
-ENTRYPOINT ["./server/build/install/{{projectName}}-server/bin/{{projectName}}-server", "run"]
+ENTRYPOINT ["./server/build/install/{{projectName}}-server/bin/{{projectName}}-server"]
