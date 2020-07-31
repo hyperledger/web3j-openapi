@@ -23,6 +23,7 @@ import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
 import java.io.IOException
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class GenerationTest {
 
@@ -31,7 +32,7 @@ class GenerationTest {
 
     @Test
     fun `Generated project gradle tasks test`() {
-        val contractsFolder = Path.of(
+        val contractsFolder = Paths.get(
             "src",
             "test",
             "resources",

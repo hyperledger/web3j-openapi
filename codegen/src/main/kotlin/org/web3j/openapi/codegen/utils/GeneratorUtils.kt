@@ -21,6 +21,7 @@ import java.lang.IllegalStateException
 
 object GeneratorUtils {
 
+    @JvmStatic
     fun loadContractConfigurations(abiList: List<File>, binList: List<File>): List<ContractConfiguration> {
         val abis = checkDuplicates(recurseIntoFolders(abiList, "abi"))
         val bins = recurseIntoFolders(binList, "bin").associateBy({ it.nameWithoutExtension }, { it })

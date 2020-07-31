@@ -19,6 +19,7 @@ import org.web3j.openapi.codegen.utils.structName
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class EventsResourceImplGenerator(
     val packageName: String,
@@ -38,7 +39,7 @@ class EventsResourceImplGenerator(
 
     fun generate() {
         val eventsFolder = File(
-            Path.of(
+            Paths.get(
                 folderPath,
                 "eventsImpl"
             ).toString())

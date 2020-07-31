@@ -25,6 +25,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import java.io.FileNotFoundException
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class CoreGenerator(
     configuration: GeneratorConfiguration
@@ -50,7 +51,7 @@ class CoreGenerator(
             logger.debug("Generating ${it.contractDetails.capitalizedContractName} Open API folders and files")
             CoreApiGenerator(
                 configuration.packageName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath,
                     it.contractDetails.lowerCaseContractName
                 ).toString(),

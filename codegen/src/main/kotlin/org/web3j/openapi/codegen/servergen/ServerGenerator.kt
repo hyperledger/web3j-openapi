@@ -26,6 +26,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
+import java.nio.file.Paths
 
 internal class ServerGenerator(
     configuration: GeneratorConfiguration
@@ -57,7 +58,7 @@ internal class ServerGenerator(
             logger.debug("Generating ${it.contractDetails.capitalizedContractName} server folders and files")
             LifecycleImplGenerator(
                 packageName = configuration.packageName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath,
                     it.contractDetails.lowerCaseContractName
                 ).toString(),
@@ -67,7 +68,7 @@ internal class ServerGenerator(
             ResourcesImplGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath.substringBefore("kotlin"),
                     "kotlin"
                 ).toString(),
@@ -77,7 +78,7 @@ internal class ServerGenerator(
             EventsResourceImplGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath,
                     it.contractDetails.lowerCaseContractName
                 ).toString(),
@@ -87,7 +88,7 @@ internal class ServerGenerator(
             StructExtensionsGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath.substringBefore("kotlin"),
                     "kotlin"
                 ).toString(),
@@ -98,7 +99,7 @@ internal class ServerGenerator(
 
     private fun copyResources(folderPath: String) {
         File(
-            Path.of(
+            Paths.get(
                 folderPath.substringBefore("main"),
                 "main",
                 "resources"
@@ -115,7 +116,7 @@ internal class ServerGenerator(
 
         // FIXME Copies SPI resource in main
         val spiFolder = File(
-            Path.of(
+            Paths.get(
                 folderPath.substringBefore("server"),
                 "server",
                 "src",
@@ -129,7 +130,7 @@ internal class ServerGenerator(
             context = context,
             outputDir = spiFolder.absolutePath,
             template = TemplateUtils.mustacheTemplate(
-                    Path.of(
+                    Paths.get(
                         "server",
                         "src",
                         "main",

@@ -21,13 +21,14 @@ import org.web3j.openapi.codegen.utils.GeneratorUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class LifecycleImplTest {
 
     @TempDir
     lateinit var tempFolder: File
 
-    private val contractsFolder = Path.of(
+    private val contractsFolder = Paths.get(
         "src",
         "test",
         "resources",

@@ -21,6 +21,7 @@ import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import java.io.File
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class GenerateOpenApi(
     private val configuration: GeneratorConfiguration
@@ -58,7 +59,7 @@ class GenerateOpenApi(
                 contractName = it.abiFile.name.removeSuffix(".abi"),
                 basePackageName = "${configuration.packageName}.wrappers",
                 destinationDir = File(
-                    Path.of(
+                    Paths.get(
                         configuration.outputDir,
                         "server",
                         "src",

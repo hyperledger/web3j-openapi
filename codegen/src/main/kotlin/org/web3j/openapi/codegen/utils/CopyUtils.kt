@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 internal object CopyUtils {
@@ -41,7 +42,7 @@ internal object CopyUtils {
 
     fun createTree(module: String, packageDir: String, outputDir: String): String {
         val folder = File(
-            Path.of(
+            Paths.get(
                 outputDir,
                 module,
                 "src",

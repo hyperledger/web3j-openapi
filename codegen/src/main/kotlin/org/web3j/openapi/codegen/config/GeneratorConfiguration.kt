@@ -15,7 +15,7 @@ package org.web3j.openapi.codegen.config
 import org.jetbrains.kotlin.ir.backend.js.utils.sanitizeName
 import org.web3j.abi.datatypes.Address
 
-data class GeneratorConfiguration(
+data class GeneratorConfiguration @JvmOverloads constructor(
     val projectName: String,
     var packageName: String,
     val outputDir: String,
