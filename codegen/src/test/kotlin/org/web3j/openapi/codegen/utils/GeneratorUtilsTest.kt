@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateInputNames
 import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateNames
 import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class GeneratorUtilsTest {

@@ -20,7 +20,6 @@ import org.web3j.openapi.codegen.servergen.subgenerators.StructExtensionsGenerat
 import org.web3j.openapi.codegen.utils.GeneratorUtils
 import java.io.File
 import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class StructExtensionsTest {

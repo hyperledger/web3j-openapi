@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class KPoetUtilsTest {

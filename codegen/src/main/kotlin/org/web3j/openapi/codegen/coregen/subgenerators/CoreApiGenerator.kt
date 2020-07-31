@@ -25,7 +25,6 @@ import org.web3j.openapi.codegen.utils.extractStructs
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.isTransactional
 import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 
 internal class CoreApiGenerator(

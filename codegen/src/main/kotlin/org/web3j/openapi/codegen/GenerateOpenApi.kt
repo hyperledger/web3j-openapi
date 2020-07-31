@@ -20,7 +20,6 @@ import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
 import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class GenerateOpenApi(

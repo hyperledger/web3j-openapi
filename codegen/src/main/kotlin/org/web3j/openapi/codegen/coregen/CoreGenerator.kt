@@ -24,7 +24,6 @@ import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class CoreGenerator(

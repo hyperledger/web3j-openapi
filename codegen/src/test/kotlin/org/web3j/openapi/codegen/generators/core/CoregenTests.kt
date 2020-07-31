@@ -25,7 +25,6 @@ import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.utils.GeneratorUtils
 import java.io.File
 import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.nio.file.Paths
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)

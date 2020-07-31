@@ -25,7 +25,6 @@ import org.web3j.openapi.codegen.utils.GeneratorUtils.sanitizedName
 import org.web3j.openapi.codegen.utils.extractStructs
 import java.io.File
 import java.io.FileNotFoundException
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class ModelsTests {

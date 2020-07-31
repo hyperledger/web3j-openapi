@@ -29,7 +29,6 @@ import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.isTransactional
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
-import java.nio.file.Path
 import java.nio.file.Paths
 
 internal class ResourcesImplGenerator(
