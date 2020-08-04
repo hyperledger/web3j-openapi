@@ -12,6 +12,9 @@
  */
 package org.web3j.openapi.codegen
 
+import org.gradle.tooling.GradleConnectionException
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ResultHandler
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.CoreGenerator
 import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.copyProjectResources
@@ -25,11 +28,19 @@ import java.nio.file.Paths
 class GenerateOpenApi(
     private val configuration: GeneratorConfiguration
 ) {
+
+    private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
+
     fun generateAll() {
         generateGradleResources()
         generateCore()
         generateServer()
         generateWrappers()
+    }
+
+    fun generateAllWithSwaggerUI() {
+        generateAll()
+        generateSwaggerUI()
     }
 
     fun generateServer() {
@@ -71,5 +82,27 @@ class GenerateOpenApi(
                 addressLength = configuration.addressLength
             ).generate()
         }
+    }
+
+    fun generateSwaggerUI() {
+        GradleConnector.newConnector()
+            .useBuildDistribution()
+            .forProjectDirectory(File(configuration.outputDir))
+            .connect()
+            .apply {
+                newBuild()
+                    .forTasks(SWAGGERUI_GENERATION_TASK)
+                    .setStandardOutput(System.out)
+                    .run(object : ResultHandler<Void> {
+                        override fun onFailure(failure: GradleConnectionException) {
+                            throw failure
+                        }
+
+                        override fun onComplete(result: Void?) {
+                            print(" Done.\n")
+                        }
+                    })
+                close()
+            }
     }
 }

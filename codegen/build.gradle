@@ -12,6 +12,7 @@ dependencies {
     }
 
     implementation "com.pinterest.ktlint:ktlint-ruleset-standard:${versions.ktlint}"
+    implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
     implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
     implementation("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
         exclude group: 'com.github.jknack'
