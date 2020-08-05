@@ -16,6 +16,7 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import org.web3j.openapi.server.console.defaultprovider.ConfigDefaultProvider
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
@@ -69,7 +70,7 @@ class RunServerCommand : Callable<Int> {
     }
 
     companion object {
-        private val DEFAULT_FILE_PATH = "${System.getProperty("user.home")}/.epirus/web3j.openapi.properties"
+        private val DEFAULT_FILE_PATH_WITHOUT_EXTENSION = "${System.getProperty("user.home")}/.epirus/web3j.openapi"
         private const val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
 
         private val environment = System.getenv()
@@ -106,7 +107,11 @@ class RunServerCommand : Callable<Int> {
                 ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
 
             commandLine.defaultValueProvider =
-                ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
+                ConfigDefaultProvider(
+                    configFile,
+                    environment,
+                    DEFAULT_FILE_PATH_WITHOUT_EXTENSION
+                )
         }
     }
 }

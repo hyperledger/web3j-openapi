@@ -20,7 +20,8 @@ dependencies {
     implementation "org.glassfish.jersey.inject:jersey-hk2:${versions.jersey}"
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}"
-
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.jackson}"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:${versions.jackson}"
     implementation "org.slf4j:jul-to-slf4j:${versions.slf4j}"
 
     implementation "info.picocli:picocli:${versions.picocli}"

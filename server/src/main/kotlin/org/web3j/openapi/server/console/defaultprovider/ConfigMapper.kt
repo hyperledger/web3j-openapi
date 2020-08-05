@@ -10,9 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server.console
+package org.web3j.openapi.server.console.defaultprovider
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import org.web3j.openapi.server.console.ConsoleConfiguration
 import java.io.File
 
 class ConfigMapper(
@@ -20,8 +23,10 @@ class ConfigMapper(
 ) {
     private val consoleConfiguration: ConsoleConfiguration?
     get() {
-        return configFile?.run {
-            return ObjectMapper().readValue(configFile, ConsoleConfiguration::class.java)
+        return when (configFile?.extension) {
+            "yaml" -> ObjectMapper(YAMLFactory()).readValue(configFile, ConsoleConfiguration::class.java)
+            "json" -> ObjectMapper().readValue(configFile, ConsoleConfiguration::class.java)
+            else -> JavaPropsMapper().readValue(configFile, ConsoleConfiguration::class.java)
         }
     }
 
