@@ -31,11 +31,11 @@ class GenerateOpenApi(
 
     private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
 
-    fun generateAll() {
-        generateGradleResources()
-        generateCore()
-        generateServer()
-        generateWrappers()
+    fun generateAll(isCodeOnly: Boolean = false, withWrappers: Boolean = true) {
+        if (!isCodeOnly) generateGradleResources()
+        generateCore(isCodeOnly)
+        generateServer(isCodeOnly)
+        if (withWrappers) generateWrappers()
     }
 
     fun generateAllWithSwaggerUI() {
@@ -43,12 +43,12 @@ class GenerateOpenApi(
         generateSwaggerUI()
     }
 
-    fun generateServer() {
-        ServerGenerator(configuration).generate()
+    fun generateServer(isCodeOnly: Boolean = false) {
+        ServerGenerator(configuration).generate(isCodeOnly)
     }
 
-    fun generateCore() {
-        CoreGenerator(configuration).generate()
+    fun generateCore(isCodeOnly: Boolean = false) {
+        CoreGenerator(configuration).generate(isCodeOnly)
     }
 
     fun generateGradleResources() {

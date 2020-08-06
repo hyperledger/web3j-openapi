@@ -74,7 +74,7 @@ class CoregenTests {
                     "test",
                     "0.1.0-SNAPSHOT"
                 )
-            ).generate()
+            ).generate(false)
         }.isSuccess()
     }
 }

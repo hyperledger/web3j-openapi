@@ -21,5 +21,5 @@ abstract class AbstractGenerator(
 
     protected val context = mutableMapOf<String, Any>("packageName" to configuration.packageName)
 
-    abstract fun generate()
+    abstract fun generate(isCodeOnly: Boolean)
 }
