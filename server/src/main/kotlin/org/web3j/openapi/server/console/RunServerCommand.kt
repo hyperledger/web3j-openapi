@@ -110,24 +110,27 @@ class RunServerCommand : Callable<Int> {
             val configFile = configFileCommand.configFileOptions.configFile
                 ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
 
-            commandLine.defaultValueProvider =
-                CascadingDefaultProvider(
-                    when (configFile?.extension) {
-                        "yaml" -> YamlDefaultProvider(configFile)
-                        "json" -> JsonDefaultProvider(configFile)
-                        "properties" -> JavaPropDefaultProvider(configFile)
-                        else -> null },
-                    when {
-                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml").exists() ->
-                                YamlDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml"))
-                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json").exists() ->
-                            JsonDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json"))
-                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties").exists() ->
-                            JavaPropDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties"))
-                        else -> null
-                    },
-                    EnvironmentVariableDefaultProvider(environment)
-                )
+            val defaultProvidersList = mutableListOf<CommandLine.IDefaultValueProvider>()
+            when (configFile?.extension) {
+                "yaml" -> YamlDefaultProvider(configFile)
+                "json" -> JsonDefaultProvider(configFile)
+                "properties" -> JavaPropDefaultProvider(configFile)
+                else -> null
+            }?.let { defaultProvidersList.add(it) }
+
+            when {
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml").exists() ->
+                    YamlDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml"))
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json").exists() ->
+                    JsonDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json"))
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties").exists() ->
+                    JavaPropDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties"))
+                else -> null
+            }?.let { defaultProvidersList.add(it) }
+
+            defaultProvidersList.add(EnvironmentVariableDefaultProvider(environment))
+
+            commandLine.defaultValueProvider = CascadingDefaultProvider(*defaultProvidersList.toTypedArray())
         }
     }
 }
