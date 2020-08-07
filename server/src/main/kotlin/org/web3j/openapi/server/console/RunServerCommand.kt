@@ -16,7 +16,11 @@ import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
 import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
-import org.web3j.openapi.server.console.defaultprovider.ConfigDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.CascadingDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.EnvironmentVariableDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.JavaPropDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.JsonDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.YamlDefaultProvider
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
@@ -107,10 +111,22 @@ class RunServerCommand : Callable<Int> {
                 ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
 
             commandLine.defaultValueProvider =
-                ConfigDefaultProvider(
-                    configFile,
-                    environment,
-                    DEFAULT_FILE_PATH_WITHOUT_EXTENSION
+                CascadingDefaultProvider(
+                    when (configFile?.extension) {
+                        "yaml" -> YamlDefaultProvider(configFile)
+                        "json" -> JsonDefaultProvider(configFile)
+                        "properties" -> JavaPropDefaultProvider(configFile)
+                        else -> null },
+                    when {
+                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml").exists() ->
+                                YamlDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml"))
+                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json").exists() ->
+                            JsonDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json"))
+                        File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties").exists() ->
+                            JavaPropDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties"))
+                        else -> null
+                    },
+                    EnvironmentVariableDefaultProvider(environment)
                 )
         }
     }
