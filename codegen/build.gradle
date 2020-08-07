@@ -1,9 +1,5 @@
 description 'web3j-openapi project code generators'
 
-repositories{
-    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-}
-
 dependencies {
     implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
         exclude group: 'org.apache.commons'
