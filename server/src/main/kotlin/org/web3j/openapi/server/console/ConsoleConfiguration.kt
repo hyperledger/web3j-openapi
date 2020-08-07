@@ -30,7 +30,7 @@ class ConsoleConfiguration {
     @JsonProperty("server")
     val serverOptions = ServerOptions()
 
-    @CommandLine.Mixin
+    @CommandLine.ArgGroup
     @JsonProperty("network")
     val networkOptions = NetworkOptions()
 
