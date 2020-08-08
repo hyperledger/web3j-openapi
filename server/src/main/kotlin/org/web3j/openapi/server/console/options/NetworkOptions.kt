@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.server.console.options
 
+import picocli.CommandLine
 import picocli.CommandLine.Option
 import java.net.URL
 
@@ -21,5 +22,14 @@ class NetworkOptions {
         description = ["specify the endpoint"],
         required = true
     )
-    lateinit var endpoint: URL
+    var endpoint: URL? = null
+
+    @CommandLine.Option(
+        names = ["--network"],
+        description = ["specify the network rinkeby|ropsten|mainnet - For Epirus use"],
+        required = true,
+        defaultValue = "",
+        hidden = true
+    )
+    var network: String = ""
 }

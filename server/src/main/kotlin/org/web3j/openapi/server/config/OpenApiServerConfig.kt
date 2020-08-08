@@ -12,21 +12,24 @@
  */
 package org.web3j.openapi.server.config
 
+import io.epirus.web3j.gas.GasPrice
 import java.io.File
 import java.net.URL
 
 data class OpenApiServerConfig(
     val projectName: String,
-    val nodeEndpoint: URL,
+    val nodeEndpoint: URL? = null,
     val privateKey: String? = null,
     val walletFile: File? = null,
     val walletPassword: String? = null,
     val host: String,
-    val port: Int
+    val port: Int,
+    val network: String = "",
+    val gasPrice: GasPrice = GasPrice.High
 ) {
     init {
-        if (privateKey == null && walletFile == null) {
-            throw IllegalArgumentException("Invalid credentials, use a private key or wallet file")
+        if (privateKey == null && walletFile == null && network.isEmpty()) {
+            throw IllegalArgumentException("Invalid credentials, use a private key, wallet file or run using the Epirus-CLI")
         } else if (walletFile != null) {
             if (!walletFile.exists())
                 throw IllegalArgumentException("Wallet file $walletFile not found!")

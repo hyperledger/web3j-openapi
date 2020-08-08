@@ -12,14 +12,20 @@
  */
 package org.web3j.openapi.server
 
+import io.epirus.web3j.Epirus
+import io.epirus.web3j.gas.EpirusGasProvider
+import io.epirus.web3j.gas.GasPrice
 import mu.KLogging
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.WalletUtils
+import org.web3j.openapi.server.Properties.GAS_PRICE
+import org.web3j.openapi.server.Properties.NETWORK
 import org.web3j.openapi.server.Properties.NODE_ADDRESS
 import org.web3j.openapi.server.Properties.PRIVATE_KEY
 import org.web3j.openapi.server.Properties.WALLET_FILE
 import org.web3j.openapi.server.Properties.WALLET_PASSWORD
+import org.web3j.protocol.Network
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.gas.ContractGasProvider
@@ -33,8 +39,12 @@ class Web3jFactory(
 ) : Factory<Web3j> {
 
     override fun provide(): Web3j {
-        val nodeAddress = configuration.getProperty(NODE_ADDRESS).toString()
-        return Web3j.build(HttpService(nodeAddress))
+        val nodeAddress = configuration.getProperty(NODE_ADDRESS)?.toString()
+        val network = configuration.getProperty(NETWORK)?.toString()
+        return if (network != null && network.isNotEmpty())
+            Epirus.buildWeb3j(Network.valueOf(network.toUpperCase()))
+        else
+            Web3j.build(HttpService(nodeAddress))
     }
 
     override fun dispose(web3j: Web3j) = web3j.shutdown()
@@ -47,6 +57,7 @@ class CredentialsFactory(
     override fun provide(): Credentials {
         val privateKey = configuration.getProperty(PRIVATE_KEY)?.toString()
         val walletFilePath = configuration.getProperty(WALLET_FILE)?.toString()
+        val network = configuration.getProperty(NETWORK)?.toString()
         return if (!walletFilePath.isNullOrBlank()) {
             logger.info("Loading credentials from wallet file $walletFilePath")
             val walletFile = File(walletFilePath)
@@ -55,6 +66,10 @@ class CredentialsFactory(
         } else if (!privateKey.isNullOrBlank()) {
             logger.info("Loading credentials from raw private key")
             Credentials.create(privateKey)
+        } else if (network != null && network.isNotEmpty()) {
+            val walletPath = System.getenv("EPIRUS_WALLET_PATH")
+            val walletPassword = System.getenv().getOrDefault("EPIRUS_WALLET_PASSWORD", "")
+            WalletUtils.loadCredentials(walletPassword, File(walletPath))
         } else {
             logger.warn("Missing credentials! Aborting.")
             throw IllegalStateException("Credentials missing!")
@@ -70,8 +85,12 @@ class ContractGasProviderFactory(
 ) : Factory<ContractGasProvider> {
 
     override fun provide(): ContractGasProvider {
-        // TODO Use server properties to instantiate the provider
-        return DefaultGasProvider()
+        val network = configuration.getProperty(NETWORK)?.toString()
+        val gasPrice = configuration.getProperty(GAS_PRICE) as GasPrice? ?: GasPrice.High
+        return if (network != null && network.isNotEmpty())
+            EpirusGasProvider(Network.valueOf(network.toUpperCase()), gasPrice)
+        else
+            DefaultGasProvider()
     }
 
     override fun dispose(gasProvider: ContractGasProvider) {

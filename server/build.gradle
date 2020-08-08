@@ -12,6 +12,7 @@ dependencies {
     api project(':web3j-openapi-core')
 
     implementation "org.web3j:core:${versions.web3j}"
+    implementation "io.epirus:epirus-web3j:${versions.web3jEpirus}"
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"

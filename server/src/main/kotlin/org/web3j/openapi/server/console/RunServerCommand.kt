@@ -41,7 +41,7 @@ class RunServerCommand : Callable<Int> {
     @Mixin
     private val serverOptions = ServerOptions()
 
-    @Mixin
+    @CommandLine.ArgGroup
     private val networkOptions = NetworkOptions()
 
     @Mixin
@@ -74,7 +74,8 @@ class RunServerCommand : Callable<Int> {
             privateKey = credentials.privateKey,
             walletFile = credentials.walletOptions.walletFile,
             walletPassword = credentials.walletOptions.walletPassword,
-            projectName = projectOptions.projectName
+            projectName = projectOptions.projectName,
+            network = networkOptions.network
         )
     }
 
