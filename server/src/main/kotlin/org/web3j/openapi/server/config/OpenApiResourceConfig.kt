@@ -32,6 +32,7 @@ import org.web3j.openapi.server.JsonParseExceptionMapper
 import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.ContractCallExceptionMapper
 import org.web3j.openapi.server.IllegalArgumentExceptionMapper
+import org.web3j.openapi.server.IllegalStateExceptionMapper
 import org.web3j.openapi.server.Properties
 import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
@@ -90,6 +91,7 @@ class OpenApiResourceConfig(
         register(JsonParseExceptionMapper::class.java)
         register(TransactionExceptionMapper::class.java)
         register(UnsupportedOperationExceptionMapper::class.java)
+        register(IllegalStateExceptionMapper::class.java)
         register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
         register(LoggingFeature(logger))
         register(InjectionBinder())
@@ -99,6 +101,8 @@ class OpenApiResourceConfig(
         property(Properties.PRIVATE_KEY, serverConfig.privateKey)
         property(Properties.WALLET_FILE, serverConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, serverConfig.walletPassword)
+        property(Properties.NETWORK, serverConfig.network)
+        property(Properties.GAS_PRICE, serverConfig.gasPrice)
     }
 
     private class InjectionBinder : AbstractBinder() {

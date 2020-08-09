@@ -57,6 +57,7 @@ class TransactionExceptionMapper : BaseExceptionMapper<TransactionException>(Sta
 class UnsupportedOperationExceptionMapper : BaseExceptionMapper<UnsupportedOperationException>(Status.BAD_REQUEST)
 class IllegalArgumentExceptionMapper : BaseExceptionMapper<IllegalArgumentException>(CustomStatus.UNPROCESSABLE_ENTITY)
 class ContractCallExceptionMapper : BaseExceptionMapper<ContractCallException>(CustomStatus.UNPROCESSABLE_ENTITY)
+class IllegalStateExceptionMapper : BaseExceptionMapper<IllegalStateException>(CustomStatus.UNPROCESSABLE_ENTITY)
 
 enum class CustomStatus(
     private val _statusCode: Int,
