@@ -3,5 +3,5 @@ FROM adoptopenjdk/openjdk11
 RUN mkdir /opt/app
 COPY . /opt/app
 WORKDIR /opt/app
-RUN ./gradlew installDist
-ENTRYPOINT ["./server/build/install/{{projectName}}-server/bin/{{projectName}}-server"]
+RUN curl -L get.epirus.io | sh
+ENTRYPOINT ["/root/.epirus/epirus", "run", "rinkeby"]
