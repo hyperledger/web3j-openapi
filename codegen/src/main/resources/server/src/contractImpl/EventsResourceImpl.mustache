@@ -9,7 +9,9 @@ import org.web3j.openapi.server.SubResourceImpl
 import javax.inject.Inject
 import javax.ws.rs.core.Context
 import org.glassfish.jersey.server.ExtendedUriInfo
+import javax.annotation.Generated
 
+@Generated
 class {{capitalizedContractName}}EventsImpl(
     private val {{decapitalizedContractName}} : {{capitalizedContractName}},
     uriInfo : ExtendedUriInfo
