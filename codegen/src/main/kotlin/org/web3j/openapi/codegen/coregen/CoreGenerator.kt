@@ -43,7 +43,7 @@ class CoreGenerator(
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        if (!configuration.isCodeOnly) generateGradleBuildFile(folderPath, "core", context)
+        if (configuration.withBuildFiles) generateGradleBuildFile(folderPath, "core", context)
         copySources(folderPath)
 
         configuration.contracts.forEach {

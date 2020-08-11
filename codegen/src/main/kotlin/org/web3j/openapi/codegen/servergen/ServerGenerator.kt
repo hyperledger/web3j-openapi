@@ -49,7 +49,7 @@ internal class ServerGenerator(
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
         val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
-        if (!configuration.isCodeOnly) generateGradleBuildFile(folderPath, "server", context)
+        if (configuration.withBuildFiles) generateGradleBuildFile(folderPath, "server", context)
         copyResources(folderPath)
         copySources(folderPath)
 
