@@ -18,6 +18,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
+import javax.annotation.processing.Generated
 
 internal fun List<NamedType>.toDataClass(
     modelPackageName: String,
@@ -60,5 +61,6 @@ internal fun List<NamedType>.toDataClass(
 
     return outputFile
         .addType(constructor.build())
+        .addAnnotation(Generated::class.java)
         .build()
 }
