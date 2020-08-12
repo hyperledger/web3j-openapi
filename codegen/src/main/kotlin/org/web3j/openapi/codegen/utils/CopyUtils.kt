@@ -39,17 +39,24 @@ internal object CopyUtils {
         )
     }
 
-    fun createTree(module: String, packageDir: String, outputDir: String): String {
+    fun createTree(outputDir: String, packageDir: String, withBuildFiles: Boolean = true, module: String = ""): String {
         val folder = File(
-            Paths.get(
-                outputDir,
-                module,
-                "src",
-                "main",
-                "kotlin",
-                packageDir,
-                module
-            ).toString()
+            if (withBuildFiles)
+                Paths.get(
+                    outputDir,
+                    module,
+                    "src",
+                    "main",
+                    "kotlin",
+                    packageDir,
+                    module
+                ).toString()
+        else
+                Paths.get(
+                    outputDir,
+                    packageDir,
+                    module
+                ).toString()
         )
             .apply { mkdirs() }
         return folder.absolutePath

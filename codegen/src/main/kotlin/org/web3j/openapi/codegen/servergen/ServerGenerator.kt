@@ -48,7 +48,14 @@ internal class ServerGenerator(
 
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
-        val folderPath = CopyUtils.createTree("server", packageDir, configuration.outputDir)
+
+        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withBuildFiles, "server")
+        val outputDir = if (configuration.withBuildFiles) Paths.get(
+            folderPath.substringBefore("kotlin"),
+            "kotlin"
+        ).toString()
+        else folderPath.substringBefore(configuration.packageName.substringBefore("."))
+
         if (configuration.withBuildFiles) generateGradleBuildFile(folderPath, "server", context)
         copyResources(folderPath)
         copySources(folderPath)
@@ -67,10 +74,7 @@ internal class ServerGenerator(
             ResourcesImplGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
-                folderPath = Paths.get(
-                    folderPath.substringBefore("kotlin"),
-                    "kotlin"
-                ).toString(),
+                folderPath = outputDir,
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
 
@@ -87,26 +91,24 @@ internal class ServerGenerator(
             StructExtensionsGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
-                folderPath = Paths.get(
-                    folderPath.substringBefore("kotlin"),
-                    "kotlin"
-                ).toString(),
+                folderPath = outputDir,
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
         }
     }
 
     private fun copyResources(folderPath: String) {
-        File(
-            Paths.get(
-                folderPath.substringBefore("main"),
-                "main",
-                "resources"
-            ).toString()
-        ).apply {
-            mkdirs()
-        }
-        logger.debug("Copying server/resources")
+        // FIXME: Not needed if we won't copy the logging.properties
+//        File(
+//            Paths.get(
+//                folderPath.substringBefore("main"),
+//                "main",
+//                "resources"
+//            ).toString()
+//        ).apply {
+//            mkdirs()
+//        }
+//        logger.debug("Copying server/resources")
         // FIXME: Throws exception (java.nio.file.NoSuchFileException) when running the integration test generation
 //        CopyUtils.copyResource(
 //            "server/src/main/resources/logging.properties",
@@ -115,11 +117,18 @@ internal class ServerGenerator(
 
         // FIXME Copies SPI resource in main
         val spiFolder = File(
-            Paths.get(
+            if (configuration.withBuildFiles) Paths.get(
                 folderPath.substringBefore("server"),
                 "server",
                 "src",
                 "main",
+                "resources",
+                "META-INF",
+                "services"
+            ).toString()
+        else Paths.get(
+                folderPath.substringBefore("server"),
+                "server",
                 "resources",
                 "META-INF",
                 "services"
