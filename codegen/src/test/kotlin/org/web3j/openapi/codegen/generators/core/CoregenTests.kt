@@ -54,7 +54,8 @@ class CoregenTests {
                 CoreApiGenerator(
                     "com.test",
                     tempFolder.canonicalPath,
-                    contractConfiguration.contractDetails
+                    contractConfiguration.contractDetails,
+                    true
                 ).generate()
             }.isSuccess()
         }
