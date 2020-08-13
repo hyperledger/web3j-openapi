@@ -32,6 +32,9 @@ task moveSwaggerUiToResources {
         ant.move file: "$buildDir/swagger-ui-openapi",
                 todir: "$rootDir/server/src/main/resources/static"
 
+        file("$rootDir/src/main/resources/static/swagger-ui")
+                        .deleteDir()
+
         file("$rootDir/server/src/main/resources/static/swagger-ui-openapi")
                 .renameTo(file("$rootDir/server/src/main/resources/static/swagger-ui"))
     }
