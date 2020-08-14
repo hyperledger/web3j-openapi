@@ -10,14 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.openapi.server
+package org.web3j.openapi.server.config
 
-object Properties {
-    const val NODE_ADDRESS = "web3j.openApi.node.address"
-    const val PRIVATE_KEY = "web3j.openApi.privateKey"
-    const val WALLET_FILE = "web3j.openApi.wallet.file"
-    const val WALLET_PASSWORD = "web3j.openApi.wallet.password"
-    const val CONTRACT_ADDRESSES = "web3j.openApi.contract.addresses"
-    const val NETWORK = "web3j.openapi.network"
-    const val GAS_PRICE = "web3j.openapi.gas.price"
-}
+import org.web3j.abi.datatypes.Address
+
+class ContractAddresses : HashMap<String, Address>()

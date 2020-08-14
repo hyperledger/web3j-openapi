@@ -24,6 +24,7 @@ data class OpenApiServerConfig(
     val walletPassword: String? = null,
     val host: String,
     val port: Int,
+    val contractAddresses: ContractAddresses?,
     val network: String = "",
     val gasPrice: GasPrice = GasPrice.High
 ) {

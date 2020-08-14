@@ -2,7 +2,6 @@ package {{packageName}}.core.{{contractName}}
 
 import org.web3j.openapi.core.CONTRACT_ADDRESS
 import org.web3j.openapi.core.CONTRACT_ADDRESS_PATH
-import org.web3j.openapi.core.ContractLifecycle
 import {{packageName}}.core.{{contractName}}.model.{{#contractDetails}}{{capitalizedContractName}}{{/contractDetails}}DeployParameters
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import javax.annotation.Generated
@@ -26,12 +25,19 @@ interface {{capitalizedContractName}}Lifecycle {
         summary = "Deploys the {{capitalizedContractName}} contract"
     )
     fun deploy{{deployParameters}}: TransactionReceipt
-    
+
     @Path(CONTRACT_ADDRESS_PATH)
     @Operation(
         tags = ["{{capitalizedContractName}} Methods"],
         summary = "Loads the {{capitalizedContractName}} contract"
     )
     fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
+
+    @Path("")
+    @Operation(
+        tags = ["{{capitalizedContractName}} Methods"],
+        summary = "Loads the {{capitalizedContractName}} contract with predefined address"
+    )
+    fun load(): {{capitalizedContractName}}Resource
 }
 {{/contractDetails}}

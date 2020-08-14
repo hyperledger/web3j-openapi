@@ -5,6 +5,7 @@ import {{packageName}}.core.{{lowerCaseContractName}}.model.{{capitalizedContrac
 import {{packageName}}.wrappers.{{capitalizedContractName}}
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import org.web3j.abi.datatypes.Address
 import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.ContractGasProvider
 import javax.annotation.Generated
@@ -12,6 +13,7 @@ import javax.ws.rs.Consumes
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import org.glassfish.jersey.server.ExtendedUriInfo
+import javax.ws.rs.NotFoundException
 
 @Generated
 @Consumes(MediaType.APPLICATION_JSON)
@@ -20,6 +22,7 @@ class {{capitalizedContractName}}LifecycleImpl(
     private val web3j: Web3j,
     private val transactionManager: TransactionManager,
     private val defaultGasProvider: ContractGasProvider,
+    private val contractAddress: Address?,
     private val uriInfo: ExtendedUriInfo
 ) : {{capitalizedContractName}}Lifecycle {
 
@@ -39,4 +42,6 @@ class {{capitalizedContractName}}LifecycleImpl(
             {{capitalizedContractName}}.load(contractAddress, web3j, transactionManager, defaultGasProvider),
             uriInfo
         )
+
+    override fun load() = contractAddress?.run { load(contractAddress.value) } ?: throw NotFoundException("Contract address not defined!")
 }

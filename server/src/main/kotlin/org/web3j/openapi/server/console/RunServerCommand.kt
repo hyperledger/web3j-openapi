@@ -12,13 +12,15 @@
  */
 package org.web3j.openapi.server.console
 
-import org.web3j.openapi.server.console.options.ConfigFileOptions
-import org.web3j.openapi.server.console.options.CredentialsOptions
-import org.web3j.openapi.server.console.options.NetworkOptions
-import org.web3j.openapi.server.console.options.ProjectOptions
-import org.web3j.openapi.server.console.options.ServerOptions
+import org.web3j.abi.datatypes.Address
 import org.web3j.openapi.server.OpenApiServer
+import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import org.web3j.openapi.server.console.defaultproviders.CascadingDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.EnvironmentVariableDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.JavaPropDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.JsonDefaultProvider
+import org.web3j.openapi.server.console.defaultproviders.YamlDefaultProvider
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.ExitCode
@@ -36,19 +38,7 @@ import kotlin.system.exitProcess
 class RunServerCommand : Callable<Int> {
 
     @Mixin
-    private val credentials = CredentialsOptions()
-
-    @Mixin
-    private val serverOptions = ServerOptions()
-
-    @CommandLine.ArgGroup
-    private val networkOptions = NetworkOptions()
-
-    @Mixin
-    private val configFileOptions = ConfigFileOptions()
-
-    @Mixin
-    private val projectOptions = ProjectOptions()
+    private val consoleConfiguration = ConsoleConfiguration()
 
     override fun call(): Int {
         val serverConfig = serverConfig()
@@ -68,19 +58,24 @@ class RunServerCommand : Callable<Int> {
 
     private fun serverConfig(): OpenApiServerConfig {
         return OpenApiServerConfig(
-            host = serverOptions.host.hostName,
-            port = serverOptions.port,
-            nodeEndpoint = networkOptions.endpoint,
-            privateKey = credentials.privateKey,
-            walletFile = credentials.walletOptions.walletFile,
-            walletPassword = credentials.walletOptions.walletPassword,
-            projectName = projectOptions.projectName,
-            network = networkOptions.network
+            host = consoleConfiguration.serverOptions.host.hostName,
+            port = consoleConfiguration.serverOptions.port,
+            nodeEndpoint = consoleConfiguration.networkOptions.endpoint,
+            privateKey = consoleConfiguration.credentialsOptions.privateKey,
+            walletFile = consoleConfiguration.credentialsOptions.walletOptions.walletFile,
+            walletPassword = consoleConfiguration.credentialsOptions.walletOptions.walletPassword,
+            projectName = consoleConfiguration.projectOptions.projectName,
+            contractAddresses = ContractAddresses().apply {
+                consoleConfiguration.contractAddresses?.let {
+                    putAll(it.mapValues { Address(it.value) })
+                }
+            },
+            network = consoleConfiguration.networkOptions.network
         )
     }
 
     companion object {
-        private const val DEFAULT_FILE_PATH = "~/.epirus/web3j.openapi.properties"
+        private val DEFAULT_FILE_PATH_WITHOUT_EXTENSION = "${System.getProperty("user.home")}/.epirus/web3j.openapi"
         private const val CONFIG_FILE_ENV_NAME = "WEB3J_OPENAPI_CONFIG_FILE"
 
         private val environment = System.getenv()
@@ -116,8 +111,27 @@ class RunServerCommand : Callable<Int> {
             val configFile = configFileCommand.configFileOptions.configFile
                 ?: environment[CONFIG_FILE_ENV_NAME]?.run { File(this) }
 
-            commandLine.defaultValueProvider =
-                ConfigDefaultProvider(configFile, environment, File(DEFAULT_FILE_PATH))
+            val defaultProvidersList = mutableListOf<CommandLine.IDefaultValueProvider>()
+            when (configFile?.extension) {
+                "yaml" -> YamlDefaultProvider(configFile)
+                "json" -> JsonDefaultProvider(configFile)
+                "properties" -> JavaPropDefaultProvider(configFile)
+                else -> null
+            }?.let { defaultProvidersList.add(it) }
+
+            when {
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml").exists() ->
+                    YamlDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.yaml"))
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json").exists() ->
+                    JsonDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.json"))
+                File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties").exists() ->
+                    JavaPropDefaultProvider(File("$DEFAULT_FILE_PATH_WITHOUT_EXTENSION.properties"))
+                else -> null
+            }?.let { defaultProvidersList.add(it) }
+
+            defaultProvidersList.add(EnvironmentVariableDefaultProvider(environment))
+
+            commandLine.defaultValueProvider = CascadingDefaultProvider(*defaultProvidersList.toTypedArray())
         }
     }
 }

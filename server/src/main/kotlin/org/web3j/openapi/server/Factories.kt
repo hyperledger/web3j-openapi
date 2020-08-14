@@ -19,12 +19,14 @@ import mu.KLogging
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.WalletUtils
+import org.web3j.openapi.server.Properties.CONTRACT_ADDRESSES
 import org.web3j.openapi.server.Properties.GAS_PRICE
 import org.web3j.openapi.server.Properties.NETWORK
 import org.web3j.openapi.server.Properties.NODE_ADDRESS
 import org.web3j.openapi.server.Properties.PRIVATE_KEY
 import org.web3j.openapi.server.Properties.WALLET_FILE
 import org.web3j.openapi.server.Properties.WALLET_PASSWORD
+import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.protocol.Network
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
@@ -94,5 +96,18 @@ class ContractGasProviderFactory(
     }
 
     override fun dispose(gasProvider: ContractGasProvider) {
+    }
+}
+
+@SuppressWarnings("Unchecked cast")
+class ContractAddressesFactory(
+    @Context private val configuration: Configuration
+) : Factory<ContractAddresses> {
+
+    override fun provide(): ContractAddresses {
+        return configuration.getProperty(CONTRACT_ADDRESSES) as ContractAddresses
+    }
+
+    override fun dispose(addresses: ContractAddresses) {
     }
 }

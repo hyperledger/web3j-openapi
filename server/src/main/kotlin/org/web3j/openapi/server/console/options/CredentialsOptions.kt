@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.server.console.options
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 
@@ -24,5 +25,6 @@ class CredentialsOptions {
     var privateKey: String? = null
 
     @Mixin
+    @JsonProperty("wallet")
     val walletOptions = WalletOptions()
 }

@@ -5,6 +5,7 @@ package {{packageName}}.server
 {{/serverImports}}
 import org.glassfish.jersey.server.ExtendedUriInfo
 import org.web3j.protocol.Web3j
+import org.web3j.openapi.server.config.ContractAddresses
 import org.web3j.tx.TransactionManager
 import org.web3j.tx.gas.ContractGasProvider
 import javax.annotation.Generated
@@ -16,6 +17,7 @@ class {{projectName}}ResourceImpl(
     web3j: Web3j,
     transactionManager: TransactionManager,
     defaultGasProvider: ContractGasProvider,
+    contractAddresses: ContractAddresses,
     uriInfo: ExtendedUriInfo
 ) : {{projectName}}Resource, SubResourceImpl(uriInfo) {
 
@@ -25,6 +27,7 @@ class {{projectName}}ResourceImpl(
         web3j,
         transactionManager,
         defaultGasProvider,
+        contractAddresses["{{capitalizedContractName}}"],
         uriInfo)
 
     {{/contractDetails}}

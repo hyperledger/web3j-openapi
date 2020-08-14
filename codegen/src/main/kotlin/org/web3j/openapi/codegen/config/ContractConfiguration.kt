@@ -16,6 +16,6 @@ import java.io.File
 
 data class ContractConfiguration(
     val abiFile: File,
-    val binFile: File,
+    val binFile: File?,
     val contractDetails: ContractDetails
 )

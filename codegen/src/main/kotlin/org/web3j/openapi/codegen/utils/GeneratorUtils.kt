@@ -16,7 +16,6 @@ import org.web3j.openapi.codegen.config.ContractConfiguration
 import org.web3j.openapi.codegen.config.ContractDetails
 import org.web3j.protocol.core.methods.response.AbiDefinition
 import java.io.File
-import java.io.FileNotFoundException
 import java.lang.IllegalStateException
 
 object GeneratorUtils {
@@ -28,8 +27,7 @@ object GeneratorUtils {
         return abis.map { abiFile ->
             ContractConfiguration(
                 abiFile,
-                bins[abiFile.nameWithoutExtension]
-                    ?: throw FileNotFoundException("${abiFile.nameWithoutExtension}.bin"),
+                bins[abiFile.nameWithoutExtension],
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
