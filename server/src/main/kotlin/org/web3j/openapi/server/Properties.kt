@@ -20,9 +20,4 @@ object Properties {
     const val CONTRACT_ADDRESSES = "web3j.openApi.contract.addresses"
     const val NETWORK = "web3j.openapi.network"
     const val GAS_PRICE = "web3j.openapi.gas.price"
-//    const val WEB3J = "web3j.openApi.web3j"
-//    const val TRANSACTION_MANAGER = "web3j.openApi.transactionManager"
-//    const val GAS_PROVIDER = "web3j.openApi.gasProvider"
-
-    // TODO Add more configurations, eg. gas price/limit
 }
