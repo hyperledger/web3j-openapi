@@ -15,7 +15,7 @@ package org.web3j.openapi.codegen.config
 import org.jetbrains.kotlin.ir.backend.js.utils.sanitizeName
 import org.web3j.abi.datatypes.Address
 
-data class GeneratorConfiguration(
+data class GeneratorConfiguration @JvmOverloads constructor(
     val projectName: String,
     var packageName: String,
     val outputDir: String,
@@ -23,7 +23,10 @@ data class GeneratorConfiguration(
     val addressLength: Int = Address.DEFAULT_LENGTH / java.lang.Byte.SIZE,
     val contextPath: String,
     val version: String = VersionProvider.versionName,
-    val sanitizedProjectName: String = sanitizeName(projectName)
+    val sanitizedProjectName: String = sanitizeName(projectName),
+    val withBuildFiles: Boolean = true,
+    val withWrappers: Boolean = true,
+    val withSwaggerUi: Boolean = true
 ) {
     val rootProjectName = sanitizedProjectName.toLowerCase().replace(' ', '-')
 

@@ -25,7 +25,7 @@ import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
 import org.web3j.openapi.codegen.utils.GeneratorUtils
 import java.io.File
 import java.io.FileNotFoundException
-import java.nio.file.Path
+import java.nio.file.Paths
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class CoregenTests {
@@ -33,7 +33,7 @@ class CoregenTests {
     @TempDir
     lateinit var tempFolder: File
 
-    private val contractsFolder = Path.of(
+    private val contractsFolder = Paths.get(
         "src",
         "test",
         "resources",
@@ -54,7 +54,8 @@ class CoregenTests {
                 CoreApiGenerator(
                     "com.test",
                     tempFolder.canonicalPath,
-                    contractConfiguration.contractDetails
+                    contractConfiguration.contractDetails,
+                    true
                 ).generate()
             }.isSuccess()
         }

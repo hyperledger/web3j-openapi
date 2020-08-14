@@ -12,17 +12,20 @@
  */
 package org.web3j.openapi.codegen.generators
 
+import assertk.assertThat
+import assertk.assertions.isSuccess
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.io.TempDir
 import org.web3j.openapi.codegen.GenerateOpenApi
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
 import java.io.IOException
-import java.nio.file.Path
+import java.nio.file.Paths
 
 class GenerationTest {
 
@@ -31,7 +34,7 @@ class GenerationTest {
 
     @Test
     fun `Generated project gradle tasks test`() {
-        val contractsFolder = Path.of(
+        val contractsFolder = Paths.get(
             "src",
             "test",
             "resources",
@@ -46,23 +49,23 @@ class GenerationTest {
             ),
             160,
             "test",
-            "0.1.0-SNAPSHOT"
+            "0.0.2" // Tests against the previously published version
         )
 
-        GenerateOpenApi(generatorConfiguration).generateAll()
+        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generateAll() }
+        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generateSwaggerUI() }
 
-        // FIXME uncomment this test after publishing the OpenAPI artifacts
-//        assertThat {
-//            runGradleTask(
-//                tempFolder,
-//                "shadowJar")
-//        }.isSuccess()
-//
-//        assertThat {
-//            runGradleTask(
-//                tempFolder,
-//                "installDist")
-//        }.isSuccess()
+        assertThat {
+            runGradleTask(
+                tempFolder,
+                "shadowJar")
+        }.isSuccess()
+
+        assertThat {
+            runGradleTask(
+                tempFolder,
+                "installDist")
+        }.isSuccess()
     }
 
     @Throws(IOException::class)

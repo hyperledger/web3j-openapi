@@ -2,7 +2,9 @@ package {{packageName}}.server
 
 import {{packageName}}.server.{{projectName}}ApiImpl
 import org.web3j.openapi.server.spi.OpenApiResourceProvider
+import javax.annotation.Generated
 
+@Generated
 class {{projectName}}ResourceProvider : OpenApiResourceProvider {
     override fun get() = {{projectName}}ApiImpl::class.java
 }

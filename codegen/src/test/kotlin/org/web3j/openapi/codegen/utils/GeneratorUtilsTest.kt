@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test
 import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateInputNames
 import org.web3j.openapi.codegen.utils.GeneratorUtils.handleDuplicateNames
 import java.io.File
-import java.nio.file.Path
+import java.nio.file.Paths
 
 class GeneratorUtilsTest {
 
-    private val contractsFolder = Path.of(
+    private val contractsFolder = Paths.get(
         "src",
         "test",
         "resources",
@@ -29,7 +29,7 @@ class GeneratorUtilsTest {
     @Test
     fun `Function names duplicates handling test`() {
         val duplicatesAbi = File(
-            Path.of(
+            Paths.get(
                 contractsFolder.absolutePath,
                 "duplicate",
                 "build",
@@ -47,7 +47,7 @@ class GeneratorUtilsTest {
     @Test
     fun `Inputs duplicates handling test`() {
         val duplicatesAbi = File(
-            Path.of(
+            Paths.get(
                 contractsFolder.absolutePath,
                 "duplicate",
                 "build",

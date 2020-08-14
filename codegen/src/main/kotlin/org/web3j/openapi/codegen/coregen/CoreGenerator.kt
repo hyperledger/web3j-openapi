@@ -24,7 +24,7 @@ import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
 import java.io.FileNotFoundException
-import java.nio.file.Path
+import java.nio.file.Paths
 
 class CoreGenerator(
     configuration: GeneratorConfiguration
@@ -42,19 +42,20 @@ class CoreGenerator(
 
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
-        val folderPath = CopyUtils.createTree("core", packageDir, configuration.outputDir)
-        generateGradleBuildFile(folderPath, "core", context)
+        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withBuildFiles, "core")
+        if (configuration.withBuildFiles) generateGradleBuildFile(folderPath, "core", context)
         copySources(folderPath)
 
         configuration.contracts.forEach {
             logger.debug("Generating ${it.contractDetails.capitalizedContractName} Open API folders and files")
             CoreApiGenerator(
                 configuration.packageName,
-                folderPath = Path.of(
+                folderPath = Paths.get(
                     folderPath,
                     it.contractDetails.lowerCaseContractName
                 ).toString(),
-                contractDetails = it.contractDetails
+                contractDetails = it.contractDetails,
+                withBuildFiles = configuration.withBuildFiles
             ).generate()
         }
     }

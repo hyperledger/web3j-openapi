@@ -25,14 +25,20 @@ import org.web3j.openapi.codegen.utils.extractStructs
 import org.web3j.openapi.codegen.utils.getReturnType
 import org.web3j.openapi.codegen.utils.isTransactional
 import java.io.File
-import java.nio.file.Path
+import java.nio.file.Paths
 
 internal class CoreApiGenerator(
     val packageName: String,
     val folderPath: String,
-    val contractDetails: ContractDetails
+    val contractDetails: ContractDetails,
+    val withBuildFiles: Boolean
 ) {
     private val context = mutableMapOf<String, Any>()
+    private val outputDir = if (withBuildFiles) Paths.get(
+        folderPath.substringBefore("kotlin"),
+        "kotlin"
+    ).toString()
+    else folderPath.substringBefore(packageName.substringBefore("."))
 
     init {
         context["packageName"] = packageName
@@ -59,10 +65,7 @@ internal class CoreApiGenerator(
                 packageName = packageName,
                 contractName = contractDetails.capitalizedContractName,
                 functionName = structDefinition!!.internalType.split(".").last(),
-                folderPath = Path.of(
-                    folderPath.substringBefore("kotlin"),
-                    "kotlin"
-                ).toString(),
+                folderPath = outputDir,
                 components = structDefinition.components
             ).generate()
         }
@@ -137,10 +140,7 @@ internal class CoreApiGenerator(
                         CoreDeployModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
-                            folderPath = Path.of(
-                                folderPath.substringBefore("kotlin"),
-                                "kotlin"
-                            ).toString(),
+                            folderPath = outputDir,
                             inputs = it.inputs
                         ).generate()
                 }
@@ -150,10 +150,7 @@ internal class CoreApiGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
                             functionName = it.sanitizedName(),
-                            folderPath = Path.of(
-                                folderPath.substringBefore("kotlin"),
-                                "kotlin"
-                            ).toString(),
+                            folderPath = outputDir,
                             inputs = it.inputs
                         ).generate()
                 }
@@ -162,10 +159,7 @@ internal class CoreApiGenerator(
                         packageName = packageName,
                         contractName = contractDetails.capitalizedContractName,
                         eventName = it.sanitizedName(),
-                        folderPath = Path.of(
-                            folderPath.substringBefore("kotlin"),
-                            "kotlin"
-                        ).toString(),
+                        folderPath = outputDir,
                         outputs = it.inputs
                     ).generate()
                 }
@@ -194,7 +188,7 @@ internal class CoreApiGenerator(
         )
 
         val eventsFolder = File(
-            Path.of(
+            Paths.get(
                 folderPath,
                 "events"
             ).toString())
