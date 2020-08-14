@@ -69,7 +69,8 @@ class RunServerCommand : Callable<Int> {
                 consoleConfiguration.contractAddresses?.let {
                     putAll(it.mapValues { Address(it.value) })
                 }
-            }
+            },
+            network = consoleConfiguration.networkOptions.network
         )
     }
 
