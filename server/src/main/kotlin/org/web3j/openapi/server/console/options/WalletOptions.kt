@@ -18,7 +18,7 @@ import java.io.File
 class WalletOptions {
 
     @Option(
-        names = ["--wallet-file"],
+        names = ["--wallet-path"],
         description = ["specify the wallet file path"]
     )
     var walletFile: File? = null
