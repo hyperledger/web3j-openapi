@@ -13,25 +13,47 @@
 package org.web3j.openapi.server.console.defaultproviders
 
 import picocli.CommandLine
+import java.util.Arrays
+import java.util.Locale
+import java.util.Objects
+import java.util.stream.Stream
 
 internal class EnvironmentVariableDefaultProvider(
     private val environment: Map<String, String>
 ) : CommandLine.IDefaultValueProvider {
 
-    override fun defaultValue(argSpec: CommandLine.Model.ArgSpec) = environment[argSpec.toEnvironmentName()]
+    private val EPIRUS_VAR_PREFIX = "EPIRUS_"
+    private val WEB3J_VAR_PREFIX = "WEB3J_"
 
-    /**
-     * Property names in environment variables are written in a specific way.
-     * For example:
-     * <code>--wallet-password</code> becomes <code>WEB3j_OPENAPI_WALLET_PASSWORD</code>
-     * for non composed names: <code>--port</code> becomes <code>WEB3J_OPENAPI_PORT</code>
-     */
-    private fun CommandLine.Model.ArgSpec.toEnvironmentName(): String {
-        return (this as CommandLine.Model.OptionSpec)
-            .longestName()
-            .toUpperCase()
-            .removePrefix("--")
-            .replace("-", "_")
-            .prependIndent("WEB3J_OPENAPI_")
+    override fun defaultValue(argSpec: CommandLine.Model.ArgSpec): String? {
+        return if (!argSpec.isOption) {
+            null
+        } else envVarNames(argSpec as CommandLine.Model.OptionSpec)
+            .map { key: String? ->
+                environment[key]
+            }
+            .filter { obj: String? -> Objects.nonNull(obj) }
+            .findFirst()
+            .orElse(null)
+    }
+
+    private fun envVarNames(spec: CommandLine.Model.OptionSpec): Stream<String?> {
+        return Arrays.stream(spec.names())
+            .filter { name: String -> name.startsWith("--") } // Only long options are allowed
+            .flatMap { name: String ->
+                Stream.of<String>(
+                    EPIRUS_VAR_PREFIX,
+                    WEB3J_VAR_PREFIX
+                )
+                    .map { prefix: String ->
+                        prefix + nameToEnvVarSuffix(
+                            name
+                        )
+                    }
+            }
+    }
+
+    private fun nameToEnvVarSuffix(name: String): String {
+        return name.substring("--".length).replace('-', '_').toUpperCase(Locale.US)
     }
 }
