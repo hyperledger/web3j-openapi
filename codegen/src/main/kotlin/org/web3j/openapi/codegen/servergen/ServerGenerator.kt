@@ -49,7 +49,10 @@ internal class ServerGenerator(
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
 
+        // FolderPath contains the module output directory
         val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withBuildFiles, "server")
+
+        // outputDir is the project root directory
         val outputDir = if (configuration.withBuildFiles) Paths.get(
             folderPath.substringBefore("kotlin"),
             "kotlin"
@@ -133,8 +136,7 @@ internal class ServerGenerator(
                 "services"
             ).toString()
         else Paths.get(
-                folderPath.substringBefore("server"),
-                "server",
+                folderPath.substringBefore("kotlin"),
                 "resources",
                 "META-INF",
                 "services"
