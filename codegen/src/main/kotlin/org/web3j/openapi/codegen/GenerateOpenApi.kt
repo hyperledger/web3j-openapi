@@ -75,13 +75,17 @@ class GenerateOpenApi(
                 binFile = it.binFile,
                 contractName = it.abiFile.name.removeSuffix(".abi"),
                 basePackageName = "${configuration.packageName}.wrappers",
-                destinationDir = File(
+                destinationDir = File(if (configuration.withGradleResources)
                     Paths.get(
                         configuration.outputDir,
                         "server",
                         "src",
                         "main",
                         "java"
+                    ).toString()
+                else
+                    Paths.get(
+                        configuration.outputDir
                     ).toString()
                 ),
                 useJavaPrimitiveTypes = true,
