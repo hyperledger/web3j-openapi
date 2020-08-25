@@ -31,6 +31,16 @@ class GenerateOpenApi(
 
     private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
 
+    fun generate() {
+        println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
+        if (configuration.withGradleResources) generateGradleResources()
+        generateCore()
+        generateServer()
+        if (configuration.withWrappers) generateWrappers()
+        if (configuration.withSwaggerUi) generateSwaggerUI()
+    }
+
+    @Deprecated("renaming the function name", ReplaceWith("generate"))
     fun generateAll() {
         println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
         if (configuration.withGradleResources) generateGradleResources()
