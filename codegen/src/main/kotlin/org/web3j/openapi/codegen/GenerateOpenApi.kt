@@ -32,7 +32,8 @@ class GenerateOpenApi(
     private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
 
     fun generateAll() {
-        if (configuration.withBuildFiles) generateGradleResources()
+        println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
+        if (configuration.withGradleResources) generateGradleResources()
         generateCore()
         generateServer()
         if (configuration.withWrappers) generateWrappers()
@@ -81,6 +82,7 @@ class GenerateOpenApi(
     }
 
     fun generateSwaggerUI() {
+        println("Generating SwaggerUI ...")
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(File(configuration.outputDir))
