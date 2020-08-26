@@ -59,7 +59,7 @@ class GenerateOpenApi(
     }
 
     fun generateGradleResources() {
-        copyProjectResources(File(configuration.outputDir))
+        copyProjectResources(File(configuration.outputDir).apply { mkdirs() })
         generateFromTemplate(
             outputDir = configuration.outputDir,
             context = mapOf("rootProjectName" to configuration.rootProjectName),
