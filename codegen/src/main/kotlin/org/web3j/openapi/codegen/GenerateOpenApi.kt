@@ -104,7 +104,6 @@ class GenerateOpenApi(
             .apply {
                 newBuild()
                     .forTasks(SWAGGERUI_GENERATION_TASK)
-                    .setStandardOutput(System.out)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
                             throw failure
