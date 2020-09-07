@@ -24,7 +24,7 @@ internal class ConfigMapper(
         return when {
             stringParam.contains("config.file") -> consoleConfiguration?.configFileOptions?.configFile?.absolutePath
             stringParam.contains("private.key") -> consoleConfiguration?.credentialsOptions?.privateKey
-            stringParam.contains("wallet.file") -> consoleConfiguration?.credentialsOptions?.walletOptions?.walletFile?.absolutePath
+            stringParam.contains("wallet.path") -> consoleConfiguration?.credentialsOptions?.walletOptions?.walletFile?.absolutePath
             stringParam.contains("wallet.password") -> consoleConfiguration?.credentialsOptions?.walletOptions?.walletPassword
             stringParam.contains("endpoint") -> consoleConfiguration?.networkOptions?.endpoint?.toString()
             stringParam.contains("projectName") -> consoleConfiguration?.projectOptions?.projectName
@@ -32,7 +32,7 @@ internal class ConfigMapper(
             stringParam.contains("host") -> consoleConfiguration?.serverOptions?.host?.hostAddress
             stringParam.contains("port") -> consoleConfiguration?.serverOptions?.port?.toString()
             stringParam.contains("contract.addresses") -> consoleConfiguration?.contractAddresses?.map { entry -> "${entry.key}=${entry.value}" }?.joinToString(",")
-            else -> null
+            else -> null // If you add other fields to here, make sure to add them to the Env variables too
         }
     }
 

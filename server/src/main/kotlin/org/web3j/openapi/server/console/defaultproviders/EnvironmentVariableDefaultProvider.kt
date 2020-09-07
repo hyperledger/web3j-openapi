@@ -13,47 +13,37 @@
 package org.web3j.openapi.server.console.defaultproviders
 
 import picocli.CommandLine
-import java.util.Arrays
-import java.util.Locale
-import java.util.Objects
-import java.util.stream.Stream
 
 internal class EnvironmentVariableDefaultProvider(
     private val environment: Map<String, String>
 ) : CommandLine.IDefaultValueProvider {
 
-    private val EPIRUS_VAR_PREFIX = "EPIRUS_"
     private val WEB3J_VAR_PREFIX = "WEB3J_"
+    private val WEB3J_OPENAPI_VAR_PREFIX = "WEB3J_OPENAPI_"
+    private val OPENAPI_SPECIFIC_VARIABLES = listOf("NAME", "CONTEXT_PATH", "HOST", "PORT", "CONTRACT_ADDRESSES")
 
-    override fun defaultValue(argSpec: CommandLine.Model.ArgSpec): String? {
-        return if (!argSpec.isOption) {
-            null
-        } else envVarNames(argSpec as CommandLine.Model.OptionSpec)
-            .map { key: String? ->
-                environment[key]
-            }
-            .filter { obj: String? -> Objects.nonNull(obj) }
-            .findFirst()
-            .orElse(null)
+    override fun defaultValue(argSpec: CommandLine.Model.ArgSpec) = environment[argSpec.toEnvironmentName()]
+
+    /**
+     * Property names in environment variables are written in a specific way.
+     * For example:
+     * <code>--wallet-password</code> becomes <code>WALLET_PASSWORD</code>
+     * for non composed names: <code>--port</code> becomes <code>PORT</code>
+     *
+     * and then, get prepended with the right prefix:
+     *      WEB3J_OPENAPI_ : if it is an OpenAPI specific variable: "NAME", "CONTEXT_PATH", "HOST", "PORT"
+     *      WEB3J_ : otherwise
+     */
+    private fun CommandLine.Model.ArgSpec.toEnvironmentName(): String {
+        return (this as CommandLine.Model.OptionSpec)
+            .longestName()
+            .toUpperCase()
+            .removePrefix("--")
+            .replace("-", "_")
+            .toPrependedEnvVarName()
     }
 
-    private fun envVarNames(spec: CommandLine.Model.OptionSpec): Stream<String?> {
-        return Arrays.stream(spec.names())
-            .filter { name: String -> name.startsWith("--") } // Only long options are allowed
-            .flatMap { name: String ->
-                Stream.of<String>(
-                    EPIRUS_VAR_PREFIX,
-                    WEB3J_VAR_PREFIX
-                )
-                    .map { prefix: String ->
-                        prefix + nameToEnvVarSuffix(
-                            name
-                        )
-                    }
-            }
-    }
-
-    private fun nameToEnvVarSuffix(name: String): String {
-        return name.substring("--".length).replace('-', '_').toUpperCase(Locale.US)
+    private fun String.toPrependedEnvVarName(): String {
+        return "${if (OPENAPI_SPECIFIC_VARIABLES.contains(this)) WEB3J_OPENAPI_VAR_PREFIX else WEB3J_VAR_PREFIX}$this"
     }
 }
