@@ -40,7 +40,7 @@ class EventsResourceImplGenerator(
         val eventsFolder = File(
             Paths.get(
                 folderPath,
-                "eventsImpl"
+                "events"
             ).toString())
 
         abiDefinitions

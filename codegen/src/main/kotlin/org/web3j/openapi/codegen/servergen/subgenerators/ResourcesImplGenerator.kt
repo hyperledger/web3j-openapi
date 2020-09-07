@@ -209,7 +209,7 @@ internal class ResourcesImplGenerator(
             .filter { it.type == "event" }
             .map { abiDefinition ->
                 Import(
-                    "import $packageName.server.${contractName.toLowerCase()}.eventsImpl.${abiDefinition.name.capitalize()}EventResourceImpl"
+                    "import $packageName.server.${contractName.toLowerCase()}.events.${abiDefinition.name.capitalize()}EventResourceImpl"
                 )
             }
     }
