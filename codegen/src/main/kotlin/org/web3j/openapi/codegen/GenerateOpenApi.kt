@@ -41,14 +41,7 @@ class GenerateOpenApi(
     }
 
     @Deprecated("renaming the function name", ReplaceWith("generate"))
-    fun generateAll() {
-        println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
-        if (configuration.withGradleResources) generateGradleResources()
-        generateCore()
-        generateServer()
-        if (configuration.withWrappers) generateWrappers()
-        if (configuration.withSwaggerUi) generateSwaggerUI()
-    }
+    fun generateAll() = generate()
 
     fun generateServer() {
         ServerGenerator(configuration).generate()
