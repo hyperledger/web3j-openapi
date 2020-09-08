@@ -24,9 +24,11 @@ data class GeneratorConfiguration @JvmOverloads constructor(
     val contextPath: String,
     val version: String = VersionProvider.versionName,
     val sanitizedProjectName: String = sanitizeName(projectName),
-    val withBuildFiles: Boolean = true,
+    val withGradleResources: Boolean = true,
     val withWrappers: Boolean = true,
-    val withSwaggerUi: Boolean = true
+    val withSwaggerUi: Boolean = true,
+    val withServerBuildFile: Boolean = true,
+    val withCoreBuildFile: Boolean = true
 ) {
     val rootProjectName = sanitizedProjectName.toLowerCase().replace(' ', '-')
 

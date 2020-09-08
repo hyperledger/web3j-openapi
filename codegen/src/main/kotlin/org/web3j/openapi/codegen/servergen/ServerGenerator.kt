@@ -50,16 +50,22 @@ internal class ServerGenerator(
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
 
         // FolderPath contains the module output directory
-        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withBuildFiles, "server")
+        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withGradleResources, "server")
 
         // outputDir is the project root directory
-        val outputDir = if (configuration.withBuildFiles) Paths.get(
+        val outputDir = if (configuration.withGradleResources) Paths.get(
             folderPath.substringBefore("kotlin"),
             "kotlin"
         ).toString()
         else folderPath.substringBefore(configuration.packageName.substringBefore("."))
 
-        if (configuration.withBuildFiles) generateGradleBuildFile(folderPath, "server", context)
+        if (configuration.withServerBuildFile)
+            generateGradleBuildFile(
+                if (configuration.withGradleResources)
+                    folderPath.substringBefore("src")
+                else
+                    folderPath,
+                "server", context)
         copyResources(folderPath)
         copySources(folderPath)
 
@@ -98,12 +104,13 @@ internal class ServerGenerator(
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
         }
-        TemplateUtils.generateFromTemplate(
-            context = mapOf(Pair("projectName", configuration.projectName.toLowerCase())),
-            outputDir = configuration.outputDir,
-            template = TemplateUtils.mustacheTemplate("server/Dockerfile.mustache"),
-            name = "Dockerfile"
-        )
+        if (configuration.withGradleResources)
+            TemplateUtils.generateFromTemplate(
+                context = mapOf(Pair("projectName", configuration.projectName.toLowerCase())),
+                outputDir = configuration.outputDir,
+                template = TemplateUtils.mustacheTemplate("server/Dockerfile.mustache"),
+                name = "Dockerfile"
+            )
     }
 
     private fun copyResources(folderPath: String) {
@@ -126,7 +133,7 @@ internal class ServerGenerator(
 
         // FIXME Copies SPI resource in main
         val spiFolder = File(
-            if (configuration.withBuildFiles) Paths.get(
+            if (configuration.withGradleResources) Paths.get(
                 folderPath.substringBefore("server"),
                 "server",
                 "src",

@@ -49,7 +49,7 @@ class GenerationTest {
         )
 
         // FIXME: we should find a way to publish the current version of the generator and test the generator against it
-//        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generateAll() }
+//        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generate() }
 //        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generateSwaggerUI() }
 //
 //        assertThat {

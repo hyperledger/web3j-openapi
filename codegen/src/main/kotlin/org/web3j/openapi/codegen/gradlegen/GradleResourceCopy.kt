@@ -35,11 +35,11 @@ object GradleResourceCopy : KLogging() {
         copyResource("README.md", outputDir)
     }
 
-    fun generateGradleBuildFile(folderPath: String, module: String, context: Map<String, Any>) {
-        logger.debug("Generating $folderPath/build.gradle")
+    fun generateGradleBuildFile(outputDir: String, module: String, context: Map<String, Any>) {
+        logger.debug("Generating $outputDir/build.gradle")
         TemplateUtils.generateFromTemplate(
             context = context,
-            outputDir = folderPath.substringBefore("src"),
+            outputDir = outputDir,
             template = TemplateUtils.mustacheTemplate("$module/build.gradle.mustache"),
             name = "build.gradle"
         )

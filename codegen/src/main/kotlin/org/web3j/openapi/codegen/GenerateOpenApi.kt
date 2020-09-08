@@ -31,13 +31,17 @@ class GenerateOpenApi(
 
     private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
 
-    fun generateAll() {
-        if (configuration.withBuildFiles) generateGradleResources()
+    fun generate() {
+        println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
+        if (configuration.withGradleResources) generateGradleResources()
         generateCore()
         generateServer()
         if (configuration.withWrappers) generateWrappers()
         if (configuration.withSwaggerUi) generateSwaggerUI()
     }
+
+    @Deprecated("renaming the function name", ReplaceWith("generate"))
+    fun generateAll() = generate()
 
     fun generateServer() {
         ServerGenerator(configuration).generate()
@@ -48,7 +52,7 @@ class GenerateOpenApi(
     }
 
     fun generateGradleResources() {
-        copyProjectResources(File(configuration.outputDir))
+        copyProjectResources(File(configuration.outputDir).apply { mkdirs() })
         generateFromTemplate(
             outputDir = configuration.outputDir,
             context = mapOf("rootProjectName" to configuration.rootProjectName),
@@ -64,13 +68,17 @@ class GenerateOpenApi(
                 binFile = it.binFile,
                 contractName = it.abiFile.name.removeSuffix(".abi"),
                 basePackageName = "${configuration.packageName}.wrappers",
-                destinationDir = File(
+                destinationDir = File(if (configuration.withGradleResources)
                     Paths.get(
                         configuration.outputDir,
                         "server",
                         "src",
                         "main",
                         "java"
+                    ).toString()
+                else
+                    Paths.get(
+                        configuration.outputDir
                     ).toString()
                 ),
                 useJavaPrimitiveTypes = true,
@@ -81,6 +89,7 @@ class GenerateOpenApi(
     }
 
     fun generateSwaggerUI() {
+        println("Generating SwaggerUI ...")
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(File(configuration.outputDir))
@@ -88,7 +97,6 @@ class GenerateOpenApi(
             .apply {
                 newBuild()
                     .forTasks(SWAGGERUI_GENERATION_TASK)
-                    .setStandardOutput(System.out)
                     .run(object : ResultHandler<Void> {
                         override fun onFailure(failure: GradleConnectionException) {
                             throw failure
