@@ -28,6 +28,14 @@ import java.util.HashMap
 import java.util.LinkedHashMap
 import java.util.stream.Collectors
 
+/**
+ * MapType maps solidity types to Java/Kotlin types.
+ *
+ * @param isParameter: refers if the type is a function/constructor/event parameter or a return type
+ * @param structName: should be used in the case we are dealing with structs, if not, leave empty
+ * @param packageName: should be used in the case of a struct, and it's used to refer the struct by its full struct name
+ * @param contractName: same as package name: <code>packageName.contractName.structName(...)</code>
+ */
 internal fun String.mapType(isParameter: Boolean = true, structName: String = "", packageName: String = "", contractName: String = ""): TypeName {
     return if (this == "address" || this == "string") {
         getParameterMapping(isParameter, String::class.asTypeName())
@@ -62,6 +70,9 @@ internal fun String.mapType(isParameter: Boolean = true, structName: String = ""
     }
 }
 
+/**
+ * Maps the different number variations to their specific types depending on their size
+ */
 fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
     return if (isParameter) getParameterMapping(isParameter, BigInteger::class.asTypeName())
     else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class.asTypeName()) // FIXME: remove this when web3j-codegen fixes this problem
@@ -76,6 +87,14 @@ fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
         getParameterMapping(isParameter, Long::class.asTypeName())
     else
         getParameterMapping(isParameter, BigInteger::class.asTypeName())
+}
+
+/**
+ * Maps events indexed types using java native types
+ */
+fun String.mapIndexedType(): TypeName {
+    return if (this == "string" || this.contains("[")) ByteArray::class.asTypeName()
+    else mapType(true)
 }
 
 private fun getParameterMapping(isParameter: Boolean, typeName: TypeName): TypeName {
