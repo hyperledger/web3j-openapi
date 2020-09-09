@@ -20,7 +20,7 @@ internal class EnvironmentVariableDefaultProvider(
 
     private val WEB3J_VAR_PREFIX = "WEB3J_"
     private val WEB3J_OPENAPI_VAR_PREFIX = "WEB3J_OPENAPI_"
-    private val OPENAPI_SPECIFIC_VARIABLES = listOf("NAME", "CONTEXT_PATH", "HOST", "PORT", "CONTRACT_ADDRESSES")
+    private val OPENAPI_SPECIFIC_VARIABLES = listOf("NAME", "CONTEXT_PATH", "HOST", "PORT", "CONTRACT_ADDRESSES", "CONFIG_FILE")
 
     override fun defaultValue(argSpec: CommandLine.Model.ArgSpec) = environment[argSpec.toEnvironmentName()]
 
