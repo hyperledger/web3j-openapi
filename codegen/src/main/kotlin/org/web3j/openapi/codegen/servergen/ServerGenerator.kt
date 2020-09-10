@@ -153,16 +153,7 @@ internal class ServerGenerator(
             context = context,
             outputDir = spiFolder.absolutePath,
             template = TemplateUtils.mustacheTemplate(
-                    Paths.get(
-                        "server",
-                        "src",
-                        "main",
-                        "resources",
-                        "META-INF",
-                        "services",
-                        "org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"
-                    ).toString()
-            ),
+                "server/src/main/resources/META-INF/services/org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"),
             name = "org.web3j.openapi.server.spi.OpenApiResourceProvider"
         )
     }
