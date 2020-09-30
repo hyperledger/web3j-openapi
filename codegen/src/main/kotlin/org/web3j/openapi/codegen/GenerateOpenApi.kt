@@ -33,9 +33,9 @@ class GenerateOpenApi(
 
     fun generate() {
         println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
-        if (configuration.withGradleResources) generateGradleResources()
         generateCore()
-        generateServer()
+        if (configuration.withGradleResources) generateGradleResources()
+        if (configuration.withImplementations) generateServer()
         if (configuration.withWrappers) generateWrappers()
         if (configuration.withSwaggerUi) generateSwaggerUI()
     }

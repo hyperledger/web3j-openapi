@@ -29,7 +29,9 @@ data class OpenApiServerConfig(
     val gasPrice: GasPrice = GasPrice.High
 ) {
     init {
-        if (privateKey == null && walletFile == null && network.isEmpty()) {
+        if (network.isEmpty() || network.isBlank()) {
+            throw IllegalArgumentException("Invalid Ethereum node URL. Please specify the network endpoint or run using the Epirus-CLI")
+        } else if (privateKey == null && walletFile == null) {
             throw IllegalArgumentException("Invalid credentials, use a private key, wallet file or run using the Epirus-CLI")
         } else if (walletFile != null) {
             if (!walletFile.exists())
