@@ -33,7 +33,7 @@ interface {{capitalizedContractName}}Lifecycle {
     )
     fun load(@PathParam(CONTRACT_ADDRESS) contractAddress: String): {{capitalizedContractName}}Resource
 
-    @Path("")
+    @Path("default")
     @Operation(
         tags = ["{{capitalizedContractName}} Methods"],
         summary = "Loads the {{capitalizedContractName}} contract with predefined address"
