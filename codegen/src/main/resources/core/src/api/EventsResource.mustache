@@ -18,5 +18,8 @@ interface {{capitalizedContractName}}Events : SubResource {
     {{{path}}}
     {{resource}} : {{{returnType}}}
 
+    @Operation(tags = ["{{capitalizedContractName}} Events"], summary = "List all {{capitalizedContractName}} events")
+    override fun findAll(): List<String>
+
 {{/contractResources.eventResources}}
 }
