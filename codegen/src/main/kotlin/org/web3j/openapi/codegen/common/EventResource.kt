@@ -17,5 +17,6 @@ data class EventResource(
     val returnType: String = "",
     val path: String = "",
     val capitalizedName: String,
-    val decapitalizedName: String = capitalizedName.decapitalize()
+    val decapitalizedName: String = capitalizedName.decapitalize(),
+    val capitalizedContractName: String
 )
