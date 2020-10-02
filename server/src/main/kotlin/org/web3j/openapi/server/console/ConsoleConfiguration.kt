@@ -19,30 +19,31 @@ import org.web3j.openapi.server.console.options.NetworkOptions
 import org.web3j.openapi.server.console.options.ServerOptions
 import org.web3j.openapi.server.console.options.CredentialsOptions
 import picocli.CommandLine
+import picocli.CommandLine.*
 
 class ConsoleConfiguration {
 
-    @CommandLine.Mixin
+    @Mixin
     @JsonProperty("credentials")
     val credentialsOptions = CredentialsOptions()
 
-    @CommandLine.Mixin
+    @Mixin
     @JsonProperty("server")
     val serverOptions = ServerOptions()
 
-    @CommandLine.ArgGroup
+    @ArgGroup
     @JsonProperty("network")
     val networkOptions = NetworkOptions()
 
-    @CommandLine.Mixin
+    @Mixin
     @JsonProperty("configFile")
     val configFileOptions = ConfigFileOptions()
 
-    @CommandLine.Mixin
+    @Mixin
     @JsonProperty("project")
     val projectOptions = ProjectOptions()
 
-    @CommandLine.Option(
+    @Option(
         names = ["--contract-addresses"],
         description = ["Add pre-deployed contract addresses"],
         arity = "0..*",

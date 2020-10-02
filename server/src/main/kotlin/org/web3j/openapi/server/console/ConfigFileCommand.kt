@@ -17,7 +17,9 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Unmatched
 
-// allows two pass approach to obtain optional config file
+/**
+ * Allows two-pass approach to obtain an optional config file.
+ */
 @Command(
     mixinStandardHelpOptions = true
 )
