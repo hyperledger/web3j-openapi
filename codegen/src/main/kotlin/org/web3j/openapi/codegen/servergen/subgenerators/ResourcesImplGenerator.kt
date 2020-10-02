@@ -219,7 +219,8 @@ internal class ResourcesImplGenerator(
             .filter { it.type == "event" }
             .map { abiDefinition ->
                 EventResource(
-                    capitalizedName = abiDefinition.sanitizedName().capitalize()
+                    capitalizedName = abiDefinition.sanitizedName().capitalize(),
+                    capitalizedContractName = contractName.capitalize()
                 )
             }
     }

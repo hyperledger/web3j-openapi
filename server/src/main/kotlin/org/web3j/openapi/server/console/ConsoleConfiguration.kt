@@ -18,8 +18,9 @@ import org.web3j.openapi.server.console.options.ProjectOptions
 import org.web3j.openapi.server.console.options.NetworkOptions
 import org.web3j.openapi.server.console.options.ServerOptions
 import org.web3j.openapi.server.console.options.CredentialsOptions
-import picocli.CommandLine
-import picocli.CommandLine.*
+import picocli.CommandLine.Mixin
+import picocli.CommandLine.ArgGroup
+import picocli.CommandLine.Option
 
 class ConsoleConfiguration {
 
