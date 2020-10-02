@@ -65,9 +65,13 @@ class RunServerCommand : Callable<Int> {
             walletFile = consoleConfiguration.credentialsOptions.walletOptions.walletFile,
             walletPassword = consoleConfiguration.credentialsOptions.walletOptions.walletPassword,
             projectName = consoleConfiguration.projectOptions.projectName,
-            contractAddresses = ContractAddresses().apply {
-                consoleConfiguration.contractAddresses?.let {
-                    putAll(it.mapValues { Address(it.value) })
+            contractAddresses = ContractAddresses().apply { 
+                consoleConfiguration.contractAddresses?.let { contractAddresses ->
+                    putAll(
+                        contractAddresses
+                            .mapKeys { it.key.toLowerCase() }
+                            .mapValues { Address(it.value) }
+                    )
                 }
             },
             network = consoleConfiguration.networkOptions.network
