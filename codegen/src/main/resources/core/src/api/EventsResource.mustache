@@ -14,13 +14,14 @@ import io.swagger.v3.oas.annotations.Operation
 {{#contractDetails}}
 @Generated
 interface {{capitalizedContractName}}Events : SubResource {
+
+    @Operation(tags = ["{{capitalizedContractName}} Events"], summary = "List all {{capitalizedContractName}} events")
+    override fun findAll(): List<String>
+
 {{/contractDetails}}
 {{#contractResources.eventResources}}
     {{{path}}}
     {{resource}} : {{{returnType}}}
-
-    @Operation(tags = ["{{capitalizedContractName}} Events"], summary = "List all {{capitalizedContractName}} events")
-    override fun findAll(): List<String>
 
 {{/contractResources.eventResources}}
 }
