@@ -43,10 +43,14 @@ class GenerationTest {
             ),
             160,
             "test",
-            "0.0.7",
             withSwaggerUi = false
         )
 
-        assertDoesNotThrow { GenerateOpenApi(generatorConfiguration).generate() }
+        assertDoesNotThrow {
+            GenerateOpenApi(generatorConfiguration).run {
+                generate()
+                generateSwaggerUI()
+            }
+        }
     }
 }

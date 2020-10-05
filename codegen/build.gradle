@@ -1,7 +1,15 @@
 description 'web3j-openapi project code generators'
 
+apply plugin: 'org.unbroken-dome.test-sets'
+
 repositories{
     maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+}
+
+testSets {
+    integrationTest {
+        dirName = 'integration-test'
+    }
 }
 
 dependencies {
@@ -21,13 +29,11 @@ dependencies {
         exclude group: 'javax.xml.bind'
     }
 
-    implementation "org.web3j:codegen:${versions.web3j}"
-
+    implementation("org.web3j:codegen:$web3jVersion") {
+        exclude group: 'info.picocli'
+    }
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
-
-    testImplementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 }
-
 
 def generatedResources = "$buildDir/generated-resources/main"
 
@@ -36,6 +42,14 @@ sourceSets {
         // Register an output folder on the main source set:
         output.dir(generatedResources, builtBy: 'generateVersionProperties')
     }
+    integrationTest.java.srcDirs += [
+            "$outputDirectory/$generatedProjectName/server/src/main/java"
+    ]
+    integrationTest.kotlin.srcDirs += [
+            "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
+            "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
+            "$outputDirectory/$generatedProjectName/server/src/main/java"
+    ]
 }
 
 task generateVersionProperties {
@@ -47,3 +61,11 @@ task generateVersionProperties {
         generated.append("timestamp=${System.currentTimeMillis()}\n")
     }
 }
+
+task copyIntegrationTestResources(type: Copy) {
+    from "$buildDir/resources/main/server/src/main/resources"
+    into 'build/resources/integrationTest/server/src/main/resources'
+    dependsOn processTestResources
+}
+
+integrationTest.dependsOn copyIntegrationTestResources, publishToMavenLocal
