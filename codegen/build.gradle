@@ -27,6 +27,7 @@ dependencies {
         exclude group: 'javax.activation'
         exclude group: 'javax.validation'
         exclude group: 'javax.xml.bind'
+        exclude group: 'org.slf4j'
     }
 
     implementation("org.web3j:codegen:$web3jVersion") {
