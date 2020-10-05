@@ -1,7 +1,7 @@
 description 'web3j-openapi core module'
 
 dependencies {
-    api "org.web3j:core:${versions.web3j}"
+    api "org.web3j:core:$web3jVersion"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swagger}"
 }

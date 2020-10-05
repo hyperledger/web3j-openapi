@@ -11,8 +11,10 @@ testSets {
 dependencies {
     api project(':web3j-openapi-core')
 
-    implementation "org.web3j:core:${versions.web3j}"
-    implementation "io.epirus:epirus-web3j:${versions.web3jEpirus}"
+    implementation "org.web3j:core:$web3jVersion"
+    implementation("io.epirus:epirus-web3j:${versions.web3jEpirus}") {
+        exclude group: 'org.web3j'
+    }
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
@@ -34,7 +36,9 @@ dependencies {
 
     testImplementation project(':web3j-openapi-client')
 
-    integrationTestImplementation "org.web3j:web3j-unit:${versions.web3j}" // FIXME Release web3j unit
+    integrationTestImplementation ("org.web3j:web3j-unit:$web3jVersion") {
+        exclude group: 'com.google.errorprone'
+    }
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
 
