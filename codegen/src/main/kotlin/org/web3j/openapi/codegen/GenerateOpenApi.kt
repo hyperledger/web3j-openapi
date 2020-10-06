@@ -28,9 +28,6 @@ import java.nio.file.Paths
 class GenerateOpenApi(
     private val configuration: GeneratorConfiguration
 ) {
-
-    private val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
-
     fun generate() {
         println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
         generateCore()
@@ -108,5 +105,9 @@ class GenerateOpenApi(
                     })
                 close()
             }
+    }
+
+    companion object {
+        private const val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
     }
 }
