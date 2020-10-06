@@ -14,4 +14,8 @@ package org.web3j.openapi.server.config
 
 import org.web3j.abi.datatypes.Address
 
-class ContractAddresses : HashMap<String, Address>()
+class ContractAddresses : MutableMap<String, Address> by LinkedHashMap() {
+    companion object {
+        val EMPTY = ContractAddresses()
+    }
+}
