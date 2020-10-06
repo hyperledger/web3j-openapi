@@ -35,15 +35,14 @@ class GenerationTest {
             "contracts").toFile()
 
         val generatorConfiguration = GeneratorConfiguration(
-            "testProject",
-            "com.test",
-            tempFolder.canonicalPath,
-            loadContractConfigurations(
+            projectName = "testProject",
+            packageName = "com.test",
+            outputDir = tempFolder.canonicalPath,
+            contracts = loadContractConfigurations(
                 listOf(contractsFolder), listOf(contractsFolder)
             ),
-            160,
-            "test",
-            withSwaggerUi = false
+            contextPath = "test",
+            withSwaggerUi = true
         )
 
         assertDoesNotThrow {
