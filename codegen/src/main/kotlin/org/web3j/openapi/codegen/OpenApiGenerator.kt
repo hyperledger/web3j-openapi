@@ -25,7 +25,7 @@ import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenera
 import java.io.File
 import java.nio.file.Paths
 
-class GenerateOpenApi(
+class OpenApiGenerator(
     private val configuration: GeneratorConfiguration
 ) {
     fun generate() {

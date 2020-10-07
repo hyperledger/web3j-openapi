@@ -15,7 +15,7 @@ package org.web3j.openapi.codegen.generators
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import org.web3j.openapi.codegen.GenerateOpenApi
+import org.web3j.openapi.codegen.OpenApiGenerator
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.utils.GeneratorUtils.loadContractConfigurations
 import java.io.File
@@ -46,7 +46,7 @@ class GenerationTest {
         )
 
         assertDoesNotThrow {
-            GenerateOpenApi(generatorConfiguration).run {
+            OpenApiGenerator(generatorConfiguration).run {
                 generate()
                 generateSwaggerUI()
             }
