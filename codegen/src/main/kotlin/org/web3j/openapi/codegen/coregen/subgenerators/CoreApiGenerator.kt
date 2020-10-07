@@ -113,7 +113,7 @@ internal class CoreApiGenerator(
                             returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
                             operationTag = operationTag,
                             mediaType = "@Produces(MediaType.APPLICATION_JSON)",
-                            path = "@Path(\"${sanitizedAbiDefinitionName.capitalize()}\")"
+                            path = "@Path(\"$sanitizedAbiDefinitionName\")"
                         )
                     )
                 } else {
