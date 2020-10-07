@@ -27,7 +27,7 @@ class GenerationTest {
     lateinit var tempFolder: File
 
     @Test
-    fun `Generated project gradle tasks test`() {
+    fun `generate project gradle tasks`() {
         val contractsFolder = Paths.get(
             "src",
             "test",

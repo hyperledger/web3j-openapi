@@ -27,7 +27,7 @@ class GeneratorUtilsTest {
         "contracts").toFile()
 
     @Test
-    fun `Function names duplicates handling test`() {
+    fun `function names duplicates handling`() {
         val duplicatesAbi = File(
             Paths.get(
                 contractsFolder.absolutePath,
@@ -45,7 +45,7 @@ class GeneratorUtilsTest {
     }
 
     @Test
-    fun `Inputs duplicates handling test`() {
+    fun `inputs duplicates handling`() {
         val duplicatesAbi = File(
             Paths.get(
                 contractsFolder.absolutePath,
