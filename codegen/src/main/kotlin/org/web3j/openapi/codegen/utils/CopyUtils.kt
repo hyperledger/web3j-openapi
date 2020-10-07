@@ -15,16 +15,13 @@ package org.web3j.openapi.codegen.utils
 import com.pinterest.ktlint.core.KtLint
 import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
 import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KLogging
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-internal object CopyUtils {
-
-    private val logger: Logger = LoggerFactory.getLogger(CopyUtils::class.java)
+internal object CopyUtils: KLogging() {
 
     private val ruleSets = listOf(
         StandardRuleSetProvider().get(),
@@ -69,11 +66,8 @@ internal object CopyUtils {
         KtLint.format(
             KtLint.Params(
                 ruleSets = ruleSets,
-                cb = { error, _ ->
-                    logger.warn(error.toString())
-                },
-                text = file.readText(),
-                debug = true
+                cb = { _, _ -> },
+                text = file.readText()
             )
         ).run {
             file.writeText(this)
