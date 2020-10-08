@@ -14,7 +14,7 @@ The workflow can be summed in the following steps:
 - Writing a solidity smart contract
 - Generating the corresponding **OpenAPI** project using **Web3j-OpenAPI**
 - Running the generated project as a standalone server
-- Sending HTTP requests using Curls or Swagger-UI
+- Sending HTTP requests using `Swagger-UI`, client application or `Curl` request.
 
 
 # Getting started with Web3j-OpenAPI
@@ -50,6 +50,7 @@ $ export WEB3J_OPENAPI_PORT=9090
 The project can be run in multiple ways. In this example, we will go for:
 
 ```ssh
+$ cd <project_folder>
 $ ./gradlew run
 ```
 
