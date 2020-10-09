@@ -2,7 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -17,7 +16,7 @@ plugins {
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
 
-description = 'Web3j-openapi project.'
+description = 'Web3j-OpenAPI code generation for Ethereum smart contracts.'
 
 ext {
     web3jVersion = version
