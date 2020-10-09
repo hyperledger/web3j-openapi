@@ -96,6 +96,8 @@ subprojects {
                 force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-base', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: versions.jackson)
                 force(group: 'io.github.microutils', name: 'kotlin-logging', version: versions.kotlinLogging)
                 force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger)
                 force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger)
