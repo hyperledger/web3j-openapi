@@ -21,7 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-internal object CopyUtils: KLogging() {
+internal object CopyUtils : KLogging() {
 
     private val ruleSets = listOf(
         StandardRuleSetProvider().get(),
