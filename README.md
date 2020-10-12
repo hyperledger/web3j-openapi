@@ -67,7 +67,7 @@ The easiest way to interact with the generated project is via the generated `Swa
 Also, you can use our client implementation via adding the following dependency to your project:
 ```groovy
 dependencies {
-    implementation "org.web3j.openapi:web3j-openapi-client:4.6.5"
+    implementation "org.web3j.openapi:web3j-openapi-client:4.7.0"
 }
 ```
 
