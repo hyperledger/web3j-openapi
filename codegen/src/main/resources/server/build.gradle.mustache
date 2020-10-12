@@ -9,12 +9,10 @@ mainClassName = 'org.web3j.openapi.server.console.RunServerCommand'
 
 dependencies {
     implementation project(':{{rootProjectName}}-core')
-
     implementation "org.web3j.openapi:web3j-openapi-server:{{version}}"
+    implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
 
-    implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.32"
-    
-    swaggerUI 'org.webjars:swagger-ui:3.10.0'
+    swaggerUI 'org.webjars:swagger-ui:${versions.swaggerUi}'
 }
 
 repositories{
