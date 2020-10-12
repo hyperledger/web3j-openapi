@@ -72,11 +72,10 @@ class EventsResourceImplGenerator(
 
     private fun getStructEventParameters(input: AbiDefinition.NamedType, functionName: String, callTree: String = ""): String {
         val structName = input.internalType.structName
-        val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
         val parameters = input.components.joinToString(",") { component ->
             if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
-            else getStructEventParameters(component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
+            else getStructEventParameters(component, functionName.decapitalize(), "$callTree.${component.name}".removeSuffix("."))
         }
-        return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)" // FIXME: Are you sure about the lower case ?
+        return "$packageName.core.${contractName.toLowerCase()}.model.${structName}StructModel($parameters)"
     }
 }
