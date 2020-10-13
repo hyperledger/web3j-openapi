@@ -6,11 +6,11 @@ Web3j Open API
 Web3j-OpenAPI is a [OpenAPI](https://swagger.io/specification/) client and server generator from 
 [Solidity](https://solidity.readthedocs.io/) smart contracts. it provides a way to interact with the Ethereum blockchain via simple and intuitive HTTP requests, abstracting the coding layer. These interactions can be done using :
 - Plain HTTP requests
-- Via the Swagger-UI, which is generated with every project
-- A client application utilizing the `webj3-openapi-client` client implementation
+- Via the `Swagger-UI`, which is generated with every project
+- A client application utilising the `webj3-openapi-client` client implementation
 
 The workflow can be summed in the following steps:
-- Writing a solidity smart contract
+- Writing a Solidity smart contract
 - Generating the corresponding **OpenAPI** project using **Web3j-OpenAPI**
 - Running the generated project as a standalone server
 - Sending HTTP requests using `Swagger-UI`, client application or `Curl` request.
