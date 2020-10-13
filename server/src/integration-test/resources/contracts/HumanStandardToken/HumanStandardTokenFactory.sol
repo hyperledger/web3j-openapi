@@ -36,7 +36,7 @@ contract HumanStandardTokenFactory {
 
     //for now, keeping this internal. Ideally there should also be a live version of this that any contract can use, lib-style.
     //retrieves the bytecode at a specific address.
-    function codeAt(address _addr) public internal returns (bytes o_code) {
+    function codeAt(address _addr) public returns (bytes o_code) {
       assembly {
           // retrieve the size of the code, this needs assembly
           let size := extcodesize(_addr)
