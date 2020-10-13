@@ -36,8 +36,14 @@ $ epirus openapi new
 You can also generate a `Web3j-OpenAPI` project using the [Web3j-OpenAPI-gradle-plugin](https://github.com/web3j/web3j-openapi-gradle-plugin).
 
 ### Configure the project
-After having the generated project, you can either use the [Epirus-cli](https://docs.epirus.io/quickstart/#deployment) and easily run it.
-Or configure it. The simplest way is using environment variables :
+After having the generated project, you can use the [Epirus-CLI](https://docs.epirus.io)  to run it using the following command (Note: You will need to create an [Epirus](https://www.web3labs.com/epirus) Account).
+
+```ssh
+$ epirus login
+$ epirus run rinkeby|ropsten
+```
+
+Alternatively, you can configure your application with the following environment variables:
 
 ```ssh
 $ export WEB3J_ENDPOINT=<link_to_your_Ethereum_node>
@@ -85,4 +91,4 @@ println("Deployment receipt: ${receipt.contractAddress}")
 // ...
 ```
 
-#### **For more explanations**, check the [documentation](https://docs.web3j.io/web3j_openapi).
+#### **For more information**, please refer to the [documentation](https://docs.web3j.io/web3j_openapi).
