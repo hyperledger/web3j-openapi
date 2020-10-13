@@ -36,7 +36,7 @@ $ epirus openapi new
 You can also generate a `Web3j-OpenAPI` project using the [Web3j-OpenAPI-gradle-plugin](https://github.com/web3j/web3j-openapi-gradle-plugin).
 
 ### Configure the project
-After having the generated project, you can use the [Epirus-CLI](https://docs.epirus.io)  to run it using the following command (Note: You will need to create an [Epirus](https://www.web3labs.com/epirus) Account).
+After having the generated project, you can use the [Epirus-CLI](https://docs.epirus.io) to run it using the following command (Note: You will need to create an [Epirus](https://www.web3labs.com/epirus) Account).
 
 ```ssh
 $ epirus login
@@ -53,7 +53,7 @@ $ export WEB3J_OPENAPI_PORT=9090
 ```
 
 ### Run the project
-The project can be run in multiple ways. In this example, we will go for:
+If you aren't using the [Epirus-CLI](https://docs.epirus.io/quickstart/#deployment), you may run the project using the following Gradle target:
 
 ```ssh
 $ cd <project_folder>
