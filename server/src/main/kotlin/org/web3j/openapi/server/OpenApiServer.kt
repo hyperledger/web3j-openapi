@@ -12,6 +12,7 @@
  */
 package org.web3j.openapi.server
 
+import mu.KLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -55,6 +56,8 @@ class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
                 baseResource = Resource.newResource(swaggerResourceUri)
                 addServlet(swaggerServletHolder, "/swagger-ui/*")
             }
-        }
+        } ?: logger.warn { "Resource static/swagger-ui/index.html not found in classpath." }
     }
+    
+    companion object: KLogging()
 }
