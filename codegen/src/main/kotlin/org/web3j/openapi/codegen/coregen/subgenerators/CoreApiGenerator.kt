@@ -30,15 +30,10 @@ import java.nio.file.Paths
 internal class CoreApiGenerator(
     val packageName: String,
     val folderPath: String,
-    val contractDetails: ContractDetails,
-    val withBuildFiles: Boolean
+    val contractDetails: ContractDetails
 ) {
     private val context = mutableMapOf<String, Any>()
-    private val outputDir = if (withBuildFiles) Paths.get(
-        folderPath.substringBefore("kotlin"),
-        "kotlin"
-    ).toString()
-    else folderPath.substringBefore(packageName.substringBefore("."))
+    private val outputDir = folderPath.substringBefore(packageName.substringBefore("."))
 
     init {
         context["packageName"] = packageName
@@ -76,9 +71,17 @@ internal class CoreApiGenerator(
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
                 if (it.type == "function")
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName().capitalize()}Parameters")
+                    Import(
+                        "import $packageName.core.${contractDetails.lowerCaseContractName}.model.${
+                            it.sanitizedName().capitalize()
+                        }Parameters"
+                    )
                 else
-                    Import("import $packageName.core.${contractDetails.lowerCaseContractName}.model.${it.sanitizedName().capitalize()}EventResponse")
+                    Import(
+                        "import $packageName.core.${contractDetails.lowerCaseContractName}.model.${
+                            it.sanitizedName().capitalize()
+                        }EventResponse"
+                    )
             }
     }
 
@@ -86,7 +89,11 @@ internal class CoreApiGenerator(
         return contractDetails.abiDefinitions
             .filter { it.type == "event" }
             .map {
-                Import("import $packageName.core.${contractDetails.lowerCaseContractName}.events.${it.sanitizedName().capitalize()}EventResource")
+                Import(
+                    "import $packageName.core.${contractDetails.lowerCaseContractName}.events.${
+                        it.sanitizedName().capitalize()
+                    }EventResource"
+                )
             }
     }
 
@@ -103,14 +110,18 @@ internal class CoreApiGenerator(
                         if (it.inputs.isNotEmpty())
                             "${sanitizedAbiDefinitionName.decapitalize()}Parameters : ${sanitizedAbiDefinitionName.capitalize()}Parameters"
                         else ""
-                    val operationTag = "@Operation(tags = [\"${contractDetails.capitalizedContractName} Methods\"],  summary = \"Execute the ${sanitizedAbiDefinitionName
-                        .capitalize()} method\")"
+                    val operationTag =
+                        "@Operation(tags = [\"${contractDetails.capitalizedContractName} Methods\"],  summary = \"Execute the ${
+                            sanitizedAbiDefinitionName
+                                .capitalize()
+                        } method\")"
                     functionResources.add(
                         FunctionResource(
                             functionName = sanitizedAbiDefinitionName,
                             resource = "fun $sanitizedAbiDefinitionName($parameters)",
                             method = if (it.inputs.isEmpty()) "@GET" else "@POST",
-                            returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName).toString(),
+                            returnType = it.getReturnType(packageName, contractDetails.lowerCaseContractName)
+                                .toString(),
                             operationTag = operationTag,
                             mediaType = "@Produces(MediaType.APPLICATION_JSON)",
                             path = "@Path(\"$sanitizedAbiDefinitionName\")"
@@ -191,7 +202,8 @@ internal class CoreApiGenerator(
             Paths.get(
                 folderPath,
                 "events"
-            ).toString())
+            ).toString()
+        )
 
         contractDetails.abiDefinitions
             .filter { it.type == "event" }

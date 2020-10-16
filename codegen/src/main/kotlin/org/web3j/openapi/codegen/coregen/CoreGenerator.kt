@@ -19,7 +19,6 @@ import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.common.Tag
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.subgenerators.CoreApiGenerator
-import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
 import org.web3j.openapi.codegen.utils.CopyUtils
 import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
 import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
@@ -42,11 +41,7 @@ class CoreGenerator(
 
     override fun generate() {
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
-        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withGradleResources, "core")
-        if (configuration.withServerBuildFile)
-            generateGradleBuildFile(
-                if (configuration.withGradleResources) folderPath.substringBefore("src")
-                else folderPath, "core", context)
+        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, "core")
         copySources(folderPath)
 
         configuration.contracts.forEach {
@@ -57,8 +52,7 @@ class CoreGenerator(
                     folderPath,
                     it.contractDetails.lowerCaseContractName
                 ).toString(),
-                contractDetails = it.contractDetails,
-                withBuildFiles = configuration.withGradleResources
+                contractDetails = it.contractDetails
             ).generate()
         }
     }

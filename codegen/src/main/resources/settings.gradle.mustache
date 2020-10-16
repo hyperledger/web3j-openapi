@@ -1,7 +1,0 @@
-rootProject.name = '{{rootProjectName}}'
-
-include 'core'
-findProject(':core')?.name = "$rootProject.name-core"
-
-include 'server'
-findProject(':server')?.name = "$rootProject.name-server"
