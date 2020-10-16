@@ -26,11 +26,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Paths
 
-internal class ServerGenerator(
-    configuration: GeneratorConfiguration
-) : AbstractGenerator(
-    configuration
-) {
+internal class ServerGenerator(configuration: GeneratorConfiguration) : AbstractGenerator(configuration) {
+
     private val serverImports: List<Import> by lazy {
         configuration.contracts.map {
             Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
