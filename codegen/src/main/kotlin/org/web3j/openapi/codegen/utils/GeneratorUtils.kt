@@ -22,8 +22,7 @@ object GeneratorUtils {
 
     @JvmStatic
     fun loadContractConfigurations(abiList: List<File>): List<ContractConfiguration> {
-        val abis = checkDuplicates(recurseIntoFolders(abiList, "abi"))
-        return abis.map { abiFile ->
+        return checkDuplicates(recurseIntoFolders(abiList, "abi")).map { abiFile ->
             ContractConfiguration(
                 abiFile,
                 ContractDetails(
