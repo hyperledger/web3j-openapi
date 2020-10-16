@@ -58,6 +58,6 @@ class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
             }
         } ?: logger.warn { "Resource static/swagger-ui/index.html not found in classpath." }
     }
-    
-    companion object: KLogging()
+
+    companion object : KLogging()
 }
