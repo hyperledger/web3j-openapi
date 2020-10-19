@@ -38,9 +38,7 @@ class GenerationTest {
             projectName = "testProject",
             packageName = "com.test",
             outputDir = tempFolder.canonicalPath,
-            contracts = loadContractConfigurations(
-                listOf(contractsFolder), listOf(contractsFolder)
-            ),
+            contracts = loadContractConfigurations(listOf(contractsFolder)),
             contextPath = "test"
         )
         assertDoesNotThrow {
