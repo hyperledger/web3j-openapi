@@ -36,26 +36,14 @@ internal object CopyUtils : KLogging() {
         )
     }
 
-    fun createTree(outputDir: String, packageDir: String, withBuildFiles: Boolean = true, module: String = ""): String {
+    fun createTree(outputDir: String, packageDir: String, module: String = ""): String {
         val folder = File(
-            if (withBuildFiles)
-                Paths.get(
-                    outputDir,
-                    module,
-                    "src",
-                    "main",
-                    "kotlin",
-                    packageDir,
-                    module
-                ).toString()
-        else
-                Paths.get(
-                    outputDir,
-                    packageDir,
-                    module
-                ).toString()
-        )
-            .apply { mkdirs() }
+            Paths.get(
+                outputDir,
+                packageDir,
+                module
+            ).toString()
+        ).apply { mkdirs() }
         return folder.absolutePath
     }
 

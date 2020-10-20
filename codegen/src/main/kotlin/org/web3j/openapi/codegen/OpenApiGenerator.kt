@@ -12,18 +12,9 @@
  */
 package org.web3j.openapi.codegen
 
-import org.gradle.tooling.GradleConnectionException
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ResultHandler
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 import org.web3j.openapi.codegen.coregen.CoreGenerator
-import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.copyProjectResources
 import org.web3j.openapi.codegen.servergen.ServerGenerator
-import org.web3j.openapi.codegen.utils.TemplateUtils.generateFromTemplate
-import org.web3j.openapi.codegen.utils.TemplateUtils.mustacheTemplate
-import org.web3j.openapi.codegen.web3jCodegenStuff.SolidityFunctionWrapperGenerator
-import java.io.File
-import java.nio.file.Paths
 
 class OpenApiGenerator(
     private val configuration: GeneratorConfiguration
@@ -31,83 +22,14 @@ class OpenApiGenerator(
     fun generate() {
         println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")
         generateCore()
-        if (configuration.withGradleResources) generateGradleResources()
         if (configuration.withImplementations) generateServer()
-        if (configuration.withWrappers) generateWrappers()
-        if (configuration.withSwaggerUi) generateSwaggerUI()
     }
 
-    @Deprecated("renaming the function name", ReplaceWith("generate"))
-    fun generateAll() = generate()
-
-    fun generateServer() {
+    private fun generateServer() {
         ServerGenerator(configuration).generate()
     }
 
-    fun generateCore() {
+    private fun generateCore() {
         CoreGenerator(configuration).generate()
-    }
-
-    fun generateGradleResources() {
-        copyProjectResources(File(configuration.outputDir).apply { mkdirs() })
-        generateFromTemplate(
-            outputDir = configuration.outputDir,
-            context = mapOf("rootProjectName" to configuration.rootProjectName),
-            template = mustacheTemplate("settings.gradle.mustache"),
-            name = "settings.gradle"
-        )
-    }
-
-    fun generateWrappers() {
-        configuration.contracts.forEach {
-            SolidityFunctionWrapperGenerator(
-                abiFile = it.abiFile,
-                binFile = it.binFile,
-                contractName = it.abiFile.name.removeSuffix(".abi"),
-                basePackageName = "${configuration.packageName}.wrappers",
-                destinationDir = File(if (configuration.withGradleResources)
-                    Paths.get(
-                        configuration.outputDir,
-                        "server",
-                        "src",
-                        "main",
-                        "java"
-                    ).toString()
-                else
-                    Paths.get(
-                        configuration.outputDir
-                    ).toString()
-                ),
-                useJavaPrimitiveTypes = true,
-                useJavaNativeTypes = true,
-                addressLength = configuration.addressLength
-            ).generate()
-        }
-    }
-
-    fun generateSwaggerUI() {
-        println("Generating SwaggerUI ...")
-        GradleConnector.newConnector()
-            .useBuildDistribution()
-            .forProjectDirectory(File(configuration.outputDir))
-            .connect()
-            .apply {
-                newBuild()
-                    .forTasks(SWAGGERUI_GENERATION_TASK)
-                    .run(object : ResultHandler<Void> {
-                        override fun onFailure(failure: GradleConnectionException) {
-                            throw failure
-                        }
-
-                        override fun onComplete(result: Void?) {
-                            print(" Done.\n")
-                        }
-                    })
-                close()
-            }
-    }
-
-    companion object {
-        private const val SWAGGERUI_GENERATION_TASK = "completeSwaggerUiGeneration"
     }
 }

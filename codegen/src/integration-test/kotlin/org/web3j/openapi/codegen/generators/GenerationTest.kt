@@ -27,7 +27,7 @@ class GenerationTest {
     lateinit var tempFolder: File
 
     @Test
-    fun `generate project gradle tasks`() {
+    fun `generate project Gradle tasks`() {
         val contractsFolder = Paths.get(
             "src",
             "test",
@@ -38,18 +38,11 @@ class GenerationTest {
             projectName = "testProject",
             packageName = "com.test",
             outputDir = tempFolder.canonicalPath,
-            contracts = loadContractConfigurations(
-                listOf(contractsFolder), listOf(contractsFolder)
-            ),
-            contextPath = "test",
-            withSwaggerUi = true
+            contracts = loadContractConfigurations(listOf(contractsFolder)),
+            contextPath = "test"
         )
-
         assertDoesNotThrow {
-            OpenApiGenerator(generatorConfiguration).run {
-                generate()
-                generateSwaggerUI()
-            }
+            OpenApiGenerator(generatorConfiguration).generate()
         }
     }
 }

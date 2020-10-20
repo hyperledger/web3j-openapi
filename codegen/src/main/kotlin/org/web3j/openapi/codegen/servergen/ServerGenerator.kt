@@ -16,7 +16,6 @@ import mu.KLogging
 import org.web3j.openapi.codegen.AbstractGenerator
 import org.web3j.openapi.codegen.common.Import
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
-import org.web3j.openapi.codegen.gradlegen.GradleResourceCopy.generateGradleBuildFile
 import org.web3j.openapi.codegen.servergen.subgenerators.EventsResourceImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.LifecycleImplGenerator
 import org.web3j.openapi.codegen.servergen.subgenerators.ResourcesImplGenerator
@@ -27,11 +26,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Paths
 
-internal class ServerGenerator(
-    configuration: GeneratorConfiguration
-) : AbstractGenerator(
-    configuration
-) {
+internal class ServerGenerator(configuration: GeneratorConfiguration) : AbstractGenerator(configuration) {
+
     private val serverImports: List<Import> by lazy {
         configuration.contracts.map {
             Import("import ${configuration.packageName}.server.${it.contractDetails.lowerCaseContractName}.${it.contractDetails.capitalizedContractName}")
@@ -50,22 +46,11 @@ internal class ServerGenerator(
         if (configuration.contracts.isEmpty()) throw FileNotFoundException("No contracts found!")
 
         // FolderPath contains the module output directory
-        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, configuration.withGradleResources, "server")
+        val folderPath = CopyUtils.createTree(configuration.outputDir, packageDir, "server")
 
         // outputDir is the project root directory
-        val outputDir = if (configuration.withGradleResources) Paths.get(
-            folderPath.substringBefore("kotlin"),
-            "kotlin"
-        ).toString()
-        else folderPath.substringBefore(configuration.packageName.substringBefore("."))
+        val outputDir = folderPath.substringBefore(configuration.packageName.substringBefore("."))
 
-        if (configuration.withServerBuildFile)
-            generateGradleBuildFile(
-                if (configuration.withGradleResources)
-                    folderPath.substringBefore("src")
-                else
-                    folderPath,
-                "server", context)
         copyResources(folderPath)
         copySources(folderPath)
 
@@ -104,13 +89,6 @@ internal class ServerGenerator(
                 resourcesDefinition = it.contractDetails.abiDefinitions
             ).generate()
         }
-        if (configuration.withGradleResources)
-            TemplateUtils.generateFromTemplate(
-                context = mapOf(Pair("projectName", configuration.projectName.toLowerCase())),
-                outputDir = configuration.outputDir,
-                template = TemplateUtils.mustacheTemplate("server/Dockerfile.mustache"),
-                name = "Dockerfile"
-            )
     }
 
     private fun copyResources(folderPath: String) {
@@ -133,16 +111,7 @@ internal class ServerGenerator(
 
         // FIXME Copies SPI resource in main
         val spiFolder = File(
-            if (configuration.withGradleResources) Paths.get(
-                folderPath.substringBefore("server"),
-                "server",
-                "src",
-                "main",
-                "resources",
-                "META-INF",
-                "services"
-            ).toString()
-        else Paths.get(
+            Paths.get(
                 folderPath.substringBefore("kotlin"),
                 "resources",
                 "META-INF",
@@ -153,7 +122,8 @@ internal class ServerGenerator(
             context = context,
             outputDir = spiFolder.absolutePath,
             template = TemplateUtils.mustacheTemplate(
-                "server/src/main/resources/META-INF/services/org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"),
+                "server/src/main/resources/META-INF/services/org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"
+            ),
             name = "org.web3j.openapi.server.spi.OpenApiResourceProvider"
         )
     }

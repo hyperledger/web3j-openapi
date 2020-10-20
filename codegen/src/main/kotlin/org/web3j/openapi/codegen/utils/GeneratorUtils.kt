@@ -21,13 +21,10 @@ import java.lang.IllegalStateException
 object GeneratorUtils {
 
     @JvmStatic
-    fun loadContractConfigurations(abiList: List<File>, binList: List<File>): List<ContractConfiguration> {
-        val abis = checkDuplicates(recurseIntoFolders(abiList, "abi"))
-        val bins = recurseIntoFolders(binList, "bin").associateBy({ it.nameWithoutExtension }, { it })
-        return abis.map { abiFile ->
+    fun loadContractConfigurations(abiList: List<File>): List<ContractConfiguration> {
+        return checkDuplicates(recurseIntoFolders(abiList, "abi")).map { abiFile ->
             ContractConfiguration(
                 abiFile,
-                bins[abiFile.nameWithoutExtension],
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
                     loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
