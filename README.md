@@ -7,14 +7,13 @@ Web3j-OpenAPI is a [OpenAPI](https://swagger.io/specification/) client and serve
 [Solidity](https://solidity.readthedocs.io/) smart contracts. it provides a way to interact with the Ethereum blockchain via simple and intuitive HTTP requests, abstracting the coding layer. These interactions can be done using :
 - Plain HTTP requests
 - Via the `Swagger-UI`, which is generated with every project
-- A client application utilising the `webj3-openapi-client` client implementation
+- A client application using the [`webj3-openapi-client`](/client) implementation
 
 The workflow can be summed in the following steps:
 - Writing a Solidity smart contract
 - Generating the corresponding **OpenAPI** project using **Web3j-OpenAPI**
 - Running the generated project as a standalone server
 - Sending HTTP requests using `Swagger-UI`, client application or `Curl` request.
-
 
 # Getting started with Web3j-OpenAPI
 To generate an OpenAPI project using the [Web3j-OpenAPI](https://github.com/web3j/web3j-openapi) generator, you need to have the [Epirus-CLI](https://docs.epirus.io/quickstart) installed on your machine (Note - the Epirus CLI has replaced the Web3j CLI). 
@@ -71,7 +70,7 @@ The easiest way to interact with the generated project is via the generated `Swa
 Also, you can use our client implementation via adding the following dependency to your project:
 ```groovy
 dependencies {
-    implementation "org.web3j.openapi:web3j-openapi-client:4.7.0"
+    implementation "org.web3j.openapi:web3j-openapi-client:4.7.1"
 }
 ```
 
