@@ -18,6 +18,6 @@ class {{capitalizedContractName}}EventsImpl(
 ) :  {{capitalizedContractName}}Events, SubResourceImpl(uriInfo){
 
 {{#EventResource}}
-    override val {{decapitalizedName}}: {{capitalizedName}}EventResourceImpl = {{capitalizedName}}EventResourceImpl({{decapitalizedContractName}})
+    override val {{decapitalizedName}} = {{capitalizedName}}EventResourceImpl({{decapitalizedContractName}})
 {{/EventResource}}
 }
