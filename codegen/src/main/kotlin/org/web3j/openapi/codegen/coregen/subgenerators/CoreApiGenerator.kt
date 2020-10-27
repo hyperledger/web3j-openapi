@@ -131,8 +131,8 @@ internal class CoreApiGenerator(
                     eventResources.add(
                         EventResource(
                             capitalizedName = sanitizedAbiDefinitionName,
-                            resource = "val ${sanitizedAbiDefinitionName.decapitalize()}Events",
-                            path = "@get:Path(\"${sanitizedAbiDefinitionName.capitalize()}Events\")",
+                            resource = "val ${sanitizedAbiDefinitionName.decapitalize()}",
+                            path = "@get:Path(\"${sanitizedAbiDefinitionName.decapitalize()}\")",
                             returnType = "${sanitizedAbiDefinitionName.capitalize()}EventResource"
                         )
                     )
