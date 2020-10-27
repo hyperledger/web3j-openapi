@@ -132,7 +132,7 @@ internal class CoreApiGenerator(
                         EventResource(
                             capitalizedName = sanitizedAbiDefinitionName,
                             resource = "val ${sanitizedAbiDefinitionName.decapitalize()}",
-                            path = "@get:Path(\"${sanitizedAbiDefinitionName.capitalize()}\")",
+                            path = "@get:Path(\"${sanitizedAbiDefinitionName.decapitalize()}\")",
                             returnType = "${sanitizedAbiDefinitionName.capitalize()}EventResource"
                         )
                     )
