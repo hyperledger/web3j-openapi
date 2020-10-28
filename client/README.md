@@ -1,4 +1,5 @@
-# Web3j-OpenAPI Client
+Web3j-OpenAPI Client
+====================
 
 This module allows to call your generated smart contract OpenAPI by using the generated 
 interfaces as a facade to the OpenAPI HTTP endpoints.
