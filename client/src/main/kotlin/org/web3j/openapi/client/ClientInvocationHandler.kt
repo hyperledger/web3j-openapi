@@ -20,6 +20,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Proxy
 import java.net.URL
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.sse.SseEventSource
@@ -112,8 +113,9 @@ internal class ClientInvocationHandler(
         return target.path(resourcePath)
     }
 
-    private fun Method.isEvent() = parameterTypes.size == 1 &&
-            parameterTypes[0] == Function1::class.java &&
+    private fun Method.isEvent() = name == "onEvent" &&
+            parameterTypes.size == 1 &&
+            parameterTypes[0] == Consumer::class.java &&
             returnType == CompletableFuture::class.java
 
     private val Any.typeArguments: List<Class<*>>
