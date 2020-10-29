@@ -12,6 +12,6 @@
  */
 package org.web3j.openapi.core
 
-const val HEX_40 = "0x[a-f0-9]{40}"
+const val HEX_40_PATTERN = "0x[a-fA-F0-9]{40}"
 const val CONTRACT_ADDRESS = "contractAddress"
-const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40}"
+const val CONTRACT_ADDRESS_PATH = "{$CONTRACT_ADDRESS: $HEX_40_PATTERN}"
