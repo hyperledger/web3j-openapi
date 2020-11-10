@@ -2,10 +2,6 @@ description 'web3j-openapi project code generators'
 
 apply plugin: 'org.unbroken-dome.test-sets'
 
-repositories{
-    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-}
-
 testSets {
     integrationTest {
         dirName = 'integration-test'
@@ -20,7 +16,6 @@ dependencies {
     }
 
     implementation "com.pinterest.ktlint:ktlint-ruleset-standard:${versions.ktlint}"
-    implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
     implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
     implementation("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
         exclude group: 'com.github.jknack'
