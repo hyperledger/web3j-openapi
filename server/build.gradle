@@ -42,48 +42,48 @@ dependencies {
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
 }
 
-ext {
-    generatedProjectName = "testProject"
-    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
-}
+//ext {
+//    generatedProjectName = "testProject"
+//    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
+//}
 
-task copyOpenApiResources(type: Copy) {
-    from 'build/resources/integrationTest/server/src/main/resources'
-    into "$outputDirectory/$generatedProjectName/server/src/main/resources"
-    delete('src/main/resources/logging.properties')
-    delete('src/main/resources/META-INF')
-}
+//task copyOpenApiResources(type: Copy) {
+//    from 'build/resources/integrationTest/server/src/main/resources'
+//    into "$outputDirectory/$generatedProjectName/server/src/main/resources"
+//    delete('src/main/resources/logging.properties')
+//    delete('src/main/resources/META-INF')
+//}
 
-task generateOpenApiProject(type : Exec, group: 'web3j') {
-    dependsOn(":web3j-openapi-console:installShadowDist")
-    dependsOn copyOpenApiResources
-    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
-            'generate',
-            '--name', "$generatedProjectName",
-            '--context-path', 'api',
-            '--package-name', 'com.test',
-            '--abi', "$projectDir/src/integration-test/resources/contracts",
-            '--bin', "$projectDir/src/integration-test/resources/contracts",
-            '--output', "$outputDirectory"
-}
+//task generateOpenApiProject(type : Exec, group: 'web3j') {
+//    dependsOn(":web3j-openapi-console:installShadowDist")
+//    dependsOn copyOpenApiResources
+//    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
+//            'generate',
+//            '--name', "$generatedProjectName",
+//            '--context-path', 'api',
+//            '--package-name', 'com.test',
+//            '--abi', "$projectDir/src/integration-test/resources/contracts",
+//            '--bin', "$projectDir/src/integration-test/resources/contracts",
+//            '--output', "$outputDirectory"
+//}
 
-compileIntegrationTestKotlin.dependsOn generateOpenApiProject
+//compileIntegrationTestKotlin.dependsOn generateOpenApiProject
 
-sourceSets {
-    integrationTest.java.srcDirs += [
-        "$outputDirectory/$generatedProjectName/server/src/main/java"
-    ]
-    integrationTest.kotlin.srcDirs += [
-        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
-        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
-        "$outputDirectory/$generatedProjectName/server/src/main/java"
-    ]
-}
+//sourceSets {
+//    integrationTest.java.srcDirs += [
+//        "$outputDirectory/$generatedProjectName/server/src/main/java"
+//    ]
+//    integrationTest.kotlin.srcDirs += [
+//        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
+//        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
+//        "$outputDirectory/$generatedProjectName/server/src/main/java"
+//    ]
+//}
 
-task copyIntegrationTestResources(type: Copy) {
-    from "$rootDir/codegen/build/resources/main/server/src/main/resources"
-    into 'build/resources/integrationTest/server/src/main/resources'
-    dependsOn processTestResources
-}
+//task copyIntegrationTestResources(type: Copy) {
+//    from "$rootDir/codegen/build/resources/main/server/src/main/resources"
+//    into 'build/resources/integrationTest/server/src/main/resources'
+//    dependsOn processTestResources
+//}
 
-integrationTest.dependsOn copyIntegrationTestResources
+//integrationTest.dependsOn copyIntegrationTestResources
