@@ -17,10 +17,10 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
-import com.test.core.TestProjectApi
-import com.test.core.humanstandardtoken.HumanStandardTokenResource
-import com.test.core.humanstandardtoken.model.ApproveParameters
-import com.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
+import org.web3j.test.core.TestProjectApi
+import org.web3j.test.core.humanstandardtoken.HumanStandardTokenResource
+import org.web3j.test.core.humanstandardtoken.model.ApproveParameters
+import org.web3j.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -37,6 +37,7 @@ import java.math.BigInteger
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.function.Consumer
 
 /**
  * Classes used in this test will be generated using a gradle task.
@@ -95,7 +96,7 @@ class ServerTest : JerseyTest() {
     @Test
     fun `on contract event`() {
         val countDownLatch = CountDownLatch(1)
-        contract.approvalEvents.onEvent { countDownLatch.countDown() }
+        contract.events.approval.onEvent(Consumer { countDownLatch.countDown() })
         contract.approve(ApproveParameters(ADDRESS, BigInteger.TEN))
         assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue()
     }
