@@ -49,7 +49,7 @@ class ServerTest : JerseyTest() {
     private lateinit var contract: HumanStandardTokenResource
 
     private val client: TestProjectApi by lazy {
-        ClientFactory.create(
+        ClientFactory.build(
             TestProjectApi::class.java,
             ClientService(target().uri.toString())
         )
