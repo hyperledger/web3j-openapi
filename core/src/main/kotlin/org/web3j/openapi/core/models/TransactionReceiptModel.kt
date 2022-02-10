@@ -30,7 +30,9 @@ data class TransactionReceiptModel(
     val to: String?,
     val logs: List<LogsModel>?,
     val logsBloom: String?,
-    val revertReason: String?
+    val revertReason: String?,
+    val type: String,
+    val effectiveGasPrice: String
 ) {
     constructor(txReceipt: TransactionReceipt) : this(
         txReceipt.transactionHash,
@@ -46,7 +48,9 @@ data class TransactionReceiptModel(
         txReceipt.to,
         txReceipt.logs.map { LogsModel(it) },
         txReceipt.logsBloom,
-        txReceipt.revertReason
+        txReceipt.revertReason,
+        txReceipt.type,
+        txReceipt.effectiveGasPrice
     ) {
     }
 
@@ -78,7 +82,9 @@ data class TransactionReceiptModel(
                 )
             },
             this.logsBloom,
-            this.revertReason
+            this.revertReason,
+            this.type,
+            this.effectiveGasPrice
         )
     }
 }

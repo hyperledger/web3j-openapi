@@ -7,6 +7,18 @@ testSets {
         dirName = 'integration-test'
     }
 }
+ext {
+    besuPluginVersion = '21.7.2'
+    besuInternalVersion = '21.7.2'
+    besuCryptoDepVersion = '0.3.0'
+}
+
+repositories {
+    maven { url "https://hyperledger.jfrog.io/artifactory/besu-maven/" }
+    maven { url "https://artifacts.consensys.net/public/maven/maven/" }
+    maven { url "https://splunk.jfrog.io/splunk/ext-releases-local" }
+    maven { url "https://dl.cloudsmith.io/public/consensys/quorum-mainnet-launcher/maven/" }
+}
 
 dependencies {
     api project(':web3j-openapi-core')
@@ -40,6 +52,25 @@ dependencies {
         exclude group: 'com.google.errorprone'
     }
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
+
+    integrationTestImplementation "org.hyperledger.besu:plugin-api:$besuPluginVersion"
+    integrationTestImplementation("org.hyperledger.besu.internal:besu:$besuInternalVersion") {
+        exclude group: 'org.web3j'
+    }
+    integrationTestImplementation("org.hyperledger.besu.internal:api:$besuInternalVersion") {
+        exclude group: 'org.web3j'
+    }
+    integrationTestImplementation "org.hyperledger.besu.internal:config:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:core:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:crypto:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:rlp:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:kvstore:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:metrics-core:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:trie:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu.internal:util:$besuInternalVersion"
+    integrationTestImplementation "org.hyperledger.besu:bls12-381:$besuCryptoDepVersion"
+
+    integrationTestImplementation "org.hyperledger.besu:secp256k1:$besuCryptoDepVersion"
 }
 
 //ext {
