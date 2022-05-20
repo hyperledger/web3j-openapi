@@ -14,12 +14,16 @@ plugins {
     id 'com.diffplug.gradle.spotless' version '3.25.0'
     id 'io.codearte.nexus-staging' version '0.22.0'
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
+    id "com.jfrog.bintray" version "1.8.4"
 }
 
 description = 'Web3j-OpenAPI code generation for Ethereum smart contracts.'
 
 ext {
     web3jVersion = version
+    besuPluginVersion = '21.7.2'
+    besuInternalVersion = '21.7.2'
+    besuCryptoDepVersion = '0.3.0'
 }
 
 subprojects {
@@ -28,7 +32,10 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
+        maven { url "https://hyperledger.jfrog.io/artifactory/besu-maven/" }
+        maven { url "https://artifacts.consensys.net/public/maven/maven/" }
+        maven { url "https://splunk.jfrog.io/splunk/ext-releases-local" }
+        maven { url "https://dl.cloudsmith.io/public/consensys/quorum-mainnet-launcher/maven/" }
     }
 
     apply {
@@ -80,6 +87,22 @@ subprojects {
         implementation "org.slf4j:slf4j-api:${versions.slf4j}"
         implementation "org.slf4j:jul-to-slf4j:${versions.slf4j}"
 
+        def withoutAbi = { exclude group: 'org.web3j', module: 'abi' }
+
+        implementation "org.hyperledger.besu:plugin-api:$besuPluginVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:besu:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:api:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:config:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:core:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:crypto:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:rlp:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:kvstore:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:metrics-core:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:trie:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu.internal:util:$besuInternalVersion", withoutAbi
+        implementation "org.hyperledger.besu:bls12-381:$besuCryptoDepVersion", withoutAbi
+        implementation "org.hyperledger.besu:secp256k1:$besuCryptoDepVersion", withoutAbi
+
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockitoJunit}"
 
@@ -105,11 +128,11 @@ subprojects {
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = 11
 }
