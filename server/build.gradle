@@ -14,8 +14,8 @@ ext {
 }
 
 repositories {
+    mavenCentral()
     maven { url "https://hyperledger.jfrog.io/artifactory/besu-maven/" }
-    maven { url "https://artifacts.consensys.net/public/maven/maven/" }
     maven { url "https://splunk.jfrog.io/splunk/ext-releases-local" }
     maven { url "https://dl.cloudsmith.io/public/consensys/quorum-mainnet-launcher/maven/" }
 }
@@ -48,7 +48,7 @@ dependencies {
 
     testImplementation project(':web3j-openapi-client')
 
-    integrationTestImplementation ("org.web3j:web3j-unit:$web3jVersion") {
+    integrationTestImplementation("org.web3j:web3j-unit:$web3jVersion") {
         exclude group: 'com.google.errorprone'
     }
     integrationTestImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:${versions.jersey}"
@@ -72,6 +72,7 @@ dependencies {
 
     integrationTestImplementation "org.hyperledger.besu:secp256k1:$besuCryptoDepVersion"
 }
+
 
 //ext {
 //    generatedProjectName = "testProject"
