@@ -44,7 +44,7 @@ class Web3jFactory(
         val nodeAddress = configuration.getProperty(NODE_ADDRESS)?.toString()
         val network = configuration.getProperty(NETWORK)?.toString()
         return if (network != null && network.isNotEmpty())
-            Epirus.buildWeb3j(Network.valueOf(network.toUpperCase()))
+            Epirus.buildWeb3j(Network.valueOf(network.uppercase()))
         else
             Web3j.build(HttpService(nodeAddress))
     }
@@ -90,7 +90,7 @@ class ContractGasProviderFactory(
         val network = configuration.getProperty(NETWORK)?.toString()
         val gasPrice = configuration.getProperty(GAS_PRICE) as GasPrice? ?: GasPrice.High
         return if (network != null && network.isNotEmpty())
-            EpirusGasProvider(Network.valueOf(network.toUpperCase()), gasPrice)
+            EpirusGasProvider(Network.valueOf(network.uppercase()), gasPrice)
         else
             DefaultGasProvider()
     }

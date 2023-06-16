@@ -7,3 +7,6 @@ dependencies {
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swagger}"
 }
+
+// To publish in mavenLocal()
+// tasks.withType(Sign)*.enabled = false

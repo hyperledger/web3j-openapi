@@ -37,7 +37,7 @@ internal class EnvironmentVariableDefaultProvider(
     private fun CommandLine.Model.ArgSpec.toEnvironmentName(): String {
         return (this as CommandLine.Model.OptionSpec)
             .longestName()
-            .toUpperCase()
+            .uppercase()
             .removePrefix("--")
             .replace("-", "_")
             .toPrependedEnvVarName()

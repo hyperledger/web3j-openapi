@@ -4,14 +4,14 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:4.0.0'
     }
 }
 
 plugins {
     id 'de.undercouch.download' version '4.1.1'
-    id 'com.diffplug.gradle.spotless' version '3.25.0'
+    id 'com.diffplug.gradle.spotless' version '4.5.1'
     id 'io.codearte.nexus-staging' version '0.22.0'
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
@@ -28,7 +28,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     apply {
@@ -105,11 +104,11 @@ subprojects {
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "17"
     }
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "17"
     }
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = 17
 }
