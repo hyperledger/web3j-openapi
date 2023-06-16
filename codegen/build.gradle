@@ -1,6 +1,8 @@
-description 'web3j-openapi project code generators'
+plugins {
+    id 'org.unbroken-dome.test-sets'
+}
 
-apply plugin: 'org.unbroken-dome.test-sets'
+description 'web3j-openapi project code generators'
 
 testSets {
     integrationTest {
@@ -28,6 +30,7 @@ dependencies {
     implementation("org.web3j:codegen:$web3jVersion") {
         exclude group: 'info.picocli'
     }
+    implementation("org.web3j:core:$web3jVersion")
     implementation "com.squareup:kotlinpoet:${versions.kotlinPoet}"
 }
 
@@ -65,3 +68,6 @@ task copyIntegrationTestResources(type: Copy) {
 }
 
 integrationTest.dependsOn copyIntegrationTestResources, publishToMavenLocal
+
+// To publish in mavenLocal()
+// tasks.withType(Sign)*.enabled = false

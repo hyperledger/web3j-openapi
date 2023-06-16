@@ -69,7 +69,7 @@ class RunServerCommand : Callable<Int> {
                 consoleConfiguration.contractAddresses?.let { contractAddresses ->
                     putAll(
                         contractAddresses
-                            .mapKeys { it.key.toLowerCase() }
+                            .mapKeys { it.key.lowercase() }
                             .mapValues { Address(it.value) }
                     )
                 }
