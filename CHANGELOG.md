@@ -11,11 +11,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* 
+* Bump snapshot version to 4.11.3 [#109](https://github.com/hyperledger/web3j-openapi/pull/109)
 
 ### BREAKING CHANGES
 
-* 
+* Master branch rename to main and repo migration fixes [#111](https://github.com/hyperledger/web3j-openapi/pull/111)
 
 # [4.11.2](https://github.com/web3j/web3j-openapi/releases/tag/v4.11.2) (2024-03-27)
 
