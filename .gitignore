@@ -50,8 +50,6 @@ docs/build
 **/.settings
 **/bin
 
-web3j.asc
-
 gradle/bintray
 gradle/jacoco
 gradle/java
