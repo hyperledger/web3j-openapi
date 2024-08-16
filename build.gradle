@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
@@ -11,9 +11,9 @@ buildscript {
 }
 
 plugins {
-    id 'de.undercouch.download' version '4.1.1'
+    id 'de.undercouch.download' version '4.1.2'
     id 'com.diffplug.gradle.spotless' version '4.5.1'
-    id 'io.codearte.nexus-staging' version '0.22.0'
+    id 'io.codearte.nexus-staging' version '0.30.0'
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
 
@@ -28,6 +28,7 @@ subprojects {
     apply from: "$rootProject.projectDir/gradle/versions.gradle"
 
     repositories {
+        jcenter()
         mavenCentral()
         maven { url "https://artifacts.consensys.net/public/maven/maven/" }
     }
