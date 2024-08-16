@@ -153,7 +153,7 @@ internal val String.structName
 fun extractStructs(
     functionDefinitions: List<AbiDefinition>
 ): List<AbiDefinition.NamedType?>? {
-    val structMap: HashMap<Int, AbiDefinition.NamedType> =
+    val structMap: HashMap<String, AbiDefinition.NamedType> =
         LinkedHashMap()
     functionDefinitions.stream()
         .flatMap { definition: AbiDefinition ->

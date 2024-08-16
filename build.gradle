@@ -1,11 +1,12 @@
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+// re-enable with next version
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:4.0.0'
     }
 }
@@ -28,14 +29,14 @@ subprojects {
     apply from: "$rootProject.projectDir/gradle/versions.gradle"
 
     repositories {
-        jcenter()
         mavenCentral()
         maven { url "https://artifacts.consensys.net/public/maven/maven/" }
     }
 
     apply {
         [
-                'bintray',
+// re-enable with next version
+//                'bintray',
                 'publish',
                 'jacoco',
                 'java',
