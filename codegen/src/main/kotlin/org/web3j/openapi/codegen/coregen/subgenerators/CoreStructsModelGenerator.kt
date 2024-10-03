@@ -21,7 +21,7 @@ class CoreStructsModelGenerator(
     val contractName: String,
     val functionName: String,
     val folderPath: String,
-    val components: List<AbiDefinition.NamedType>
+    val components: List<AbiDefinition.NamedType>,
 ) {
     fun generate() {
         val functionFile = components.toDataClass(
@@ -29,7 +29,7 @@ class CoreStructsModelGenerator(
             functionName,
             "StructModel",
             packageName,
-            contractName
+            contractName,
         )
         CoreFunctionsModelGenerator.logger.debug("Generating $contractName $functionName parameters")
         functionFile.writeTo(File(folderPath))

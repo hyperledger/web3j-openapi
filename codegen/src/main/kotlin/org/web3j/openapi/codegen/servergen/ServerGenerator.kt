@@ -60,16 +60,16 @@ internal class ServerGenerator(configuration: GeneratorConfiguration) : Abstract
                 packageName = configuration.packageName,
                 folderPath = Paths.get(
                     folderPath,
-                    it.contractDetails.lowerCaseContractName
+                    it.contractDetails.lowerCaseContractName,
                 ).toString(),
-                contractDetails = it.contractDetails
+                contractDetails = it.contractDetails,
             ).generate()
 
             ResourcesImplGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
                 folderPath = outputDir,
-                resourcesDefinition = it.contractDetails.abiDefinitions
+                resourcesDefinition = it.contractDetails.abiDefinitions,
             ).generate()
 
             EventsResourceImplGenerator(
@@ -77,16 +77,16 @@ internal class ServerGenerator(configuration: GeneratorConfiguration) : Abstract
                 contractName = it.contractDetails.contractName,
                 folderPath = Paths.get(
                     folderPath,
-                    it.contractDetails.lowerCaseContractName
+                    it.contractDetails.lowerCaseContractName,
                 ).toString(),
-                abiDefinitions = it.contractDetails.abiDefinitions
+                abiDefinitions = it.contractDetails.abiDefinitions,
             ).generate()
 
             StructExtensionsGenerator(
                 packageName = configuration.packageName,
                 contractName = it.contractDetails.contractName,
                 folderPath = outputDir,
-                resourcesDefinition = it.contractDetails.abiDefinitions
+                resourcesDefinition = it.contractDetails.abiDefinitions,
             ).generate()
         }
     }
@@ -115,16 +115,16 @@ internal class ServerGenerator(configuration: GeneratorConfiguration) : Abstract
                 folderPath.substringBefore("kotlin"),
                 "resources",
                 "META-INF",
-                "services"
-            ).toString()
+                "services",
+            ).toString(),
         ).apply { mkdirs() }
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = spiFolder.absolutePath,
             template = TemplateUtils.mustacheTemplate(
-                "server/src/main/resources/META-INF/services/org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache"
+                "server/src/main/resources/META-INF/services/org.web3j.openapi.server.spi.OpenApiResourceProvider.mustache",
             ),
-            name = "org.web3j.openapi.server.spi.OpenApiResourceProvider"
+            name = "org.web3j.openapi.server.spi.OpenApiResourceProvider",
         )
     }
 
@@ -133,19 +133,19 @@ internal class ServerGenerator(configuration: GeneratorConfiguration) : Abstract
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsApiImpl.mustache"),
-            name = "${configuration.sanitizedProjectName.capitalize()}ApiImpl.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ApiImpl.kt",
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/ContractsResourceProvider.mustache"),
-            name = "${configuration.sanitizedProjectName.capitalize()}ResourceProvider.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ResourceProvider.kt",
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/GeneratedContractsResourceImpl.mustache"),
-            name = "${configuration.sanitizedProjectName.capitalize()}ResourceImpl.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}ResourceImpl.kt",
         )
     }
 

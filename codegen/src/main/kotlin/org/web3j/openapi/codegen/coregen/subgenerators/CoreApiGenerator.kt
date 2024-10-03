@@ -30,7 +30,7 @@ import java.nio.file.Paths
 internal class CoreApiGenerator(
     val packageName: String,
     val folderPath: String,
-    val contractDetails: ContractDetails
+    val contractDetails: ContractDetails,
 ) {
     private val context = mutableMapOf<String, Any>()
     private val outputDir = folderPath.substringBefore(packageName.substringBefore("."))
@@ -61,7 +61,7 @@ internal class CoreApiGenerator(
                 contractName = contractDetails.capitalizedContractName,
                 functionName = structDefinition!!.internalType.split(".").last(),
                 folderPath = outputDir,
-                components = structDefinition.components
+                components = structDefinition.components,
             ).generate()
         }
     }
@@ -70,18 +70,19 @@ internal class CoreApiGenerator(
         return contractDetails.abiDefinitions
             .filter { it.type == "function" && it.inputs.isNotEmpty() || it.type == "event" }
             .map {
-                if (it.type == "function")
+                if (it.type == "function") {
                     Import(
                         "import $packageName.core.${contractDetails.lowerCaseContractName}.model.${
                             it.sanitizedName().capitalize()
-                        }Parameters"
+                        }Parameters",
                     )
-                else
+                } else {
                     Import(
                         "import $packageName.core.${contractDetails.lowerCaseContractName}.model.${
                             it.sanitizedName().capitalize()
-                        }EventResponse"
+                        }EventResponse",
                     )
+                }
             }
     }
 
@@ -92,7 +93,7 @@ internal class CoreApiGenerator(
                 Import(
                     "import $packageName.core.${contractDetails.lowerCaseContractName}.events.${
                         it.sanitizedName().capitalize()
-                    }EventResource"
+                    }EventResource",
                 )
             }
     }
@@ -107,9 +108,11 @@ internal class CoreApiGenerator(
                 if (it.type == "function") {
                     if (!it.isTransactional() && it.outputs.isEmpty()) return@forEach
                     val parameters =
-                        if (it.inputs.isNotEmpty())
+                        if (it.inputs.isNotEmpty()) {
                             "${sanitizedAbiDefinitionName.decapitalize()}Parameters : ${sanitizedAbiDefinitionName.capitalize()}Parameters"
-                        else ""
+                        } else {
+                            ""
+                        }
                     val operationTag =
                         "@Operation(tags = [\"${contractDetails.capitalizedContractName} Methods\"],  summary = \"Execute the ${
                             sanitizedAbiDefinitionName
@@ -124,8 +127,8 @@ internal class CoreApiGenerator(
                                 .toString(),
                             operationTag = operationTag,
                             mediaType = "@Produces(MediaType.APPLICATION_JSON)",
-                            path = "@Path(\"$sanitizedAbiDefinitionName\")"
-                        )
+                            path = "@Path(\"$sanitizedAbiDefinitionName\")",
+                        ),
                     )
                 } else {
                     eventResources.add(
@@ -133,8 +136,8 @@ internal class CoreApiGenerator(
                             capitalizedName = sanitizedAbiDefinitionName,
                             resource = "val ${sanitizedAbiDefinitionName.decapitalize()}",
                             path = "@get:Path(\"${sanitizedAbiDefinitionName.decapitalize()}\")",
-                            returnType = "${sanitizedAbiDefinitionName.capitalize()}EventResource"
-                        )
+                            returnType = "${sanitizedAbiDefinitionName.capitalize()}EventResource",
+                        ),
                     )
                 }
             }
@@ -147,23 +150,25 @@ internal class CoreApiGenerator(
 
             when (it.type) {
                 "constructor" -> {
-                    if (it.inputs.isNotEmpty())
+                    if (it.inputs.isNotEmpty()) {
                         CoreDeployModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
                             folderPath = outputDir,
-                            inputs = it.inputs
+                            inputs = it.inputs,
                         ).generate()
+                    }
                 }
                 "function" -> {
-                    if (it.inputs.isNotEmpty())
+                    if (it.inputs.isNotEmpty()) {
                         CoreFunctionsModelGenerator(
                             packageName = packageName,
                             contractName = contractDetails.capitalizedContractName,
                             functionName = it.sanitizedName(),
                             folderPath = outputDir,
-                            inputs = it.inputs
+                            inputs = it.inputs,
                         ).generate()
+                    }
                 }
                 "event" -> {
                     CoreEventsModelGenerator(
@@ -171,7 +176,7 @@ internal class CoreApiGenerator(
                         contractName = contractDetails.capitalizedContractName,
                         eventName = it.sanitizedName(),
                         folderPath = outputDir,
-                        outputs = it.inputs
+                        outputs = it.inputs,
                     ).generate()
                 }
             }
@@ -183,26 +188,26 @@ internal class CoreApiGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("core/src/api/ContractLifecycle.mustache"),
-            name = "${contractDetails.capitalizedContractName}Lifecycle.kt"
+            name = "${contractDetails.capitalizedContractName}Lifecycle.kt",
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("core/src/api/ContractResource.mustache"),
-            name = "${contractDetails.capitalizedContractName}Resource.kt"
+            name = "${contractDetails.capitalizedContractName}Resource.kt",
         )
         TemplateUtils.generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("core/src/api/EventsResource.mustache"),
-            name = "${contractDetails.capitalizedContractName}Events.kt"
+            name = "${contractDetails.capitalizedContractName}Events.kt",
         )
 
         val eventsFolder = File(
             Paths.get(
                 folderPath,
-                "events"
-            ).toString()
+                "events",
+            ).toString(),
         )
 
         contractDetails.abiDefinitions
@@ -215,7 +220,7 @@ internal class CoreApiGenerator(
                     context = context,
                     outputDir = eventsFolder.canonicalPath,
                     template = TemplateUtils.mustacheTemplate("core/src/api/NamedEventResource.mustache"),
-                    name = "${sanitizedAbiDefinitionName.capitalize()}EventResource.kt"
+                    name = "${sanitizedAbiDefinitionName.capitalize()}EventResource.kt",
                 )
             }
     }

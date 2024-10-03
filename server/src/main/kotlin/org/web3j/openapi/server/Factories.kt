@@ -12,22 +12,17 @@
  */
 package org.web3j.openapi.server
 
-import io.epirus.web3j.Epirus
-import io.epirus.web3j.gas.EpirusGasProvider
-import io.epirus.web3j.gas.GasPrice
 import mu.KLogging
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.WalletUtils
 import org.web3j.openapi.server.Properties.CONTRACT_ADDRESSES
-import org.web3j.openapi.server.Properties.GAS_PRICE
 import org.web3j.openapi.server.Properties.NETWORK
 import org.web3j.openapi.server.Properties.NODE_ADDRESS
 import org.web3j.openapi.server.Properties.PRIVATE_KEY
 import org.web3j.openapi.server.Properties.WALLET_FILE
 import org.web3j.openapi.server.Properties.WALLET_PASSWORD
 import org.web3j.openapi.server.config.ContractAddresses
-import org.web3j.protocol.Network
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.gas.ContractGasProvider
@@ -37,23 +32,19 @@ import javax.ws.rs.core.Configuration
 import javax.ws.rs.core.Context
 
 class Web3jFactory(
-    @Context private val configuration: Configuration
+    @Context private val configuration: Configuration,
 ) : Factory<Web3j> {
 
     override fun provide(): Web3j {
         val nodeAddress = configuration.getProperty(NODE_ADDRESS)?.toString()
-        val network = configuration.getProperty(NETWORK)?.toString()
-        return if (network != null && network.isNotEmpty())
-            Epirus.buildWeb3j(Network.valueOf(network.uppercase()))
-        else
-            Web3j.build(HttpService(nodeAddress))
+        return Web3j.build(HttpService(nodeAddress))
     }
 
     override fun dispose(web3j: Web3j) = web3j.shutdown()
 }
 
 class CredentialsFactory(
-    @Context private val configuration: Configuration
+    @Context private val configuration: Configuration,
 ) : Factory<Credentials>, KLogging() {
 
     override fun provide(): Credentials {
@@ -83,16 +74,11 @@ class CredentialsFactory(
 }
 
 class ContractGasProviderFactory(
-    @Context private val configuration: Configuration
+    @Context private val configuration: Configuration,
 ) : Factory<ContractGasProvider> {
 
     override fun provide(): ContractGasProvider {
-        val network = configuration.getProperty(NETWORK)?.toString()
-        val gasPrice = configuration.getProperty(GAS_PRICE) as GasPrice? ?: GasPrice.High
-        return if (network != null && network.isNotEmpty())
-            EpirusGasProvider(Network.valueOf(network.uppercase()), gasPrice)
-        else
-            DefaultGasProvider()
+        return DefaultGasProvider()
     }
 
     override fun dispose(gasProvider: ContractGasProvider) {
@@ -101,7 +87,7 @@ class ContractGasProviderFactory(
 
 @SuppressWarnings("Unchecked cast")
 class ContractAddressesFactory(
-    @Context private val configuration: Configuration
+    @Context private val configuration: Configuration,
 ) : Factory<ContractAddresses> {
 
     override fun provide(): ContractAddresses {

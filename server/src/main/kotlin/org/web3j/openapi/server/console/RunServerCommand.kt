@@ -33,7 +33,7 @@ import kotlin.system.exitProcess
     showDefaultValues = true,
     mixinStandardHelpOptions = true,
     description = ["Runs a Web3j OpenAPI server."],
-    version = ["1.0"] // TODO: Make version not hardcoded
+    version = ["1.0"], // TODO: Make version not hardcoded
 )
 class RunServerCommand : Callable<Int> {
 
@@ -70,11 +70,10 @@ class RunServerCommand : Callable<Int> {
                     putAll(
                         contractAddresses
                             .mapKeys { it.key.lowercase() }
-                            .mapValues { Address(it.value) }
+                            .mapValues { Address(it.value) },
                     )
                 }
             },
-            network = consoleConfiguration.networkOptions.network
         )
     }
 
@@ -93,7 +92,6 @@ class RunServerCommand : Callable<Int> {
         }
 
         private fun configureDefaultProvider(args: Array<String>, commandLine: CommandLine) {
-
             // First pass to get the configuration file
             val configFileCommand = ConfigFileCommand()
             val configFileCommandLine = CommandLine(configFileCommand).apply {

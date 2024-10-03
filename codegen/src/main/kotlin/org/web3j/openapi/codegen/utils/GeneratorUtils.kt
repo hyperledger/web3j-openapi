@@ -27,8 +27,8 @@ object GeneratorUtils {
                 abiFile,
                 ContractDetails(
                     abiFile.name.removeSuffix(".abi"),
-                    loadContractDefinition(abiFile) // TODO: Use the web3j.codegen function
-                )
+                    loadContractDefinition(abiFile), // TODO: Use the web3j.codegen function
+                ),
             )
         }
     }

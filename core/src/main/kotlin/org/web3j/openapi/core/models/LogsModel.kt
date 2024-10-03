@@ -25,7 +25,7 @@ data class LogsModel(
     val address: String? = null,
     val data: String? = null,
     val type: String? = null,
-    val topics: List<String>? = null
+    val topics: List<String>? = null,
 ) {
     constructor(log: Log) : this (
         log.isRemoved,
@@ -37,6 +37,6 @@ data class LogsModel(
         log.address,
         log.data,
         log.type,
-        log.topics
+        log.topics,
     )
 }

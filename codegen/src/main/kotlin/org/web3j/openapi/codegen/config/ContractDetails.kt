@@ -18,7 +18,7 @@ import org.web3j.protocol.core.methods.response.AbiDefinition
 
 data class ContractDetails(
     val contractName: String,
-    var abiDefinitions: List<AbiDefinition>
+    var abiDefinitions: List<AbiDefinition>,
 ) {
     init {
         abiDefinitions.filter { it.isPayable }

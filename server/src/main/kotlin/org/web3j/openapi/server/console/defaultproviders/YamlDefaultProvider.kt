@@ -19,7 +19,7 @@ import picocli.CommandLine
 import java.io.File
 
 internal class YamlDefaultProvider(
-    configFile: File?
+    configFile: File?,
 ) : CommandLine.IDefaultValueProvider {
 
     private val consoleConfiguration: ConsoleConfiguration? = ObjectMapper(YAMLFactory()).readValue(configFile, ConsoleConfiguration::class.java)

@@ -12,5 +12,11 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}"
 }
 
-// To publish in mavenLocal()
-// tasks.withType(Sign)*.enabled = false
+tasks.named("spotlessJava") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+}
+
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("spotlessJava"))
+}

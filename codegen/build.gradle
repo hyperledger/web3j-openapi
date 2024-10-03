@@ -69,5 +69,11 @@ task copyIntegrationTestResources(type: Copy) {
 
 integrationTest.dependsOn copyIntegrationTestResources, publishToMavenLocal
 
-// To publish in mavenLocal()
-// tasks.withType(Sign)*.enabled = false
+tasks.named("spotlessJava") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+}
+
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("spotlessJava"))
+}

@@ -28,10 +28,12 @@ import java.net.URI
 
 class OpenApiServer(private val serverConfig: OpenApiServerConfig) : Server() {
     init {
-        addConnector(ServerConnector(this).apply {
-            host = serverConfig.host
-            port = serverConfig.port
-        })
+        addConnector(
+            ServerConnector(this).apply {
+                host = serverConfig.host
+                port = serverConfig.port
+            },
+        )
         handler = ServletContextHandler(NO_SESSIONS)
         configureSwaggerUi()
         configureOpenApi()

@@ -44,20 +44,20 @@ class KPoetUtilsTest {
 
         val namedTypes = listOf(
             NamedType("number", "uint256"),
-            NamedType("string", "string")
+            NamedType("string", "string"),
         )
         namedTypes.toDataClass(
             "test",
             "testFunction",
-            "Parameters"
+            "Parameters",
         ).writeTo(tempFolder)
 
         val actualOutput = File(
             Paths.get(
                 tempFolder.absolutePath,
                 "test",
-                "TestFunctionParameters.kt"
-            ).toString()
+                "TestFunctionParameters.kt",
+            ).toString(),
         ).readText().replace("\\s".toRegex(), "")
 
         assertThat(actualOutput).isEqualTo(expectedOutput)

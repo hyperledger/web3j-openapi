@@ -25,9 +25,6 @@ dependencies {
     api project(':web3j-openapi-core')
 
     implementation "org.web3j:core:$web3jVersion"
-    implementation("io.epirus:epirus-web3j:${versions.web3jEpirus}") {
-        exclude group: 'org.web3j'
-    }
 
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:${versions.jersey}"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
@@ -76,51 +73,11 @@ dependencies {
     integrationTestImplementation "org.hyperledger.besu:secp256k1:$besuCryptoDepVersion"
 }
 
-// To publish in mavenLocal()
-// tasks.withType(Sign)*.enabled = false
+tasks.named("spotlessJava") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+}
 
-//ext {
-//    generatedProjectName = "testProject"
-//    outputDirectory = "$projectDir/build/tmp/web3j-openapi/generated"
-//}
-
-//task copyOpenApiResources(type: Copy) {
-//    from 'build/resources/integrationTest/server/src/main/resources'
-//    into "$outputDirectory/$generatedProjectName/server/src/main/resources"
-//    delete('src/main/resources/logging.properties')
-//    delete('src/main/resources/META-INF')
-//}
-
-//task generateOpenApiProject(type : Exec, group: 'web3j') {
-//    dependsOn(":web3j-openapi-console:installShadowDist")
-//    dependsOn copyOpenApiResources
-//    commandLine "$rootDir/console/build/install/web3j-openapi-console-shadow/bin/web3j-openapi",
-//            'generate',
-//            '--name', "$generatedProjectName",
-//            '--context-path', 'api',
-//            '--package-name', 'com.test',
-//            '--abi', "$projectDir/src/integration-test/resources/contracts",
-//            '--bin', "$projectDir/src/integration-test/resources/contracts",
-//            '--output', "$outputDirectory"
-//}
-
-//compileIntegrationTestKotlin.dependsOn generateOpenApiProject
-
-//sourceSets {
-//    integrationTest.java.srcDirs += [
-//        "$outputDirectory/$generatedProjectName/server/src/main/java"
-//    ]
-//    integrationTest.kotlin.srcDirs += [
-//        "$outputDirectory/$generatedProjectName/core/src/main/kotlin",
-//        "$outputDirectory/$generatedProjectName/server/src/main/kotlin",
-//        "$outputDirectory/$generatedProjectName/server/src/main/java"
-//    ]
-//}
-
-//task copyIntegrationTestResources(type: Copy) {
-//    from "$rootDir/codegen/build/resources/main/server/src/main/resources"
-//    into 'build/resources/integrationTest/server/src/main/resources'
-//    dependsOn processTestResources
-//}
-
-//integrationTest.dependsOn copyIntegrationTestResources
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("spotlessJava"))
+}

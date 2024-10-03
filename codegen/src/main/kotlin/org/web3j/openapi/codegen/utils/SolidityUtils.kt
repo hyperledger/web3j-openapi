@@ -65,7 +65,7 @@ internal fun String.mapType(isParameter: Boolean = true, structName: String = ""
         getParameterMapping(isParameter, ClassName("$packageName.core.$contractName.model", "${structName}StructModel"))
     } else {
         throw UnsupportedOperationException(
-            "Unsupported type: $this, no native type mapping exists."
+            "Unsupported type: $this, no native type mapping exists.",
         )
     }
 }
@@ -74,32 +74,42 @@ internal fun String.mapType(isParameter: Boolean = true, structName: String = ""
  * Maps the different number variations to their specific types depending on their size
  */
 fun getNumbersMapping(isParameter: Boolean, type: String): TypeName {
-    return if (isParameter) getParameterMapping(isParameter, BigInteger::class.asTypeName())
-    else if (type == "uint8") getParameterMapping(isParameter, BigInteger::class.asTypeName()) // FIXME: remove this when web3j-codegen fixes this problem
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16 ||
-            type.startsWith("uint") && type.substringAfter("int").toInt() < 16)
-        getParameterMapping(isParameter, Short::class.asTypeName())
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32 ||
-            type.startsWith("uint") && type.substringAfter("int").toInt() < 32)
-        getParameterMapping(isParameter, Integer::class.asTypeName())
-    else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64 ||
-            type.startsWith("uint") && type.substringAfter("int").toInt() < 64)
-        getParameterMapping(isParameter, Long::class.asTypeName())
-    else
+    return if (isParameter) {
         getParameterMapping(isParameter, BigInteger::class.asTypeName())
+    } else if (type == "uint8") {
+        getParameterMapping(isParameter, BigInteger::class.asTypeName()) // FIXME: remove this when web3j-codegen fixes this problem
+    } else if (type.startsWith("int") && type.substringAfter("int").toInt() < 16 ||
+        type.startsWith("uint") && type.substringAfter("int").toInt() < 16
+    ) {
+        getParameterMapping(isParameter, Short::class.asTypeName())
+    } else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 32 ||
+        type.startsWith("uint") && type.substringAfter("int").toInt() < 32
+    ) {
+        getParameterMapping(isParameter, Integer::class.asTypeName())
+    } else if (type.startsWith("int") && type.substringAfter("int").toInt() <= 64 ||
+        type.startsWith("uint") && type.substringAfter("int").toInt() < 64
+    ) {
+        getParameterMapping(isParameter, Long::class.asTypeName())
+    } else {
+        getParameterMapping(isParameter, BigInteger::class.asTypeName())
+    }
 }
 
 /**
  * Maps events indexed types using java native types
  */
 fun String.mapIndexedType(): TypeName {
-    return if (this == "string" || this.contains("[")) ByteArray::class.asTypeName()
-    else mapType(true)
+    return if (this == "string" || this.contains("[")) {
+        ByteArray::class.asTypeName()
+    } else {
+        mapType(true)
+    }
 }
 
 private fun getParameterMapping(isParameter: Boolean, typeName: TypeName): TypeName {
-    return if (isParameter) typeName
-    else {
+    return if (isParameter) {
+        typeName
+    } else {
         ClassName("org.web3j.openapi.core.models", "ResultModel")
             .parameterizedBy(typeName)
     }
@@ -123,7 +133,8 @@ internal fun AbiDefinition.getReturnType(packageName: String = "", contractName:
             getParameterMapping(
                 false,
                 ClassName("org.web3j.tuples.generated", "Tuple${outputs.size}")
-                    .parameterizedBy(outputs.map { it.type.mapType(true, it.internalType.structName, packageName, contractName).copy() }))
+                    .parameterizedBy(outputs.map { it.type.mapType(true, it.internalType.structName, packageName, contractName).copy() }),
+            )
         }
     } else {
         ClassName("org.web3j.openapi.core.models", "TransactionReceiptModel")
@@ -141,7 +152,7 @@ internal fun loadContractDefinition(absFile: File?): List<AbiDefinition> {
     val abiDefinition: Array<AbiDefinition> =
         objectMapper.readValue(
             absFile,
-            Array<AbiDefinition>::class.java
+            Array<AbiDefinition>::class.java,
         )
     return listOf(*abiDefinition)
 }
@@ -151,7 +162,7 @@ internal val String.structName
 
 // FIXME: Use web3j.codegen one
 fun extractStructs(
-    functionDefinitions: List<AbiDefinition>
+    functionDefinitions: List<AbiDefinition>,
 ): List<AbiDefinition.NamedType?>? {
     val structMap: HashMap<Int, AbiDefinition.NamedType> =
         LinkedHashMap()
@@ -179,7 +190,7 @@ fun extractStructs(
 
 // FIXME: Use web3j.codegen one
 private fun extractNested(
-    namedType: AbiDefinition.NamedType
+    namedType: AbiDefinition.NamedType,
 ): Collection<AbiDefinition.NamedType?>? {
     return if (namedType.components.size == 0) {
         ArrayList()
@@ -200,8 +211,11 @@ fun getStructCallParameters(contractName: String, input: AbiDefinition.NamedType
     val structName = input.internalType.structName
     val decapitalizedFunctionName = functionName.decapitalize() // FIXME: do we need this ?
     val parameters = input.components.joinToString(",") { component ->
-        if (component.components.isNullOrEmpty()) "$callTree.${component.name}"
-        else getStructCallParameters(contractName, component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
+        if (component.components.isNullOrEmpty()) {
+            "$callTree.${component.name}"
+        } else {
+            getStructCallParameters(contractName, component, decapitalizedFunctionName, "$callTree.${component.name}".removeSuffix("."))
+        }
     }
     return "$contractName.$structName($parameters)"
 }

@@ -25,14 +25,14 @@ internal object CopyUtils : KLogging() {
 
     private val ruleSets = listOf(
         StandardRuleSetProvider().get(),
-        ExperimentalRuleSetProvider().get()
+        ExperimentalRuleSetProvider().get(),
     )
 
     fun copyResource(name: String, outputDir: File) {
         Files.copy(
             javaClass.classLoader.getResourceAsStream(name)!!,
             outputDir.resolve(name).toPath(),
-            StandardCopyOption.REPLACE_EXISTING
+            StandardCopyOption.REPLACE_EXISTING,
         )
     }
 
@@ -41,8 +41,8 @@ internal object CopyUtils : KLogging() {
             Paths.get(
                 outputDir,
                 packageDir,
-                module
-            ).toString()
+                module,
+            ).toString(),
         ).apply { mkdirs() }
         return folder.absolutePath
     }
@@ -55,8 +55,8 @@ internal object CopyUtils : KLogging() {
             KtLint.Params(
                 ruleSets = ruleSets,
                 cb = { _, _ -> },
-                text = file.readText()
-            )
+                text = file.readText(),
+            ),
         ).run {
             file.writeText(this)
         }

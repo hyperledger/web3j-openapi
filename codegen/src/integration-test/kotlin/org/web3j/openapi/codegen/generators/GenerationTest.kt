@@ -32,14 +32,15 @@ class GenerationTest {
             "src",
             "test",
             "resources",
-            "contracts").toFile()
+            "contracts",
+        ).toFile()
 
         val generatorConfiguration = GeneratorConfiguration(
             projectName = "testProject",
             packageName = "com.test",
             outputDir = tempFolder.canonicalPath,
             contracts = loadContractConfigurations(listOf(contractsFolder)),
-            contextPath = "test"
+            contextPath = "test",
         )
         assertDoesNotThrow {
             OpenApiGenerator(generatorConfiguration).generate()

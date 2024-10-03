@@ -22,7 +22,7 @@ abstract class FunctionWrapperGenerator(
     val destinationDirLocation: File?,
     open val basePackageName: String?,
     open val useJavaNativeTypes: Boolean,
-    open val useJavaPrimitiveTypes: Boolean
+    open val useJavaPrimitiveTypes: Boolean,
 ) {
 
     @Throws(IOException::class, ClassNotFoundException::class)

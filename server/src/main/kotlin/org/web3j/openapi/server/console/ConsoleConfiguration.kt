@@ -14,12 +14,12 @@ package org.web3j.openapi.server.console
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.web3j.openapi.server.console.options.ConfigFileOptions
-import org.web3j.openapi.server.console.options.ProjectOptions
-import org.web3j.openapi.server.console.options.NetworkOptions
-import org.web3j.openapi.server.console.options.ServerOptions
 import org.web3j.openapi.server.console.options.CredentialsOptions
-import picocli.CommandLine.Mixin
+import org.web3j.openapi.server.console.options.NetworkOptions
+import org.web3j.openapi.server.console.options.ProjectOptions
+import org.web3j.openapi.server.console.options.ServerOptions
 import picocli.CommandLine.ArgGroup
+import picocli.CommandLine.Mixin
 import picocli.CommandLine.Option
 
 class ConsoleConfiguration {
@@ -49,7 +49,7 @@ class ConsoleConfiguration {
         description = ["Add pre-deployed contract addresses"],
         arity = "0..*",
         split = ",",
-        required = false
+        required = false,
     )
     var contractAddresses: Map<String, String>? = null
 }

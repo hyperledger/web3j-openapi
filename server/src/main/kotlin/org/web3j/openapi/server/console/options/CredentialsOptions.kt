@@ -20,7 +20,7 @@ class CredentialsOptions {
 
     @Option(
         names = ["--private-key"],
-        description = ["private key for signed transactions"]
+        description = ["private key for signed transactions"],
     )
     var privateKey: String? = null
 

@@ -40,7 +40,7 @@ object VersionProvider {
     fun getVersion(): Array<String> {
         return arrayOf(
             "Version: $versionName",
-            "Build timestamp: ${buildTimestamp.let { timeFormatter.format(it) }}"
+            "Build timestamp: ${buildTimestamp.let { timeFormatter.format(it) }}",
         )
     }
 }

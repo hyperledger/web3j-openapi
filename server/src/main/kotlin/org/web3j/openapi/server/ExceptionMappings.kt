@@ -29,7 +29,7 @@ import javax.ws.rs.core.UriInfo
 import javax.ws.rs.ext.ExceptionMapper
 
 sealed class BaseExceptionMapper<E : Throwable>(
-    private val status: Response.StatusType
+    private val status: Response.StatusType,
 ) : ExceptionMapper<E> {
 
     @Context
@@ -39,13 +39,12 @@ sealed class BaseExceptionMapper<E : Throwable>(
     private lateinit var request: HttpServletRequest
 
     override fun toResponse(exception: E): Response {
-
         val error = ErrorResponse(
             title = exception.message ?: status.reasonPhrase,
             userAgent = request.getHeader(HttpHeaders.USER_AGENT),
             responseStatus = status.statusCode,
             requestMethod = request.method,
-            requestUrl = uriInfo.requestUri.toString()
+            requestUrl = uriInfo.requestUri.toString(),
         )
 
         return Response.status(status.statusCode).entity(error).build()
@@ -64,13 +63,14 @@ class NotFoundExceptionMapper : BaseExceptionMapper<NotFoundException>(Status.NO
 
 enum class CustomStatus(
     private val _statusCode: Int,
-    private val _reasonPhrase: String
+    private val _reasonPhrase: String,
 ) : Response.StatusType {
 
     UNPROCESSABLE_ENTITY(
         HttpStatus.Code.UNPROCESSABLE_ENTITY.code,
-        HttpStatus.Code.UNPROCESSABLE_ENTITY.message
-    );
+        HttpStatus.Code.UNPROCESSABLE_ENTITY.message,
+    ),
+    ;
 
     override fun getStatusCode(): Int = _statusCode
     override fun getFamily(): Family = Family.familyOf(_statusCode)

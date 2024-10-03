@@ -13,12 +13,12 @@
 package org.web3j.openapi.codegen.utils
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.AnnotationSpec
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType
 
 internal fun List<NamedType>.toDataClass(
@@ -26,11 +26,11 @@ internal fun List<NamedType>.toDataClass(
     name: String,
     type: String,
     basePackageName: String = "",
-    contractName: String = ""
+    contractName: String = "",
 ): FileSpec {
     val outputFile = FileSpec.builder(
         modelPackageName,
-        "${name.capitalize()}$type"
+        "${name.capitalize()}$type",
     )
 
     val constructor = TypeSpec
@@ -52,19 +52,19 @@ internal fun List<NamedType>.toDataClass(
 
         constructorBuilder.addParameter(
             inputName,
-            inputType
+            inputType,
         )
         constructor.addProperty(
             PropertySpec.builder(
                 inputName,
-                inputType
+                inputType,
             ).initializer(inputName)
                 .addAnnotation(
                     AnnotationSpec.builder(JsonProperty::class.java)
                         .addMember("value = %S", inputName)
-                        .build()
+                        .build(),
                 )
-                .build()
+                .build(),
         )
     }
     constructor.primaryConstructor(constructorBuilder.build())

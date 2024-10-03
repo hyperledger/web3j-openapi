@@ -19,5 +19,5 @@ data class FunctionResource(
     val returnType: String,
     val mediaType: String = "",
     val path: String = "",
-    val operationTag: String = ""
+    val operationTag: String = "",
 )

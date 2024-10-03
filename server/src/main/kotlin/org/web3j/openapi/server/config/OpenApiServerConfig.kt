@@ -12,7 +12,6 @@
  */
 package org.web3j.openapi.server.config
 
-import io.epirus.web3j.gas.GasPrice
 import java.io.File
 import java.net.URL
 
@@ -25,19 +24,18 @@ data class OpenApiServerConfig(
     val host: String,
     val port: Int,
     val contractAddresses: ContractAddresses = ContractAddresses.EMPTY,
-    val network: String = "",
-    val gasPrice: GasPrice = GasPrice.High
 ) {
     init {
-        if (nodeEndpoint == null && network.isBlank()) {
-            throw IllegalArgumentException("Invalid Ethereum node URL. Please specify the network endpoint or run using the Epirus-CLI")
+        if (nodeEndpoint == null) {
+            throw IllegalArgumentException("Invalid Ethereum node URL. Please specify the network endpoint or run using the Web3j-CLI")
         } else if (privateKey == null && walletFile == null) {
-            throw IllegalArgumentException("Invalid credentials, use a private key, wallet file or run using the Epirus-CLI")
+            throw IllegalArgumentException("Invalid credentials, use a private key, wallet file or run using the Web3j-CLI")
         } else if (walletFile != null) {
-            if (!walletFile.exists())
+            if (!walletFile.exists()) {
                 throw IllegalArgumentException("Wallet file $walletFile not found!")
-            else if (walletPassword == null)
+            } else if (walletPassword == null) {
                 throw IllegalArgumentException("Wallet file $walletFile password not found!")
+            }
         }
     }
 }

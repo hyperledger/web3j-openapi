@@ -38,7 +38,7 @@ import javax.ws.rs.sse.SseEventSource
  */
 internal class ClientInvocationHandler(
     private val target: WebTarget,
-    private val client: Any
+    private val client: Any,
 ) : InvocationHandler {
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
@@ -71,7 +71,7 @@ internal class ClientInvocationHandler(
                     Proxy.newProxyInstance(
                         method.returnType.classLoader,
                         arrayOf(method.returnType),
-                        ClientInvocationHandler(target, it)
+                        ClientInvocationHandler(target, it),
                     )
                 } else {
                     it
@@ -91,7 +91,7 @@ internal class ClientInvocationHandler(
             } else {
                 logger.error {
                     "Unexpected exception while invoking method $method: " +
-                            (error.message ?: error::class.java.canonicalName)
+                        (error.message ?: error::class.java.canonicalName)
                 }
                 error.targetException
             }
@@ -101,7 +101,7 @@ internal class ClientInvocationHandler(
     private fun handleClientError(error: ClientErrorException, method: Method): RuntimeException {
         logger.error {
             "Client exception while invoking method $method: " +
-                    (error.message ?: error.response.statusInfo.reasonPhrase)
+                (error.message ?: error.response.statusInfo.reasonPhrase)
         }
         return ClientException.of(error)
     }
@@ -115,9 +115,9 @@ internal class ClientInvocationHandler(
     }
 
     private fun Method.isEvent() = name == "onEvent" &&
-            parameterTypes.size == 1 &&
-            parameterTypes[0] == Consumer::class.java &&
-            returnType == CompletableFuture::class.java
+        parameterTypes.size == 1 &&
+        parameterTypes[0] == Consumer::class.java &&
+        returnType == CompletableFuture::class.java
 
     private val Any.typeArguments: List<Class<*>>
         get() {
@@ -128,13 +128,13 @@ internal class ClientInvocationHandler(
     private class SseEventSourceResult<T>(
         private val source: SseEventSource,
         onEvent: Consumer<T>,
-        eventType: Class<T>
+        eventType: Class<T>,
     ) : CompletableFuture<Void>() {
         init {
             source.register(
                 { onEvent.accept(it.readData(eventType)) },
                 { completeExceptionally(it) },
-                { complete(null) }
+                { complete(null) },
             )
             whenComplete { _, _ ->
                 // Close the source gracefully by client

@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema
     "responseStatus",
     "requestMethod",
     "requestUrl",
-    "user"
+    "user",
 )
 data class ErrorResponse(
 //    @ApiModelProperty(value = "The error title", readOnly = true)
@@ -37,5 +37,5 @@ data class ErrorResponse(
     val responseStatus: Int? = null,
 
 //    @ApiModelProperty(value = "The UA string if provided with a request")
-    val userAgent: String? = null
+    val userAgent: String? = null,
 )

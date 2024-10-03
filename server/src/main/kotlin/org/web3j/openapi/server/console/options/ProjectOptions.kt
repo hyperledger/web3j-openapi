@@ -20,13 +20,13 @@ class ProjectOptions {
         names = ["-n", "--name"],
         description = ["specify the project name."],
         defaultValue = "Web3j-OpenAPI",
-        required = true
+        required = true,
     )
     lateinit var projectName: String
 
     @Option(
         names = ["--context-path"],
-        description = ["set the API context path (default: the project name)"]
+        description = ["set the API context path (default: the project name)"],
     )
     var contextPath: String? = null
 }
