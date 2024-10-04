@@ -69,11 +69,17 @@ task copyIntegrationTestResources(type: Copy) {
 
 integrationTest.dependsOn copyIntegrationTestResources, publishToMavenLocal
 
-tasks.named("spotlessJava") {
-    dependsOn(tasks.named("spotlessGroovyGradle"))
-}
-
 tasks.named("spotlessKotlin") {
     dependsOn(tasks.named("spotlessGroovyGradle"))
     dependsOn(tasks.named("spotlessJava"))
+    dependsOn(tasks.named("test"))
+}
+
+tasks.named("spotlessJava") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("compileKotlin"))
+    dependsOn(tasks.named("compileTestKotlin"))
+    dependsOn(tasks.named("processResources"))
+    dependsOn(tasks.named("processTestResources"))
+    dependsOn(tasks.named("test"))
 }

@@ -75,6 +75,8 @@ dependencies {
 
 tasks.named("spotlessJava") {
     dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("compileKotlin"))
+    dependsOn(tasks.named("processResources"))
 }
 
 tasks.named("spotlessKotlin") {

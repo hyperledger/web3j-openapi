@@ -60,8 +60,8 @@ class CredentialsFactory(
             logger.info("Loading credentials from raw private key")
             Credentials.create(privateKey)
         } else if (network != null && network.isNotEmpty()) {
-            val walletPath = System.getenv("EPIRUS_WALLET_PATH")
-            val walletPassword = System.getenv().getOrDefault("EPIRUS_WALLET_PASSWORD", "")
+            val walletPath = System.getenv("WEB3J_WALLET_PATH")
+            val walletPassword = System.getenv().getOrDefault("WEB3J_WALLET_PASSWORD", "")
             WalletUtils.loadCredentials(walletPassword, File(walletPath))
         } else {
             logger.warn("Missing credentials! Aborting.")

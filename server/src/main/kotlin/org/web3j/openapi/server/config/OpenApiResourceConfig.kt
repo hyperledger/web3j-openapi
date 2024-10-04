@@ -107,8 +107,6 @@ class OpenApiResourceConfig(
         property(Properties.WALLET_FILE, serverConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, serverConfig.walletPassword)
         property(Properties.CONTRACT_ADDRESSES, serverConfig.contractAddresses)
-        property(Properties.NETWORK, serverConfig.network)
-        property(Properties.GAS_PRICE, serverConfig.gasPrice)
     }
 
     private class InjectionBinder : AbstractBinder() {
