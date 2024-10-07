@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.12.2]() (Upcoming)
+# [4.12.3]() (Upcoming)
 
 ### Bug Fixes
 
