@@ -22,7 +22,7 @@ internal class CoreFunctionsModelGenerator(
     private val contractName: String,
     private val functionName: String,
     val folderPath: String,
-    val inputs: List<NamedType>
+    val inputs: List<NamedType>,
 ) {
     fun generate() {
         val functionFile = inputs.toDataClass(
@@ -30,7 +30,7 @@ internal class CoreFunctionsModelGenerator(
             functionName,
             "Parameters",
             packageName,
-            contractName
+            contractName,
         )
         logger.debug("Generating $contractName $functionName parameters")
         functionFile.writeTo(File(folderPath))

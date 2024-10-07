@@ -24,7 +24,8 @@ class GeneratorUtilsTest {
         "src",
         "test",
         "resources",
-        "contracts").toFile()
+        "contracts",
+    ).toFile()
 
     @Test
     fun `function names duplicates handling`() {
@@ -33,15 +34,17 @@ class GeneratorUtilsTest {
                 contractsFolder.absolutePath,
                 "duplicate",
                 "build",
-                "DuplicateField.abi"
-            ).toString()
+                "DuplicateField.abi",
+            ).toString(),
         )
 
         val contractAbiDefinition = loadContractDefinition(duplicatesAbi)
         val sanitizedAbiDefinitions = handleDuplicateNames(contractAbiDefinition, "function")
 
-        assert(sanitizedAbiDefinitions.filter { it.type == "function" }.map { it.name.decapitalize() }.toSet().size
-            == loadContractDefinition(duplicatesAbi).filter { it.type == "function" }.size)
+        assert(
+            sanitizedAbiDefinitions.filter { it.type == "function" }.map { it.name.decapitalize() }.toSet().size
+                == loadContractDefinition(duplicatesAbi).filter { it.type == "function" }.size,
+        )
     }
 
     @Test
@@ -51,14 +54,16 @@ class GeneratorUtilsTest {
                 contractsFolder.absolutePath,
                 "duplicate",
                 "build",
-                "DuplicateField.abi"
-            ).toString()
+                "DuplicateField.abi",
+            ).toString(),
         )
 
         val inputWithDuplicates = loadContractDefinition(duplicatesAbi).filter { it.name == "Sum" }.map { it.inputs }.first()
         val sanitizedInputs = handleDuplicateInputNames(inputWithDuplicates)
 
-        assert(sanitizedInputs.map { it.name.decapitalize() }.toSet().size
-                == sanitizedInputs.size)
+        assert(
+            sanitizedInputs.map { it.name.decapitalize() }.toSet().size
+                == sanitizedInputs.size,
+        )
     }
 }

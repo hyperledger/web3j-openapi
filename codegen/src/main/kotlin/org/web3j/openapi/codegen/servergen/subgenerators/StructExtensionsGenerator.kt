@@ -25,7 +25,7 @@ class StructExtensionsGenerator(
     val packageName: String,
     private val contractName: String,
     private val resourcesDefinition: List<AbiDefinition>,
-    private val folderPath: String
+    private val folderPath: String,
 ) {
 
     fun generate() {
@@ -42,7 +42,7 @@ class StructExtensionsGenerator(
     private fun generateExtensions(structs: List<AbiDefinition.NamedType?>): FileSpec {
         val extensionsFile = FileSpec.builder(
             "$packageName.server.${contractName.toLowerCase()}",
-            "${contractName.capitalize()}Extensions"
+            "${contractName.capitalize()}Extensions",
         )
 
         structs.forEach { structDefinition ->
@@ -50,12 +50,12 @@ class StructExtensionsGenerator(
 
             val contractClass = ClassName(
                 "$packageName.wrappers.${contractName.capitalize()}",
-                structName
+                structName,
             )
 
             val modelClass = ClassName(
                 "$packageName.core.${contractName.toLowerCase()}.model",
-                "${structName}StructModel"
+                "${structName}StructModel",
             )
 
             val code = "return ${modelClass.simpleName}(${extensionDefinitionParameters(structDefinition)})"
@@ -74,10 +74,11 @@ class StructExtensionsGenerator(
 
     private fun extensionDefinitionParameters(structDefinition: AbiDefinition.NamedType): String {
         return structDefinition.components.joinToString(",") { structField ->
-            if (structField.components.isNullOrEmpty())
+            if (structField.components.isNullOrEmpty()) {
                 structField.name
-            else
+            } else {
                 "${structField.name}.toModel()"
+            }
         }
     }
 }

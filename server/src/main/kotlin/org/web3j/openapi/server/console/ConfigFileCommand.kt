@@ -21,7 +21,7 @@ import picocli.CommandLine.Unmatched
  * Allows two-pass approach to obtain an optional config file.
  */
 @Command(
-    mixinStandardHelpOptions = true
+    mixinStandardHelpOptions = true,
 )
 class ConfigFileCommand {
 

@@ -30,34 +30,34 @@ class KPoetUtilsTest {
         val expectedOutput = """
             package test
 
-            import com.fasterxml.jackson.annotation.JsonProperty
+            import com.fasterxml.jackson.`annotation`.JsonProperty
             import java.math.BigInteger
             import kotlin.String
 
-            data class TestFunctionParameters(
+            public data class TestFunctionParameters(
               @JsonProperty(value = "number")
-              val number: BigInteger,
+              public val number: BigInteger,
               @JsonProperty(value = "string")
-              val string: String
+              public val string: String,
             )
             """.replace("\\s".toRegex(), "")
 
         val namedTypes = listOf(
             NamedType("number", "uint256"),
-            NamedType("string", "string")
+            NamedType("string", "string"),
         )
         namedTypes.toDataClass(
             "test",
             "testFunction",
-            "Parameters"
+            "Parameters",
         ).writeTo(tempFolder)
 
         val actualOutput = File(
             Paths.get(
                 tempFolder.absolutePath,
                 "test",
-                "TestFunctionParameters.kt"
-            ).toString()
+                "TestFunctionParameters.kt",
+            ).toString(),
         ).readText().replace("\\s".toRegex(), "")
 
         assertThat(actualOutput).isEqualTo(expectedOutput)

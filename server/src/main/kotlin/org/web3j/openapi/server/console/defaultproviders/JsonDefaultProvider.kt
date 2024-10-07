@@ -18,7 +18,7 @@ import picocli.CommandLine
 import java.io.File
 
 internal class JsonDefaultProvider(
-    configFile: File?
+    configFile: File?,
 ) : CommandLine.IDefaultValueProvider {
 
     private val consoleConfiguration: ConsoleConfiguration? = ObjectMapper().readValue(configFile, ConsoleConfiguration::class.java)

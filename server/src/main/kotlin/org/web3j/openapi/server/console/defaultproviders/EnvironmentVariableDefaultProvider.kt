@@ -15,7 +15,7 @@ package org.web3j.openapi.server.console.defaultproviders
 import picocli.CommandLine
 
 internal class EnvironmentVariableDefaultProvider(
-    private val environment: Map<String, String>
+    private val environment: Map<String, String>,
 ) : CommandLine.IDefaultValueProvider {
 
     private val WEB3J_VAR_PREFIX = "WEB3J_"

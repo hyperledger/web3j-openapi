@@ -16,7 +16,7 @@ import org.web3j.openapi.server.console.ConsoleConfiguration
 import picocli.CommandLine
 
 internal class ConfigMapper(
-    private val consoleConfiguration: ConsoleConfiguration?
+    private val consoleConfiguration: ConsoleConfiguration?,
 ) {
 
     fun value(param: CommandLine.Model.ArgSpec): String? {

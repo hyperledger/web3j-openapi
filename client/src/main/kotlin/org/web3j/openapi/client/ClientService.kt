@@ -28,10 +28,10 @@ import java.util.logging.Logger
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 
-class ClientService @JvmOverloads constructor (
+class ClientService @JvmOverloads constructor(
     val uri: String,
     readTimeout: Int = DEFAULT_READ_TIMEOUT,
-    connectTimeout: Int = DEFAULT_CONNECT_TIMEOUT
+    connectTimeout: Int = DEFAULT_CONNECT_TIMEOUT,
 ) : AutoCloseable {
 
     private val mapper = jacksonObjectMapper()

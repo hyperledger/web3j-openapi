@@ -29,8 +29,9 @@ class TemplateUtilsTest {
     fun mustacheTemplateTest() {
         assertThat(
             TemplateUtils.mustacheTemplate(
-                "server/src/GeneratedContractsResourceImpl.mustache"
-            )).isNotNull()
+                "server/src/GeneratedContractsResourceImpl.mustache",
+            ),
+        ).isNotNull()
     }
 
     @Test
@@ -42,8 +43,8 @@ class TemplateUtilsTest {
             tempFolder.absolutePath,
             "testTemplate.txt",
             TemplateUtils.mustacheTemplate(
-                "testTemplate.mustache"
-            )
+                "testTemplate.mustache",
+            ),
         ).readText().replace("\\s".toRegex(), "")
 
         assertThat(actualOutput).isEqualTo(expectedOutput)

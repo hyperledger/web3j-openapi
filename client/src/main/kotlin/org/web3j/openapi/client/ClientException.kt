@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType
  * Client API exception containing error data.
  */
 class ClientException internal constructor(
-    val error: ErrorResponse?
+    val error: ErrorResponse?,
 ) : RuntimeException(error?.title) {
     companion object {
 
@@ -34,8 +34,8 @@ class ClientException internal constructor(
                         ErrorResponse(
                             title = exception.response.statusInfo.reasonPhrase,
                             requestUrl = exception.response.location?.toString(),
-                            responseStatus = exception.response.status
-                        )
+                            responseStatus = exception.response.status,
+                        ),
                     )
                 }
             }

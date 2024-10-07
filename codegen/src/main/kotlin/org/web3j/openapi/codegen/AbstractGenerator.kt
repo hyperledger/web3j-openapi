@@ -15,7 +15,7 @@ package org.web3j.openapi.codegen
 import org.web3j.openapi.codegen.config.GeneratorConfiguration
 
 abstract class AbstractGenerator(
-    val configuration: GeneratorConfiguration
+    val configuration: GeneratorConfiguration,
 ) {
     protected val packageDir = configuration.packageName.split(".").joinToString("/")
 

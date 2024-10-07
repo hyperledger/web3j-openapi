@@ -21,7 +21,7 @@ class ConfigFileOptions {
         names = ["-c", "--config-file"],
         paramLabel = "<FILENAME>",
         description = ["name of the YAML configuration file"],
-        arity = "1"
+        arity = "1",
     )
     var configFile: File? = null
 }

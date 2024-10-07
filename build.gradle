@@ -5,15 +5,14 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
-        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:4.0.0'
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:4.1.0'
     }
 }
 
 plugins {
-    id 'de.undercouch.download' version '4.1.1'
-    id 'com.diffplug.gradle.spotless' version '4.5.1'
-    id 'io.codearte.nexus-staging' version '0.22.0'
+    id 'de.undercouch.download' version '4.1.2'
+    id 'com.diffplug.spotless' version '6.25.0'
+    id 'io.codearte.nexus-staging' version '0.30.0'
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
 
@@ -34,7 +33,6 @@ subprojects {
 
     apply {
         [
-                'bintray',
                 'publish',
                 'jacoco',
                 'java',
@@ -113,4 +111,8 @@ subprojects {
     }
 
     sourceCompatibility = 17
+
+    tasks.named("spotlessJava") {
+        dependsOn(tasks.named("spotlessGroovyGradle"))
+    }
 }

@@ -18,7 +18,7 @@ import org.glassfish.jersey.server.model.Resource
 import org.web3j.openapi.core.SubResource
 
 abstract class SubResourceImpl(
-    private val uriInfo: ExtendedUriInfo
+    private val uriInfo: ExtendedUriInfo,
 ) : SubResource {
 
     override fun findAll(): List<String> {

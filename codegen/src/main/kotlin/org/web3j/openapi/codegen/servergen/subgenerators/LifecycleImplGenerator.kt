@@ -21,28 +21,30 @@ import java.io.File
 class LifecycleImplGenerator(
     val packageName: String,
     val folderPath: String,
-    val contractDetails: ContractDetails
+    val contractDetails: ContractDetails,
 ) {
     private val context = mutableMapOf<String, Any>()
 
     private val parameters: String by lazy {
-        if (contractDetails.deployParameters == "()") ""
-        else {
+        if (contractDetails.deployParameters == "()") {
+            ""
+        } else {
             var parameters = ""
             contractDetails.abiDefinitions
                 .filter { it.type == "constructor" }
                 .map { it.inputs }
                 .first()
                 .forEach { input ->
-                    parameters += if (input.type == "tuple")
+                    parameters += if (input.type == "tuple") {
                         ", ${getStructCallParameters(
                             contractDetails.contractName,
                             input,
                             "",
-                            "parameters.${input.name}"
+                            "parameters.${input.name}",
                         )}"
-                    else
+                    } else {
                         ", parameters.${input.name}"
+                    }
                 }
             parameters.removeSuffix(",")
         }
@@ -67,7 +69,7 @@ class LifecycleImplGenerator(
             context = context,
             outputDir = folderPath,
             template = TemplateUtils.mustacheTemplate("server/src/contractImpl/ContractLifecycleImpl.mustache"),
-            name = "${contractDetails.capitalizedContractName}LifecycleImpl.kt"
+            name = "${contractDetails.capitalizedContractName}LifecycleImpl.kt",
         )
     }
 

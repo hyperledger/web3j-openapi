@@ -12,13 +12,13 @@
  */
 package org.web3j.openapi.server.console.defaultproviders
 
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import org.web3j.openapi.server.console.ConsoleConfiguration
 import picocli.CommandLine
 import java.io.File
-import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 
 internal class JavaPropDefaultProvider(
-    configFile: File?
+    configFile: File?,
 ) : CommandLine.IDefaultValueProvider {
 
     private val consoleConfiguration: ConsoleConfiguration? = JavaPropsMapper()

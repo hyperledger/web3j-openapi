@@ -29,13 +29,14 @@ class SolidityFunctionWrapperGenerator(
     override val useJavaPrimitiveTypes: Boolean = false,
     val generateSendTxForCalls: Boolean = false,
     override val contractClass: Class<out Contract?> = Contract::class.java,
-    val addressLength: Int
+    val addressLength: Int,
 ) : FunctionWrapperGenerator(
     contractClass,
     destinationDir,
     basePackageName,
     useJavaNativeTypes,
-    useJavaPrimitiveTypes) {
+    useJavaPrimitiveTypes,
+) {
 
     private val COMMAND_SOLIDITY = "solidity"
     private val COMMAND_GENERATE = "generate"
@@ -70,7 +71,7 @@ class SolidityFunctionWrapperGenerator(
         val abiDefinition: Array<org.web3j.protocol.core.methods.response.AbiDefinition> =
             objectMapper.readValue(
                 absFile,
-                Array<org.web3j.protocol.core.methods.response.AbiDefinition>::class.java
+                Array<org.web3j.protocol.core.methods.response.AbiDefinition>::class.java,
             )
         return listOf(*abiDefinition)
     }
@@ -93,7 +94,7 @@ class SolidityFunctionWrapperGenerator(
                 useJavaNativeTypes,
                 useJavaPrimitiveTypes,
                 generateSendTxForCalls,
-                addressLength
+                addressLength,
             )
                 .generateJavaFiles(
                     contractClass,
@@ -102,13 +103,13 @@ class SolidityFunctionWrapperGenerator(
                     functionDefinitions,
                     destinationDirLocation.toString(),
                     basePackageName,
-                    null
+                    null,
                 )
             println(
                 """
                     File written to $destinationDirLocation
 
-                    """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -127,7 +128,7 @@ class SolidityFunctionWrapperGenerator(
                 packageName,
                 useJavaTypes,
                 primitiveTypes,
-                addressLength = addressLength
+                addressLength = addressLength,
             )
                 .generate()
         } catch (e: Exception) {

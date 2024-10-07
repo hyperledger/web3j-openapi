@@ -15,10 +15,10 @@ package org.web3j.openapi.codegen.utils
 import com.samskivert.mustache.Mustache
 import com.samskivert.mustache.Template
 import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import java.io.FileOutputStream
 
 internal object TemplateUtils {
     fun mustacheTemplate(filePath: String): Template {

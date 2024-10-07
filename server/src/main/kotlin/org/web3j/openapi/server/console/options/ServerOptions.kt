@@ -20,14 +20,14 @@ class ServerOptions {
     @Option(
         names = ["--host"],
         description = ["specify the host name"],
-        defaultValue = "localhost"
+        defaultValue = "localhost",
     )
     lateinit var host: InetAddress
 
     @Option(
         names = ["--port"],
         description = ["specify the port number"],
-        defaultValue = "8080"
+        defaultValue = "8080",
     )
     var port: Int = 8080
 }

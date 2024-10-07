@@ -32,11 +32,11 @@ import org.web3j.openapi.server.ContractGasProviderFactory
 import org.web3j.openapi.server.CredentialsFactory
 import org.web3j.openapi.server.IllegalArgumentExceptionMapper
 import org.web3j.openapi.server.IllegalStateExceptionMapper
-import org.web3j.openapi.server.RuntimeExceptionMapper
 import org.web3j.openapi.server.JsonMappingExceptionMapper
 import org.web3j.openapi.server.JsonParseExceptionMapper
 import org.web3j.openapi.server.NotFoundExceptionMapper
 import org.web3j.openapi.server.Properties
+import org.web3j.openapi.server.RuntimeExceptionMapper
 import org.web3j.openapi.server.TransactionExceptionMapper
 import org.web3j.openapi.server.UnsupportedOperationExceptionMapper
 import org.web3j.openapi.server.Web3jFactory
@@ -54,7 +54,7 @@ import javax.inject.Singleton
  * @see OpenApiResourceProvider
  */
 class OpenApiResourceConfig(
-    serverConfig: OpenApiServerConfig
+    serverConfig: OpenApiServerConfig,
 ) : ResourceConfig() {
 
 //    /**
@@ -107,8 +107,6 @@ class OpenApiResourceConfig(
         property(Properties.WALLET_FILE, serverConfig.walletFile?.absolutePath)
         property(Properties.WALLET_PASSWORD, serverConfig.walletPassword)
         property(Properties.CONTRACT_ADDRESSES, serverConfig.contractAddresses)
-        property(Properties.NETWORK, serverConfig.network)
-        property(Properties.GAS_PRICE, serverConfig.gasPrice)
     }
 
     private class InjectionBinder : AbstractBinder() {

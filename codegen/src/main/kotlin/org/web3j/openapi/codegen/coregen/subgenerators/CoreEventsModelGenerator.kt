@@ -22,7 +22,7 @@ internal class CoreEventsModelGenerator(
     private val contractName: String,
     private val eventName: String,
     private val folderPath: String,
-    private val outputs: List<NamedType>
+    private val outputs: List<NamedType>,
 ) {
     fun generate() {
         val functionFile = outputs.toDataClass(
@@ -30,7 +30,7 @@ internal class CoreEventsModelGenerator(
             eventName,
             "EventResponse",
             packageName,
-            contractName
+            contractName,
         )
         logger.debug("Generating $contractName $eventName model")
         functionFile.writeTo(File(folderPath))

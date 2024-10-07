@@ -14,5 +14,5 @@ package org.web3j.openapi.codegen.common
 
 class ContractResources(
     val functionResources: List<FunctionResource>,
-    val eventResources: List<EventResource>
+    val eventResources: List<EventResource>,
 )

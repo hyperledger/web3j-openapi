@@ -19,13 +19,13 @@ class WalletOptions {
 
     @Option(
         names = ["--wallet-path"],
-        description = ["specify the wallet file path"]
+        description = ["specify the wallet file path"],
     )
     var walletFile: File? = null
 
     @Option(
         names = ["--wallet-password"],
-        description = ["specify the wallet file password"]
+        description = ["specify the wallet file password"],
     )
     var walletPassword: String? = null
 }

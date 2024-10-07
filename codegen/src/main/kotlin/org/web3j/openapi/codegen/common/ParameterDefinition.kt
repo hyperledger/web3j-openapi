@@ -14,5 +14,5 @@ package org.web3j.openapi.codegen.common
 
 data class ParameterDefinition(
     val name: String,
-    val type: String
+    val type: String,
 )

@@ -17,7 +17,7 @@ import org.web3j.openapi.codegen.coregen.CoreGenerator
 import org.web3j.openapi.codegen.servergen.ServerGenerator
 
 class OpenApiGenerator(
-    private val configuration: GeneratorConfiguration
+    private val configuration: GeneratorConfiguration,
 ) {
     fun generate() {
         println("Generating Web3j-OpenAPI project ... Files written to ${configuration.outputDir}")

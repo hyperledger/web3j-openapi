@@ -17,10 +17,6 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
-import org.web3j.test.core.TestProjectApi
-import org.web3j.test.core.humanstandardtoken.HumanStandardTokenResource
-import org.web3j.test.core.humanstandardtoken.model.ApproveParameters
-import org.web3j.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import org.glassfish.jersey.test.JerseyTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -33,6 +29,10 @@ import org.web3j.openapi.client.ClientFactory
 import org.web3j.openapi.client.ClientService
 import org.web3j.openapi.server.config.OpenApiResourceConfig
 import org.web3j.openapi.server.config.OpenApiServerConfig
+import org.web3j.test.core.TestProjectApi
+import org.web3j.test.core.humanstandardtoken.HumanStandardTokenResource
+import org.web3j.test.core.humanstandardtoken.model.ApproveParameters
+import org.web3j.test.core.humanstandardtoken.model.HumanStandardTokenDeployParameters
 import java.math.BigInteger
 import java.net.URL
 import java.util.concurrent.CountDownLatch
@@ -51,7 +51,7 @@ class ServerTest : JerseyTest() {
     private val client: TestProjectApi by lazy {
         ClientFactory.create(
             TestProjectApi::class.java,
-            ClientService(target().uri.toString())
+            ClientService(target().uri.toString()),
         )
     }
 
@@ -62,8 +62,8 @@ class ServerTest : JerseyTest() {
                 nodeEndpoint = URL("http://localhost:8545"),
                 privateKey = PRIVATE_KEY,
                 host = "localhost",
-                port = 0
-            )
+                port = 0,
+            ),
         )
 
     @BeforeAll
@@ -71,8 +71,11 @@ class ServerTest : JerseyTest() {
         super.setUp()
         contract = client.contracts.humanStandardToken.deploy(
             HumanStandardTokenDeployParameters(
-                BigInteger.TEN, "Test", BigInteger.ZERO, "TEST"
-            )
+                BigInteger.TEN,
+                "Test",
+                BigInteger.ZERO,
+                "TEST",
+            ),
         ).let {
             client.contracts.humanStandardToken.load(it.contractAddress)
         }

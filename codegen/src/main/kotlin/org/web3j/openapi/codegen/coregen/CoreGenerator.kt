@@ -26,9 +26,9 @@ import java.io.FileNotFoundException
 import java.nio.file.Paths
 
 class CoreGenerator(
-    configuration: GeneratorConfiguration
+    configuration: GeneratorConfiguration,
 ) : AbstractGenerator(
-    configuration
+    configuration,
 ) {
     init {
         context["contractsConfiguration"] = configuration.contracts
@@ -50,9 +50,9 @@ class CoreGenerator(
                 configuration.packageName,
                 folderPath = Paths.get(
                     folderPath,
-                    it.contractDetails.lowerCaseContractName
+                    it.contractDetails.lowerCaseContractName,
                 ).toString(),
-                contractDetails = it.contractDetails
+                contractDetails = it.contractDetails,
             ).generate()
         }
     }
@@ -63,14 +63,14 @@ class CoreGenerator(
             tags.add(
                 Tag(
                     "${it.contractDetails.capitalizedContractName} Methods",
-                    "List ${it.contractDetails.capitalizedContractName} method's calls"
-                )
+                    "List ${it.contractDetails.capitalizedContractName} method's calls",
+                ),
             )
             tags.add(
                 Tag(
                     "${it.contractDetails.capitalizedContractName} Events",
-                    "List ${it.contractDetails.capitalizedContractName} event's calls"
-                )
+                    "List ${it.contractDetails.capitalizedContractName} event's calls",
+                ),
             )
         }
         return tags.also {
@@ -89,13 +89,13 @@ class CoreGenerator(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/ContractsApi.mustache"),
-            name = "${configuration.sanitizedProjectName.capitalize()}Api.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}Api.kt",
         )
         generateFromTemplate(
             context = context,
             outputDir = folderPath,
             template = mustacheTemplate("core/src/GeneratedContractsResource.mustache"),
-            name = "${configuration.sanitizedProjectName.capitalize()}Resource.kt"
+            name = "${configuration.sanitizedProjectName.capitalize()}Resource.kt",
         )
     }
 

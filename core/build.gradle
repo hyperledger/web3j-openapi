@@ -8,5 +8,12 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-annotations:${versions.swagger}"
 }
 
-// To publish in mavenLocal()
-// tasks.withType(Sign)*.enabled = false
+tasks.named("spotlessJava") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("compileKotlin"))
+}
+
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("spotlessGroovyGradle"))
+    dependsOn(tasks.named("spotlessJava"))
+}

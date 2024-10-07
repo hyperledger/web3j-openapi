@@ -30,7 +30,7 @@ class SolidityUtilsTest {
         val expectedResult = ClassName("kotlin.collections", "List")
             .plusParameter(
                 ClassName("kotlin.collections", "List")
-                    .plusParameter(Integer::class.asClassName())
+                    .plusParameter(Integer::class.asClassName()),
             )
         val actualResult = "int[10][20]".mapType()
 
@@ -43,7 +43,7 @@ class SolidityUtilsTest {
             .parameterizedBy(
                 ClassName("kotlin.collections", "List")
                     .plusParameter(ANY.copy(true))
-                    .copy(true)
+                    .copy(true),
             )
 
         val actualResult = "int[10][20]".mapType(false)
@@ -84,15 +84,15 @@ class SolidityUtilsTest {
                     .parameterizedBy(
                         listOf(
                             Integer::class.asClassName(),
-                            String::class.asClassName()
-                        )
-                    )
+                            String::class.asClassName(),
+                        ),
+                    ),
             )
 
         val actualResult = AbiDefinition().apply {
             outputs = listOf(
                 NamedType("param1", "int"),
-                NamedType("param2", "address")
+                NamedType("param2", "address"),
             )
             isConstant = true
         }

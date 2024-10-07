@@ -49,11 +49,3 @@ docs/build
 **/.project
 **/.settings
 **/bin
-
-gradle/bintray
-gradle/jacoco
-gradle/java
-gradle/javadoc
-gradle/publish
-gradle/repositories
-gradle/spotless

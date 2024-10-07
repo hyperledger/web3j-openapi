@@ -13,5 +13,5 @@
 package org.web3j.openapi.core.models
 
 data class ResultModel<T>(
-    val result: T? = null
+    val result: T? = null,
 )
