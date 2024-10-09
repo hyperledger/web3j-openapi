@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* 
+* Bump SNAPSHOT version to 4.12.3 [#114](https://github.com/hyperledger/web3j-openapi/pull/114)
 
 ### BREAKING CHANGES
 
