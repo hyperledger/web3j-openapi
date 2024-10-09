@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource
+import jakarta.inject.Singleton
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
@@ -45,7 +46,6 @@ import org.web3j.protocol.Web3j
 import org.web3j.tx.gas.ContractGasProvider
 import java.util.ServiceLoader
 import java.util.logging.Logger
-import javax.inject.Singleton
 
 /**
  * The JAX-RS application configuration.

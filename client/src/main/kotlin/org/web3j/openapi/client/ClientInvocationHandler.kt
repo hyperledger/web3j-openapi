@@ -12,6 +12,9 @@
  */
 package org.web3j.openapi.client
 
+import jakarta.ws.rs.ClientErrorException
+import jakarta.ws.rs.client.WebTarget
+import jakarta.ws.rs.sse.SseEventSource
 import mu.KLogging
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.InvocationTargetException
@@ -21,9 +24,6 @@ import java.lang.reflect.Proxy
 import java.net.URL
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import javax.ws.rs.ClientErrorException
-import javax.ws.rs.client.WebTarget
-import javax.ws.rs.sse.SseEventSource
 
 /**
  * Invocation handler for proxied resources.

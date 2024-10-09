@@ -13,11 +13,11 @@
 package org.web3j.openapi.server
 
 import io.reactivex.Flowable
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.sse.Sse
+import jakarta.ws.rs.sse.SseEventSink
 import mu.KLogging
 import org.web3j.abi.datatypes.Event
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.sse.Sse
-import javax.ws.rs.sse.SseEventSink
 
 object SseUtils : KLogging() {
     fun <T, R> subscribe(

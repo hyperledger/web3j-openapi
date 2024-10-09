@@ -12,9 +12,9 @@
  */
 package org.web3j.openapi.client
 
-import javax.ws.rs.client.ClientRequestContext
-import javax.ws.rs.client.ClientRequestFilter
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.client.ClientRequestContext
+import jakarta.ws.rs.client.ClientRequestFilter
+import jakarta.ws.rs.core.HttpHeaders
 
 class AuthenticationFilter private constructor(private val token: String) : ClientRequestFilter {
 

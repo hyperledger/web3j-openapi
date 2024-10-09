@@ -14,19 +14,19 @@ package org.web3j.openapi.server
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.ws.rs.NotFoundException
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.Response
+import jakarta.ws.rs.core.Response.Status
+import jakarta.ws.rs.core.Response.Status.Family
+import jakarta.ws.rs.core.UriInfo
+import jakarta.ws.rs.ext.ExceptionMapper
 import org.eclipse.jetty.http.HttpStatus
 import org.web3j.openapi.core.ErrorResponse
 import org.web3j.protocol.exceptions.TransactionException
 import org.web3j.tx.exceptions.ContractCallException
-import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.NotFoundException
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status
-import javax.ws.rs.core.Response.Status.Family
-import javax.ws.rs.core.UriInfo
-import javax.ws.rs.ext.ExceptionMapper
 
 sealed class BaseExceptionMapper<E : Throwable>(
     private val status: Response.StatusType,
