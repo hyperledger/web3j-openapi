@@ -11,6 +11,20 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
+* 
+
+### BREAKING CHANGES
+
+* 
+
+# [4.12.2](https://github.com/web3j/web3j-openapi/releases/tag/v4.12.2) (2024-10-09)
+
+### Bug Fixes
+
+*
+
+### Features
+
 * updated to gradle 8.7 and removed Epirus [#113](https://github.com/hyperledger/web3j-openapi/pull/113)
 * Bump snapshot version to 4.11.3 [#109](https://github.com/hyperledger/web3j-openapi/pull/109)
 
