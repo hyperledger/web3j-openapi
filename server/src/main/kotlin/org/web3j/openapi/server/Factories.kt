@@ -12,6 +12,8 @@
  */
 package org.web3j.openapi.server
 
+import jakarta.ws.rs.core.Configuration
+import jakarta.ws.rs.core.Context
 import mu.KLogging
 import org.glassfish.hk2.api.Factory
 import org.web3j.crypto.Credentials
@@ -28,8 +30,6 @@ import org.web3j.protocol.http.HttpService
 import org.web3j.tx.gas.ContractGasProvider
 import org.web3j.tx.gas.DefaultGasProvider
 import java.io.File
-import javax.ws.rs.core.Configuration
-import javax.ws.rs.core.Context
 
 class Web3jFactory(
     @Context private val configuration: Configuration,

@@ -13,7 +13,6 @@
 package org.web3j.openapi.codegen.utils
 
 import com.pinterest.ktlint.core.KtLint
-import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
 import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 import mu.KLogging
 import java.io.File
@@ -23,10 +22,7 @@ import java.nio.file.StandardCopyOption
 
 internal object CopyUtils : KLogging() {
 
-    private val ruleSets = listOf(
-        StandardRuleSetProvider().get(),
-        ExperimentalRuleSetProvider().get(),
-    )
+    private val ruleProvider = StandardRuleSetProvider().getRuleProviders()
 
     fun copyResource(name: String, outputDir: File) {
         Files.copy(
@@ -51,14 +47,16 @@ internal object CopyUtils : KLogging() {
      * Format a given Kotlin file using KtLint.
      */
     fun kotlinFormat(file: File) {
-        KtLint.format(
-            KtLint.Params(
-                ruleSets = ruleSets,
-                cb = { _, _ -> },
+        val formattedText = KtLint.format(
+            KtLint.ExperimentalParams(
                 text = file.readText(),
+                ruleProviders = ruleProvider,
+                userData = mapOf(),
+                cb = { _, _ -> },
+                script = false,
+                debug = false,
             ),
-        ).run {
-            file.writeText(this)
-        }
+        )
+        file.writeText(formattedText)
     }
 }

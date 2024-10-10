@@ -12,9 +12,9 @@
  */
 package org.web3j.openapi.client
 
+import jakarta.ws.rs.ClientErrorException
+import jakarta.ws.rs.core.MediaType
 import org.web3j.openapi.core.ErrorResponse
-import javax.ws.rs.ClientErrorException
-import javax.ws.rs.core.MediaType
 
 /**
  * Client API exception containing error data.

@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import jakarta.ws.rs.client.Client
+import jakarta.ws.rs.client.ClientBuilder
 import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
@@ -25,8 +27,6 @@ import org.glassfish.jersey.logging.LoggingFeature
 import org.slf4j.bridge.SLF4JBridgeHandler
 import java.util.logging.Level
 import java.util.logging.Logger
-import javax.ws.rs.client.Client
-import javax.ws.rs.client.ClientBuilder
 
 class ClientService @JvmOverloads constructor(
     val uri: String,
